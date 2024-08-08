@@ -8,7 +8,6 @@ visitor = Blueprint("visitor", __name__, static_folder="static",
                        template_folder="templates")
 
 
-
 @app.route('/')
 def visitor_home():
     cursor, connection = get_cursor() 
@@ -207,3 +206,120 @@ def course_details(course_id):
     cursor.close()  
     connection.close() 
     return render_template('course_details.html', course=course, sections=sections, user_role=user_role, section_count=section_count, related_courses=related_courses)
+
+@app.route('/news')
+def news():
+    cursor, connection = get_cursor()
+    try:
+        news_query = '''
+                    SELECT r.resource_id, r.topic, r.content, r.published_date, r.image_url,
+                    COALESCE(e.first_name, a.first_name) AS first_name,
+                    COALESCE(e.last_name, a.last_name) AS last_name,
+                    r.creator_id
+                    FROM Resource r
+                    LEFT JOIN Expert e ON r.creator_id = e.expert_id
+                    LEFT JOIN Administrator a ON r.creator_id = a.admin_id
+                    WHERE r.type = 'News'
+                    ORDER BY r.published_date DESC
+                    '''
+        cursor.execute(news_query)
+        news_items = cursor.fetchall()
+    finally:
+        cursor.close()
+        connection.close()
+    
+    return render_template('news.html', news_items=news_items)
+
+@app.route('/Research')
+def research():
+    cursor, connection = get_cursor()
+    try:
+        news_query = '''
+                    SELECT r.resource_id, r.topic, r.content, r.published_date, r.image_url,
+                    COALESCE(e.first_name, a.first_name) AS first_name,
+                    COALESCE(e.last_name, a.last_name) AS last_name,
+                    r.creator_id
+                    FROM Resource r
+                    LEFT JOIN Expert e ON r.creator_id = e.expert_id
+                    LEFT JOIN Administrator a ON r.creator_id = a.admin_id
+                    WHERE r.type = 'Research'
+                    ORDER BY r.published_date DESC
+                    '''
+        cursor.execute(news_query)
+        news_items = cursor.fetchall()
+    finally:
+        cursor.close()
+        connection.close()
+    
+    return render_template('research.html', news_items=news_items)
+
+
+@app.route('/Article')
+def article():
+    cursor, connection = get_cursor()
+    try:
+        news_query = '''
+                    SELECT r.resource_id, r.topic, r.content, r.published_date, r.image_url,
+                    COALESCE(e.first_name, a.first_name) AS first_name,
+                    COALESCE(e.last_name, a.last_name) AS last_name,
+                    r.creator_id
+                    FROM Resource r
+                    LEFT JOIN Expert e ON r.creator_id = e.expert_id
+                    LEFT JOIN Administrator a ON r.creator_id = a.admin_id
+                    WHERE r.type = 'Article'
+                    ORDER BY r.published_date DESC
+                    '''
+        cursor.execute(news_query)
+        news_items = cursor.fetchall()
+    finally:
+        cursor.close()
+        connection.close()
+    
+    return render_template('article.html', news_items=news_items)
+
+
+@app.route('/tutorial')
+def tutorial():
+    cursor, connection = get_cursor()
+    try:
+        news_query = '''
+                    SELECT r.resource_id, r.topic, r.content, r.published_date, r.image_url,
+                    COALESCE(e.first_name, a.first_name) AS first_name,
+                    COALESCE(e.last_name, a.last_name) AS last_name,
+                    r.creator_id
+                    FROM Resource r
+                    LEFT JOIN Expert e ON r.creator_id = e.expert_id
+                    LEFT JOIN Administrator a ON r.creator_id = a.admin_id
+                    WHERE r.type = 'Tutorial'
+                    ORDER BY r.published_date DESC
+                    '''
+        cursor.execute(news_query)
+        news_items = cursor.fetchall()
+    finally:
+        cursor.close()
+        connection.close()
+    
+    return render_template('tutorial.html', news_items=news_items)
+
+
+@app.route('/resource_details/<int:resource_id>')
+def resource_details(resource_id):
+    cursor, connection = get_cursor()
+    try:
+        news_query = '''
+                    SELECT r.resource_id, r.topic, r.content, r.published_date, r.image_url,
+                    COALESCE(e.first_name, a.first_name) AS first_name,
+                    COALESCE(e.last_name, a.last_name) AS last_name,
+                    r.creator_id, r.details
+                    FROM Resource r
+                    LEFT JOIN Expert e ON r.creator_id = e.expert_id
+                    LEFT JOIN Administrator a ON r.creator_id = a.admin_id
+                    WHERE r.resource_id = %s 
+                    '''
+        cursor.execute(news_query, (resource_id,))
+        news_items = cursor.fetchall()
+    finally:
+        cursor.close()
+        connection.close()
+    
+    return render_template('resource_details.html', news_items=news_items)

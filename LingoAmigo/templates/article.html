@@ -1,4 +1,4 @@
-﻿{% extends 'layout.html' %} {% block title %}LingoAmigo{% endblock %} {% block
+{% extends 'layout.html' %} {% block title %}LingoAmigo{% endblock %} {% block
     content %}
 <!DOCTYPE html>
 <html lang="en">
@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>News || LingoAmigo</title>
+    <title>Article || LingoAmigo</title>
     <meta name="description" content="Crsine HTML Template For Car Services" />
 </head>
 
@@ -33,12 +33,12 @@
                 <div class="col-xl-12">
                     <div class="page-header__wrapper clearfix">
                         <div class="page-header__title">
-                            <h2>News</h2>
+                            <h2>Article</h2>
                         </div>
                         <div class="page-header__menu">
                             <ul class="page-header__menu-list list-unstyled clearfix">
                                 <li><a href="index.html">Home</a></li>
-                                <li class="active">News</li>
+                                <li class="active">Article</li>
                             </ul>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                             <div class="blog-one__single-content-overlay-mata-info">
                                 <ul class="list-unstyled">
                                     <li><a href="#"><span class="icon-clock"></span> {{ news[3].strftime('%d-%m-%Y') }}</a></li>
-                                    <li><span class="icon-user"></span> Admin</li>
+                                    <li><a href="{{ url_for('expert_profile', expert_id=news[7]) }}"><span class="icon-user"></span> {{ news[5] }}  {{ news[6] }}</a></li>
                                 </ul>
                             </div>
                             <h2 class="blog-one__single-content-title"><a href="{{ url_for('resource_details', resource_id=news[0]) }}"> {{ news[1] }}</a></h2>

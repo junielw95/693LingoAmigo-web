@@ -325,7 +325,7 @@
                                 </li>
                             </ul>
                         </div>
-
+                        <!--related courses-->
                         <div class="course-details__new-courses wow fadeInUp animated" data-wow-delay="0.5s">
                             <h3 class="course-details__new-courses-title">Related Courses</h3>
                             <ul class="course-details__new-courses-list list-unstyled">
@@ -353,9 +353,18 @@
                                     </div>
                                 </li>
                                 {% endfor %}
-
-                                
                             </ul>
+                        </div>
+                        <!--End related courses sidebar-->
+        
+                        <!--Categories-->
+                        <div class="course-details__new-courses wow fadeInUp animated" data-wow-delay="0.5s">
+                            <h3 class="sidebar__title">All Categories</h3>
+                            {% for language in languages %}
+                            <ul class="sidebar__category-list list-unstyled">
+                                    <li><a href="{{ url_for('courses') }}?language_id={{ language[0] }}"><i class="far fa-arrow-alt-circle-right"></i>{{ language[1] }}</a></li>
+                            </ul>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
