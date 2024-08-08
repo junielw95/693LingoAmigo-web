@@ -1,0 +1,418 @@
+﻿{% extends 'layout.html' %} {% block title %} LingoAmigo {% endblock %} {% block
+        content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About</title>
+    <meta name="description" content="Crsine HTML Template For Car Services" />
+
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content">
+
+            </div><!-- /.sticky-header__content -->
+        </div><!-- /.stricky-header -->
+
+
+
+    <!--Page Header Start-->
+    <section class="page-header clearfix" style="background-image: url(static/images/page-header-bg.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="page-header__wrapper clearfix">
+                        <div class="page-header__title">
+                            <h2>About</h2>
+                        </div>
+                        <div class="page-header__menu">
+                            <ul class="page-header__menu-list list-unstyled clearfix">
+                                <li><a href="index.html">Home</a></li>
+                                <li class="active">about</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!--Page Header End-->
+
+    <!--About Two Start-->
+    <section class="about-two">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
+                    <div class="about-two__single-img">
+                        <img src="static/picture/about-v2-img2.jpg" alt=""/>
+                    </div>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="200ms" data-wow-duration="1500ms">
+                    <div class="about-two__single-img">
+                        <img src="static/picture/about-v2-img1.jpg" alt=""/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-two__bottom-content">
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4">
+                        <div class="about-two__title-box">
+                            <div class="section-title">
+                                <span class="section-title__tagline">About Company</span>
+                                <h2 class="section-title__title">The Best Global <br>Teachers and Experts</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-8 col-lg-8">
+                        <div class="about-two__text-box">
+                            <p class="about-two__text-box-text">LingoAmigo is an innovative language learning platform designed to connect language learners with native speakers from around the globe. 
+                                  Whether you're a beginner or advancing your skills, LingoAmigo offers the tools and community support to achieve fluency and confidence in your chosen language.</p>
+                            <div class="about-two__text-box-btn">
+                                <a href="{{ url_for('courses') }}" class="thm-btn">view all courses</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--About Two End-->
+
+
+
+    <!--Counter One Start-->
+    <section class="counter-one counter-one--about jarallax" data-jarallax data-speed="0.2" data-imgPosition="50% 0%" style="background-image: url(static/images/counters-v1-bg.jpg);">
+        <div class="container">
+            <div class="row">
+                <!--Start Counter One Left-->
+                <div class="col-xl-5 col-lg-5">
+                    <div class="counter-one__left">
+                        <div class="section-title">
+                            <span class="section-title__tagline">Fun Facts</span>
+                            <h2 class="section-title__title">LingoAmigo is to <br>Polish your skill</h2>
+                        </div>
+                        <p class="counter-one__left-text">There are many variations of passages of lore ipsum available but the majority have suffered.</p>
+                    </div>
+                </div>
+                <!--End Counter One Left-->
+
+                <!--Start Counter One Right-->
+                <div class="col-xl-7 col-lg-7">
+                    <div class="counter-one__right">
+                        <ul class="counter-one__right-box list-unstyled">
+                            <!--Start Counter One Right Single-->
+                            <li class="counter-one__right-single wow slideInUp animated" data-wow-delay="0.1s" data-wow-duration="1500ms">
+                               <div class="counter-one__right-single-icon">
+                                   <span class="icon-teacher"></span>
+                               </div>
+                                <h3 class="odometer" data-count="100">00+</h3>
+                                <p class="counter-one__right-text">Pro Teachers</p>
+                            </li>
+                            <!--End Counter One Right Single-->
+
+                            <!--Start Counter One Right Single-->
+                            <li class="counter-one__right-single wow slideInUp animated" data-wow-delay="0.3s" data-wow-duration="1500ms">
+                                <div class="counter-one__right-single-icon">
+                                    <span class="icon-online-course"></span>
+                                </div>
+                                 <h3 class="odometer" data-count="500">00+</h3>
+                                 <p class="counter-one__right-text">Skill Courses</p>
+                             </li>
+                             <!--End Counter One Right Single-->
+
+                             <!--Start Counter One Right Single-->
+                            <li class="counter-one__right-single wow slideInUp animated" data-wow-delay="0.5s" data-wow-duration="1500ms">
+                                <div class="counter-one__right-single-icon">
+                                    <span class="icon-student"></span>
+                                </div>
+                                 <h3 class="odometer" data-count="700">00+</h3>
+                                 <p class="counter-one__right-text">Students Enrolled</p>
+                             </li>
+                             <!--End Counter One Right Single-->
+                        </ul>
+                    </div>
+                </div>
+                <!--End Counter One Right-->
+            </div>
+        </div>
+    </section>
+    <!--Counter One End-->
+
+
+    <!--Start Meet Teachers One-->
+    <section class="meet-teachers-one">
+        <div class="container">
+            <div class="section-title text-center">
+                <span class="section-title__tagline">Skilled & Qualified</span>
+                <h2 class="section-title__title">Meet the Experts</h2>
+            </div>
+            <div class="row">
+                {% for expert in experts %}
+                <!--Start Single Meet Teachers One-->
+                <div class="col-xl-4 col-lg-4">
+                    <div class="meet-teachers-one__single wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
+                        <div class="meet-teachers-one__single-img">
+                            <img src="{{ url_for('static', filename='uploads/' + expert[8]) }}" alt="{{ expert[1] }} {{ expert[2] }}">
+                        </div>
+                        
+                        <div class="meet-teachers-one__single-content">
+                            <div class="meet-teachers-one__single-middle-content">
+                                <div class="title">
+                                    <h4><a href="{{ url_for('expert_profile', expert_id=expert[0]) }}">{{ expert[1] }} {{ expert[2] }}</a></h4>
+                                    <p>Expert</p>
+                                </div>
+                                
+                            </div>
+                        
+                            <div class="meet-teachers-one__single-bottom-content">
+                                <div class="meet-teachers-one__single-content-courses-box">
+                                    <div class="text">
+                                        <p>Contact</p>
+                                    </div>
+                                    <div class="social-icon">
+                                        <ul class="list-unstyled">
+                                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                            <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                                            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!--End Meet Teachers One-->
+    
+        <!--Teacher Start-->
+        <section class="company-logos-one">
+            <div class="container">
+                <div class="company-logos-one__title text-center">
+                    <h6>Who Will You Learn With?</h6>
+                </div>
+                <div class="thm-swiper__slider swiper-container" data-swiper-options='{"spaceBetween": 100, "slidesPerView": 5, "autoplay": { "delay": 5000 }, "breakpoints": {
+                "0": {
+                    "spaceBetween": 30,
+                    "slidesPerView": 2
+                },
+                "375": {
+                    "spaceBetween": 30,
+                    "slidesPerView": 2
+                },
+                "575": {
+                    "spaceBetween": 30,
+                    "slidesPerView": 3
+                },
+                "767": {
+                    "spaceBetween": 50,
+                    "slidesPerView": 4
+                },
+                "991": {
+                    "spaceBetween": 50,
+                    "slidesPerView": 5
+                },
+                "1199": {
+                    "spaceBetween": 100,
+                    "slidesPerView": 5
+                }
+            }}'>
+                    <div class="swiper-wrapper">
+                        {% for teacher in teachers %}
+                        <div class="swiper-slide">
+                            <img src="{{ url_for('static', filename='uploads/' + teacher[8]) }}" alt="{{ teacher[1] }} {{ teacher[2] }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--Teachers One End-->
+
+
+
+    
+    <!-- FAQ Section -->
+    <section class="company-logos-one faq-section">
+        <div class="container">
+            <div class="company-logos-one__title text-center">
+                <h6>FAQs - Frequently Asked Questions</h6>
+            </div>
+            <div class="faq-container space-y-4 mt-4">
+                <div class="faq-item">
+                    <button class="faq-toggle flex justify-between w-full text-left text-lg font-semibold text-gray-900 focus:outline-none" aria-expanded="false">
+                        <span>1. What is LingoAmigo?</span>
+                        <span class="text-2xl">+</span>
+                    </button>
+                    <p class="faq-answer text-gray-600 hidden mt-2">
+                        LingoAmigo is an e-learning web application dedicated to language learning. Our platform offers comprehensive courses in various languages, equipped with video lectures, interactive quizzes, and discussion boards to ensure a dynamic and engaging learning experience.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-container space-y-4 mt-4">
+                <div class="faq-item">
+                    <button class="faq-toggle flex justify-between w-full text-left text-lg font-semibold text-gray-900 focus:outline-none" aria-expanded="false">
+                        <span>2. Who can benefit from using LingoAmigo?</span>
+                        <span class="text-2xl">+</span>
+                    </button>
+                    <p class="faq-answer text-gray-600 hidden mt-2">
+                        Our services are designed for students, teachers, language enthusiasts, and experts in linguistics. Whether you are starting to learn a new language or looking to deepen your expertise, LingoAmigo provides the tools and community to support your journey.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-container space-y-4 mt-4">
+                <div class="faq-item">
+                    <button class="faq-toggle flex justify-between w-full text-left text-lg font-semibold text-gray-900 focus:outline-none" aria-expanded="false">
+                        <span>3. What features does LingoAmigo offer? </span>
+                        <span class="text-2xl">+</span>
+                    </button>
+                    <p class="faq-answer text-gray-600 hidden mt-2">
+                        LingoAmigo offers a range of interactive features, including:
+                            -Video lectures
+                            -Interactive quizzes to test your knowledge
+                            -Discussion boards for peer interaction and support
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-container space-y-4 mt-4">
+                <div class="faq-item">
+                    <button class="faq-toggle flex justify-between w-full text-left text-lg font-semibold text-gray-900 focus:outline-none" aria-expanded="false">
+                        <span>4. How do I access the courses on LingoAmigo? </span>
+                        <span class="text-2xl">+</span>
+                    </button>
+                    <p class="faq-answer text-gray-600 hidden mt-2">
+                        You can access our courses by registering on our website. Once registered, you can browse through various language courses and select the ones that fit your learning goals.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-container space-y-4 mt-4">
+                <div class="faq-item">
+                    <button class="faq-toggle flex justify-between w-full text-left text-lg font-semibold text-gray-900 focus:outline-none" aria-expanded="false">
+                        <span>5. Is there a fee to use LingoAmigo? </span>
+                        <span class="text-2xl">+</span>
+                    </button>
+                    <p class="faq-answer text-gray-600 hidden mt-2">
+                        We offer both free and premium courses. Premium courses may have a fee associated with them, which will be clearly indicated in the course description.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-container space-y-4 mt-4">
+                <div class="faq-item">
+                    <button class="faq-toggle flex justify-between w-full text-left text-lg font-semibold text-gray-900 focus:outline-none" aria-expanded="false">
+                        <span>6. How does LingoAmigo ensure a high-quality learning experience? </span>
+                        <span class="text-2xl">+</span>
+                    </button>
+                    <p class="faq-answer text-gray-600 hidden mt-2">
+                        Our courses are designed and delivered by experienced educators and linguists. We also implement regular updates and improvements based on user feedback and the latest educational research.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-container space-y-4 mt-4">
+                <div class="faq-item">
+                    <button class="faq-toggle flex justify-between w-full text-left text-lg font-semibold text-gray-900 focus:outline-none" aria-expanded="false">
+                        <span>7. What technical requirements do I need to use LingoAmigo? </span>
+                        <span class="text-2xl">+</span>
+                    </button>
+                    <p class="faq-answer text-gray-600 hidden mt-2">
+                        LingoAmigo is accessible from any device with an internet connection. For the best experience, we recommend using a modern browser such as Google Chrome, Firefox, or Safari.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-container space-y-4 mt-4">
+                <div class="faq-item">
+                    <button class="faq-toggle flex justify-between w-full text-left text-lg font-semibold text-gray-900 focus:outline-none" aria-expanded="false">
+                        <span>8. How can I provide feedback or get help with an issue? </span>
+                        <span class="text-2xl">+</span>
+                    </button>
+                    <p class="faq-answer text-gray-600 hidden mt-2">
+                        Feedback and support requests can be submitted through our contact form on the website. Our support team is dedicated to assisting you and will respond to your inquiries as quickly as possible.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+
+    <div class="search-popup">
+        <div class="search-popup__overlay search-toggler"></div>
+        <!-- /.search-popup__overlay -->
+        <div class="search-popup__content">
+            <form action="#">
+                <label for="search" class="sr-only">search here</label><!-- /.sr-only -->
+                <input type="text" id="search" placeholder="Search Here..." />
+                <button type="submit" aria-label="search submit" class="thm-btn2">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
+        <!-- /.search-popup__content -->
+    </div>
+    <!-- /.search-popup -->
+
+
+
+    <a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+
+
+    <script src="static/js/jquery-3.5.1.min.js"></script>
+    <script src="static/js/bootstrap.bundle.min.js"></script>
+    <script src="static/js/jarallax.min.js"></script>
+    <script src="static/js/jquery.ajaxchimp.min.js"></script>
+    <script src="static/js/jquery.appear.min.js"></script>
+    <script src="static/js/jquery.circle-progress.min.js"></script>
+    <script src="static/js/jquery.magnific-popup.min.js"></script>
+    <script src="static/js/jquery.validate.min.js"></script>
+    <script src="static/js/nouislider.min.js"></script>
+    <script src="static/js/odometer.min.js"></script>
+    <script src="static/js/swiper.min.js"></script>
+    <script src="static/js/tiny-slider.min.js"></script>
+    <script src="static/js/wnumb.min.js"></script>
+    <script src="static/js/wow.js"></script>
+    <script src="static/js/isotope.js"></script>
+    <script src="static/js/countdown.min.js"></script>
+    <script src="static/js/owl.carousel.min.js"></script>
+    <script src="static/js/twentytwenty.js"></script>
+    <script src="static/js/jquery.event.move.js"></script>
+
+
+    <script src="static/js/74ebec82705a46348cb0d31f8a8da95b.js"></script>
+
+    <!-- template js -->
+    <script src="static/js/lingoamigo.js"></script>
+    
+    <script>
+        document.querySelector(".preloader").style.display = 'none';
+        document.addEventListener('DOMContentLoaded', function (){
+            document.querySelectorAll('.faq-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.closest('.faq-item').querySelector('.faq-answer');
+                const isExpanded = answer.classList.toggle('hidden');
+                button.children[1].textContent = isExpanded ? '+' : '-';
+                button.setAttribute('aria-expanded', isExpanded);
+
+                });
+            });
+        });
+    </script>
+
+
+</body>
+</html>
+{% endblock %}

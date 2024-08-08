@@ -1,0 +1,62 @@
+{% extends 'layout.html' %} {% block title %} LingoAmigo {% endblock %} {% block
+        content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expert Profile|| LingoAmigo</title>
+    <meta name="description" content="Crsine HTML Template For Car Services" />
+</head>
+<body>
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content">
+
+            </div><!-- /.sticky-header__content -->
+        </div><!-- /.stricky-header -->
+
+    <!--Page Header Start-->
+    <section class="page-header clearfix" style="background-image: url(static/images/page-header-bg.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="page-header__wrapper clearfix">
+                        <div class="page-header__title">
+                            <h2>Expert Profile</h2>
+                        </div>
+                        <div class="page-header__menu">
+                            <ul class="page-header__menu-list list-unstyled clearfix">
+                                <li><a href="index.html">Home</a></li>
+                                <li><a href="{{ url_for('about') }}">About</a></li>
+                                <li class="active">Expert Profile</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!--Page Header End-->
+
+    
+    <div class="teacher-profile-container">
+        <!--profile info-->
+        <div class="teacher-info">
+            <h2>{{ expert[1] }} {{ expert[2] }}</h2>
+            <p>Title: {{ expert[4] }}</p>
+            <p>Email: {{ expert[3] }}</p>
+            <p>Nationality: {{ expert[5] }}</p>
+            <p>Phone: {{ expert[7] }}</p>
+            <p>Date of Join: {{ expert[10].strftime('%d-%m-%Y') if expert[10] else 'N/A' }}</p>
+            <p>Description: {{ expert[6] }}</p>
+        </div>
+        <!--profile photo-->
+        <div class="teacher-photo">
+            <img src="{{ url_for('static', filename='uploads/' + expert[8]) }}" alt="{{ expert[1] }} {{ expert[2] }}">
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

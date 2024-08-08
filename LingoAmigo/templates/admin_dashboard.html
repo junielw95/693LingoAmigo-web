@@ -1,0 +1,275 @@
+{% extends 'layout.html' %} {% block title %} LingoAmigo - Administrator dashboard{% endblock %} {% block
+        content %}
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <meta name="description" content="Crsine HTML Template For Car Services" />
+
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content">
+
+            </div><!-- /.sticky-header__content -->
+        </div><!-- /.stricky-header -->
+
+
+    <!--Page Header Start-->
+    <section class="page-header clearfix" style="background-image: url(static/images/page-header-bg.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="page-header__wrapper clearfix">
+                        <div class="page-header__title">
+                            <h2>Welcome to Your Dashboard</h2>
+                        </div>
+                        <div class="page-header__menu">
+                            <ul class="page-header__menu-list list-unstyled clearfix">
+                                <li><a href="{{ url_for('visitor_home') }}">Home</a></li>
+                                <li class="active">My dashboard</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</head>
+{% with messages = get_flashed_messages() %} {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+            <li><strong><i class="fas fa-lightbulb"></i>{{ message }}</strong></li>
+            {% endfor %}
+        </ul>
+    {% endif %} {% endwith %}
+    <!--Page Header End-->
+    <div class="container mt-5">
+      <h3>Your profile details:</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <table class="table">
+            <tr>
+              <td>Username:</td>
+              <td>{{ admin_info[1] }}</td>
+            </tr>
+            <tr>
+              <td>Title:</td>
+              <td>{{ admin_profile[4] }}</td>
+            </tr>
+            <tr>
+              <td>First Name:</td>
+              <td>{{ admin_profile[1] }}</td>
+            </tr>
+            <tr>
+              <td>Last Name:</td>
+              <td>{{ admin_profile[2] }}</td>
+            </tr>
+            <tr>
+              <td>Email:</td>
+              <td>{{ admin_profile[3] }}</td>
+            </tr>
+            <tr>
+              <td>Phone Number:</td>
+              <td>{{ admin_profile[6] }}</td>
+            </tr>
+            <tr>
+              <td>Description:</td>
+              <td>{{ admin_profile[5] }}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md-6">
+          {% if admin_profile[7] %} {% if admin_profile[7].startswith('uploads/') %}
+    
+          <img
+            src="{{ url_for('static', filename=admin_profile[7]) }}"
+            alt="Profile Image"
+            class="img-thumbnail"
+            style="max-width: 200px; border-radius: 10px"
+          />
+          {% else %}
+          <img
+            src="{{ url_for('static', filename='uploads/' + admin_profile[7]) }}"
+            alt="Default Profile Image"
+            class="img-thumbnail"
+            style="max-width: 200px; border-radius: 10px"
+          />
+          {% endif %} {% else %}
+          <img
+            src="{{ url_for('static', filename='uploads/profile.jpg') }}"
+            alt="Default Profile Image"
+            class="img-thumbnail"
+            style="max-width: 200px; border-radius: 10px"
+          />
+          {% endif %}
+        </div>
+      </div>
+      <br>
+      <div class="row justify-content-center" style="margin-bottom: 10px">
+        <div class="col-auto">
+          <a
+            href="{{ url_for('administrator.admin_edit_profile')}}"
+            class="btn btn-primary"
+            >Edit My Profile</a
+          >
+        </div>
+        <div class="col-auto">
+          <a
+            href="javascript:void(0)"
+            id="changePasswordLink"
+            class="btn btn-primary"
+            >Change My Password</a
+          >
+        </div>
+      </div>
+      <div class="col-md-12">
+        <form
+          action="{{ url_for('administrator.change_password')}}"
+          method="POST"
+          id="changePasswordForm"
+          style="display: none"
+        >
+          <div class="form-group">
+            <label for="newPassword">New Password:</label>
+            <input
+              type="password"
+              class="form-control"
+              id="newPassword"
+              name="newPassword"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password:</label>
+            <input
+              type="password"
+              class="form-control"
+              id="confirmPassword"
+              name="confirmPassword"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">Change Password</button>
+          <button type="button" class="btn btn-danger" id="cancelChangePassword">
+            Cancel
+          </button>
+        </form>
+      </div>
+      
+      <div class = "container mt-5">
+        <div class="row">
+            <!--Language card-->
+          <div class="col-md-4">
+            <a href="#" class="card-link">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"><i class="fas fa-book" style="font-size: 2rem"></i>Manage Languages</h5>
+                  <p class="card-text">#</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          <!--Course card-->
+          <div class="col-md-4">
+            <a href="#" class="card-link">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"><i class="fas fa-book" style="font-size: 2rem"></i>Manage All Courses</h5>
+                  <p class="card-text">#</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          <!--Resource card-->
+          <div class="col-md-4">
+            <a href="#" class="card-link">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"><i class="fas fa-book" style="font-size: 2rem"></i>Manage Resources</h5>
+                  <p class="card-text">#</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          <!--Student card-->
+          <div class="col-md-4">
+            <a href="#" class="card-link">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"><i class="fas fa-user-cog" style="font-size: 2rem"></i>Manage All Students</h5>
+                  <p class="card-text">#</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          <!--Teacher card-->
+          <div class="col-md-4">
+            <a href="#" class="card-link">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"><i class="fas fa-user-tie" style="font-size: 2rem"></i>Manage All Teachers</h5>
+                  <p class="card-text">#</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          <!--Expert card-->
+          <div class="col-md-4">
+            <a href="#" class="card-link">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"><i class="fas fa-user-tie" style="font-size: 2rem"></i>Manage All Experts</h5>
+                  <p class="card-text">#</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          <!--Report card-->
+          <div class="col-md-4">
+            <a href="#" class="card-link">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"><i class="fas fa-chart-line" style="font-size: 2rem"></i>Report</h5>
+                  <p class="card-text">#</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          
+          <!--Posts card-->
+          <div class="col-md-4">
+            <a href="#" class="card-link">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"><i class="fas fa-envelope" style="font-size: 2rem"></i>Manage Posts</h5>
+                  <p class="card-text">#</p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br><br><br>
+      
+
+    <script>
+        document.querySelector(".preloader").style.display = 'none';
+        document.getElementById("changePasswordLink").onclick = function () {
+          var form = document.getElementById("changePasswordForm")
+          form.style.display = form.style.display === "none" ? "block" : "none"
+        }
+        document.getElementById("cancelChangePassword").onclick = function () {
+          var form = document.getElementById("changePasswordForm")
+          form.style.display = "none"
+          document.getElementById("newPassword").value = ""
+          document.getElementById("confirmPassword").value = ""
+        }
+    </script>
+
+</html>
+{% endblock %}   

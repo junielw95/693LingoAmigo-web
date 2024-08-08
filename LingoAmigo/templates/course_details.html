@@ -1,0 +1,437 @@
+﻿{% extends 'layout.html' %} {% block title %}LingoAmigo - course_details{% endblock %} {% block
+    content %}
+
+<body>
+
+    
+
+    <!-- /.preloader -->
+    <div class="page-wrapper">
+
+        
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content">
+
+            </div><!-- /.sticky-header__content -->
+        </div><!-- /.stricky-header -->
+
+
+
+    <!--Page Header Start-->
+    <section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="page-header__wrapper clearfix">
+                        <div class="page-header__title">
+                            <h2>Course Details</h2>
+                        </div>
+                        <div class="page-header__menu">
+                            <ul class="page-header__menu-list list-unstyled clearfix">
+                                <li><a href="index.html">Home</a></li>
+                                <li><a href="{{ url_for('courses') }}">Courses</a></li>
+                                <li class="active">Course Details</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!--Page Header End-->
+
+    <!--Start Course Details-->
+    <section class="course-details">
+        <div class="container">
+            <div class="row">
+                <!--Start Course Details Content-->
+                <div class="col-xl-8 col-lg-8">
+                    <div class="course-details__content">
+                        <!--Start Single Courses One-->
+                        <div class="courses-one__single style2 wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1000ms">
+                            <div class="courses-one__single-img">
+                                <img src="{{ url_for('static', filename='course/' + course[5]) }}" alt="{{ course[1] }}">
+                                <div class="overlay-text">
+                                    <p>Top</p>
+                                </div>
+                            </div>
+                            <div class="courses-one__single-content">
+                                <div class="courses-one__single-content-overlay-img">
+                                    <a href="{{ url_for('teacher_profile', teacher_id=course[11]) }}">
+                                    <img src="{{ url_for('static', filename='uploads/' + course[8]) }}" alt="{{ course[7] }}" class="teacher-photo"></a>
+                                </div>
+                                <h6 class="courses-one__single-content-name"><a href="{{ url_for('teacher_profile', teacher_id=course[11]) }}">    {{ course[7] }}</a></h6>
+                                <h4 class="courses-one__single-content-title">{{ course[1] }}</h4>
+                                <div class="courses-one__single-content-review-box">
+                                    <ul class="list-unstyled">
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                        <li><i class="fa fa-star"></i></li>
+                                    </ul>
+                                    <div class="rateing-box">
+                                        <span>(4)</span>
+                                    </div>
+                                </div>
+                                <div class="course-details__content-text1">
+                                    <p>{{ course[2] }}</p>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--End Single Courses One-->
+
+                        <!--Start Course Details Curriculum-->
+                        <div class="course-details__curriculum">
+                            <h2 class="course-details__curriculum-title">Curriculum</h2>
+                            <!--Start Single Course Details Curriculum-->
+                            <div class="course-details__curriculum-single">
+                                <h3 class="course-details__curriculum-single-title">Course Sections</h3>
+                                <ul class="course-details__curriculum-list list-unstyled">
+                                    {% for section in sections %}
+                                    <li>
+                                        <div class="course-details__curriculum-list-left">
+                                            <div class="course-details__curriculum-list-left-icon">
+                                                <i class="fa fa-play" aria-hidden="true"></i>
+                                            </div>
+                                            <a href="#" class="course-details__curriculum-list-left-title">{{ section[0] }}</a>
+                                        </div>
+                                        <br>
+                                        <div class="course-details__curriculum-list-right course-details__curriculum-content">
+                                            <p>{{ section[1] }}</p>
+                                        </div>
+                                    
+                                    </li>
+                                    {% endfor %}
+                                    <li>
+                                        <div class="course-details__curriculum-list-left">
+                                            <div class="course-details__curriculum-list-left-icon style2">
+                                                <i class="fa fa-comment" aria-hidden="true"></i>
+                                            </div>
+                                            <a href="#" class="course-details__curriculum-list-left-title">Quiz</a>
+                                        </div>
+                                        <div class="course-details__curriculum-list-right">
+                                            <p>6 questions</p>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <!--End Single Course Details Curriculum-->
+
+                        </div>
+                        <!--End Course Details Curriculum-->
+
+                        <!--Start Course Details Reviews-->
+                        <div class="course-details__reviews">
+                            <h3 class="course-details__reviews-title">Reviews</h3>
+                            <div class="course-details__progress-review">
+                                <div class="row">
+                                    <div class="col-xl-7 col-lg-7 col-md-7">
+                                        <div class="course-details__progress clearfix">
+                                            <div class="course-details__progress-item">
+                                                <p class="course-details__progress-text">Excellent</p>
+                                                <div class="course-details__progress-bar">
+                                                    <span style="width: 90%;"></span>
+                                                </div>
+                                                <p class="course-details__progress-count">2</p>
+                                            </div>
+
+                                            <div class="course-details__progress-item">
+                                                <p class="course-details__progress-text">Very Good</p>
+                                                <div class="course-details__progress-bar">
+                                                    <span style="width: 80%;"></span>
+                                                </div>
+                                                <p class="course-details__progress-count">1</p>
+                                            </div>
+
+                                            <div class="course-details__progress-item">
+                                                <p class="course-details__progress-text">Average</p>
+                                                <div class="course-details__progress-bar">
+                                                    <span style="width: 70%;"></span>
+                                                </div>
+                                                <p class="course-details__progress-count">1</p>
+                                            </div>
+
+                                            <div class="course-details__progress-item">
+                                                <p class="course-details__progress-text">Poor</p>
+                                                <div class="course-details__progress-bar">
+                                                    <span style="width: 0%;" class="no-bubble"></span>
+                                                </div>
+                                                <p class="course-details__progress-count">0</p>
+                                            </div>
+
+                                            <div class="course-details__progress-item">
+                                                <p class="course-details__progress-text">Terrible</p>
+                                                <div class="course-details__progress-bar">
+                                                    <span style="width: 0%;" class="no-bubble"></span>
+                                                </div>
+                                                <p class="course-details__progress-count">0</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-5 col-lg-5 col-md-5">
+                                        <div class="course-details__review-box">
+                                            <h2 class="course-details__review-count">4.6</h2>
+                                            <div class="course-details__review-stars">
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            </div>
+                                            <p class="course-details__review-text">30 reviews</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Start Course Details Comment-->
+                            <div class="course-details__comment">
+                                <div class="course-details__comment-single">
+                                    <div class="course-details__comment-img">
+                                        <img src="#" alt=""/>
+                                    </div>
+                                    <div class="course-details__comment-text">
+                                        <div class="course-details__comment-text-top">
+                                            <h3 class="course-details__comment-text-name">David Marks</h3>
+                                            <p>3 hours ago</p>
+                                            <div class="course-details__comment-review-stars">
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            </div>
+                                        </div>
+                                        <p class="course-details__comment-text-bottom">Cursus massa at urnaaculis estie. Sed aliquamellus vitae ultrs condmentum lightly believable. If you are going to use a of you need to be sure there.</p>
+                                    </div>
+                                </div>
+
+                                <div class="course-details__comment-single">
+                                    <div class="course-details__comment-img">
+                                        <img src="#" alt=""/>
+                                    </div>
+                                    <div class="course-details__comment-text">
+                                        <div class="course-details__comment-text-top">
+                                            <h3 class="course-details__comment-text-name">Christine Eve</h3>
+                                            <p>3 hours ago</p>
+                                            <div class="course-details__comment-review-stars">
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                                <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            </div>
+                                        </div>
+                                        <p class="course-details__comment-text-bottom">Cursus massa at urnaaculis estie. Sed aliquamellus vitae ultrs condmentum lightly believable. If you are going to use a of you need to be sure there.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--End Course Details Comment-->
+
+                            <div class="course-details__add-review">
+                                <h2 class="course-details__add-review-title">Add a Review</h2>
+                                <p class="course-details__add-review-text">
+                                    Rate this Course?
+                                    <a href="#" class="fas fa-star active pd-left"></a>
+                                    <a href="#" class="fas fa-star active"></a>
+                                    <a href="#" class="fas fa-star active"></a>
+                                    <a href="#" class="fas fa-star"></a>
+                                    <a href="#" class="fas fa-star"></a>
+                                </p>
+
+                                <div class="course-details__add-review-form">
+                                    <form action="assets/inc/sendemail.php" class="comment-one__form contact-form-validated" novalidate="novalidate">
+                                        <div class="row">
+                                            <div class="col-xl-6 col-lg-6">
+                                                <div class="comment-form__input-box">
+                                                    <input type="text" placeholder="Your name" name="name">
+                                                </div>
+                                                <div class="comment-form__input-box">
+                                                    <input type="email" placeholder="Email address" name="email">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xl-12 col-lg-12">
+                                                <div class="comment-form__input-box">
+                                                    <textarea name="message" placeholder="Write message"></textarea>
+                                                </div>
+                                                <button type="submit" class="thm-btn comment-form__btn">Submit review</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!--End Course Details Reviews-->
+                    </div>
+                </div>
+                <!--End Course Details Content-->
+
+                <!--Start Course Details Sidebar-->
+                <div class="col-xl-4 col-lg-4">
+                    <div class="course-details__sidebar">
+                        <div class="course-details__price wow fadeInUp animated" data-wow-delay="0.1s">
+                            <h2 class="course-details__price-amount">$ {{ course[4] }}</h2>
+                            {% if user_role == 'Student' %}
+                            <div class="course-details__price-btn">
+                                <button onclick="addToCart({{ course[0] }})" class="thm-btn">Buy this course</a>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="course-details__sidebar-meta wow fadeInUp animated" data-wow-delay="0.3s">
+                            <ul class="course-details__sidebar-meta-list list-unstyled">
+                                <li class="course-details__sidebar-meta-list-item">
+                                    <div class="icon">
+                                        <a href=""><i class="far fa-clock"></i></a>
+                                    </div>
+                                    <div class="text">
+                                        <p><a href="#">Durations:<span>{{ course[3] }} weeks</span></a></p>
+                                    </div>
+                                </li>
+
+                                <li class="course-details__sidebar-meta-list-item">
+                                    <div class="icon">
+                                        <a href=""><i class="far fa-folder-open"></i></a>
+                                    </div>
+                                    <div class="text">
+                                        <p><a href="#">Sections:<span>{{ section_count }}</span></a></p>
+                                    </div>
+                                </li>
+
+                                <li class="course-details__sidebar-meta-list-item">
+                                    <div class="icon">
+                                        <a href=""><i class="fas fa-play"></i></a>
+                                    </div>
+                                    <div class="text">
+                                        <p><a href="#">Video:<span>8 hours</span></a></p>
+                                    </div>
+                                </li>
+
+                                <li class="course-details__sidebar-meta-list-item">
+                                    <div class="icon">
+                                        <a href=""><i class="far fa-bell"></i></a>
+                                    </div>
+                                    <div class="text">
+                                        <p><a href="#">Language:<span>{{ course[9] }}</span></a></p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="course-details__new-courses wow fadeInUp animated" data-wow-delay="0.5s">
+                            <h3 class="course-details__new-courses-title">Related Courses</h3>
+                            <ul class="course-details__new-courses-list list-unstyled">
+                                {% for rc in related_courses %}
+                                <li class="course-details__new-courses-list-item">
+                                    <div class="course-details__new-courses-list-item-img">
+                                        <a href="{{ url_for('course_details', course_id=rc[0]) }}">
+                                        <img src="{{ url_for('static', filename='course/' + rc[3]) }}" alt="{{ rc[1] }}" class="related-course-img"></a>
+                                    </div>
+                                    <div class="course-details__new-courses-list-item-content">
+                                        <h4 class="course-details__new-courses-list-item-content-title"><a href="{{ url_for('course_details', course_id=rc[0]) }}">{{ rc[1] }}</a></h4>
+                                        <div class="course-details__new-courses-rateing-box">
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-star"></i></li>
+                                                <li><i class="fas fa-star"></i></li>
+                                                <li><i class="fas fa-star"></i></li>
+                                                <li><i class="fas fa-star"></i></li>
+                                                <li><i class="fas fa-star"></i></li>
+                                            </ul>
+                                            <div class="course-details__new-courses-rateing-count">
+                                                <span>(4)</span>
+                                            </div>
+                                        </div>
+                                        <p class="course-details__new-courses-price">${{ rc[2] }}</p>
+                                    </div>
+                                </li>
+                                {% endfor %}
+
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--End Course Details Sidebar-->
+            </div>
+        </div>
+    </section>
+    <!--End Course Details-->
+
+
+    </div><!-- /.page-wrapper -->
+
+
+
+    <div class="search-popup">
+        <div class="search-popup__overlay search-toggler"></div>
+        <!-- /.search-popup__overlay -->
+        <div class="search-popup__content">
+            <form action="#">
+                <label for="search" class="sr-only">search here</label><!-- /.sr-only -->
+                <input type="text" id="search" placeholder="Search Here..." />
+                <button type="submit" aria-label="search submit" class="thm-btn2">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
+        <!-- /.search-popup__content -->
+    </div>
+    <!-- /.search-popup -->
+
+
+
+    <a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+
+    <script src="{{ url_for('static', filename='js/lingoamigo.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.querySelector(".preloader").style.display = 'none';
+        function addToCart(courseId) {
+            fetch(`/student/add_to_cart/${courseId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Course added to cart',
+                            icon: 'success',
+                            confirmButtonText: 'Go to Cart',
+                            showCancelButton: true,
+                            cancelButtonText: 'Continue Viewing'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/student/cart';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.error,
+                            icon: 'error',
+                            confirmButtonText: 'Close'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'There was an error processing your request.',
+                        icon: 'error',
+                        confirmButtonText: 'Close'
+                    });
+                });
+        }
+    </script>
+
+</body>
+{% endblock %}

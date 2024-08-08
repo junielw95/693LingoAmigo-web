@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}{% endblock %}</title>
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="static/css/5248609259be45f6be1b103744028964.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animate.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom-animate.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jarallax.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.magnific-popup.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nouislider.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nouislider.pips.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/odometer.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/swiper.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tiny-slider.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stylesheet.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/owl.carousel.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/owl.theme.default.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/twentytwenty.css') }}" />
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+
+    <!-- template styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lingoamigo.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lingoamigo-responsive.css') }}" />
+</head>
+
+<body>
+
+    <div class="preloader">
+        <img class="preloader__image" width="60" src="{{ url_for('static', filename='picture/loader.png') }}" alt="Loader" />
+    </div>
+
+    <!-- header -->
+    <div class="page-wrapper">
+
+        <header class="main-header main-header--one  clearfix">
+            <div class="main-header--one__top clearfix">
+                <div class="container">
+                    <div class="main-header--one__top-inner clearfix">
+                        <div class="main-header--one__top-left">
+                            <div class="main-header--one__top-logo">
+                                <a href="{{ url_for('visitor_home') }}"><img src="{{ url_for('static', filename='picture/logo-1.png') }}" alt="Logo" style="width: 300px; height: auto;"/></a>
+                            </div>
+                        </div>
+
+                        <div class="main-header--one__top-right clearfix">
+                            <ul class="main-header--one__top-social-link list-unstyled clearfix">
+                                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                                <li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
+                                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                            </ul>
+
+                            <div class="main-header--one__top-contact-info clearfix">
+                                <ul class="main-header--one__top-contact-info-list list-unstyled">
+                                    <li class="main-header--one__top-contact-info-list-item">
+                                        <div class="icon">
+                                            <span class="icon-phone-call-1"></span>
+                                        </div>
+                                        <div class="text">
+                                            <h6>Call Agent</h6>
+                                            <p><a href="tel:123456789">0312312345</a></p>
+                                        </div>
+                                    </li>
+                                    <li class="main-header--one__top-contact-info-list-item">
+                                        <div class="icon">
+                                            <span class="icon-message"></span>
+                                        </div>
+                                        <div class="text">
+                                            <h6>Call Agent</h6>
+                                            <p><a href="mailto:info@templatepath.com">contact@lingoamigo.com</a></p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="main-header-one__bottom clearfix">
+                <div class="container">
+                    <div class="main-header-one__bottom-inner clearfix">
+                        <nav class="main-menu main-menu--1">
+                            <div class="main-menu__inner">
+                                <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
+
+                                <div class="left">
+                                    <ul class="main-menu__list">
+                                        <li class="dropdown current">
+                                            <a href="{{ url_for('visitor_home') }}">Home</a>
+                                            <ul>
+                                            <!--login as student-->
+                                                {% if session['loggedin'] %} {% if session['role'] == 'Student' %}
+                                                <li class="nav-item">
+                                                  <a
+                                                    class="nav-link"
+                                                    href="{{ url_for('student.student_dashboard')}}"
+                                                    ><i class="fas fa-user"></i>Dashboard</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                  <a class="nav-link" href="{{ url_for('student.student_courses')}}">
+                                                    <i class="fas fa-book"></i> My Courses
+                                                  </a>
+                                                </li>
+                                                {% endif %} {% endif %}
+                                                <!--login as teacher-->
+                                                {% if session['loggedin'] %} {% if
+                                                  session['role'] == 'Teacher' %}
+                                                  <li class="nav-item">
+                                                  <a
+                                                    class="nav-link"
+                                                    href="{{ url_for('teacher.teacher_dashboard')}}"
+                                                    ><i class="fas fa-user"></i>Dashboard</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                  <a class="nav-link" href="#">
+                                                    <i class="fas fa-book"></i>Manage My Courses
+                                                  </a>
+                                                </li>
+                                                {% endif %} {% endif %}
+                                                <!--login as expert-->
+                                                {% if session['loggedin'] %} {% if
+                                                  session['role'] == 'Expert' %}
+                                                  <li class="nav-item">
+                                                  <a
+                                                    class="nav-link"
+                                                    href="{{ url_for('expert.expert_dashboard')}}"
+                                                    ><i class="fas fa-user"></i>Dashboard</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                  <a class="nav-link" href="#">
+                                                    <i class="fas fa-book"></i>Manage Resources
+                                                  </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                  <a class="nav-link" href="#">
+                                                    <i class="fas fa-envelope"></i>Sessions
+                                                  </a>
+                                                </li>
+                                                {% endif %} {% endif %}
+                                                <!--login as Administrator-->
+                                                {% if session['loggedin'] %} {% if
+                                                  session['role'] == 'Administrator' %}
+                                                  <li class="nav-item">
+                                                  <a
+                                                    class="nav-link"
+                                                    href="{{ url_for('administrator.admin_dashboard')}}"
+                                                    ><i class="fas fa-user"></i>Dashboard</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                  <a class="nav-link" href="#">
+                                                    <i class="fas fa-book"></i>Manage Courses
+                                                  </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                  <a class="nav-link" href="#">
+                                                    <i class="fas fa-book"></i>Manage Languages
+                                                  </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                  <a class="nav-link" href="#">
+                                                    <i class="fas fa-user-cog"></i> Manage Students</a
+                                                  >
+                                                </li>
+                                                <li class="nav-item">
+                                                  <a class="nav-link" href="#">
+                                                    <i class="fas fa-user-tie"></i> Manage Teachers
+                                                  </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                  <a class="nav-link" href="#">
+                                                    <i class="fas fa-user-tie"></i> Manage Experts
+                                                  </a>
+                                                </li>
+                                                <li>
+                                                  <li class="nav-item">
+                                                    <a class="nav-link" href="#">
+                                                      <i class="fas fa-chart-line"></i>Reports</a
+                                                  >
+                                                </li>
+                                                {% endif %} {% endif %}
+                                              
+                                            </ul>
+                                        </li>
+                                        
+                                        <li class="dropdown">
+                                            <a href="{{ url_for('courses') }}">Courses</a>
+                                            <ul>
+                                                {% for language in languages %}
+                                                <li><a href="{{ url_for('courses') }}?language_id={{ language[0] }}">{{ language[1] }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a href="#"> Teachers</a>
+                                            <ul>
+                                                <li><a href="{{ url_for('teachers') }}">All Teachers</a></li>
+                                                <li><a href="#">Become Teacher</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a href="#">Resources</a>
+                                            <ul>
+                                                <li><a href="#">News</a></li>
+                                                <li><a href="#">Research</a></li>
+                                                <li><a href="#">Article</a></li>
+                                                <li><a href="#">Tutorial</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#">Discussion Board</a></li>
+                                        <li><a href="{{ url_for('about') }}">About</a></li>
+                                        <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                                    </ul>
+                                </div>
+                                <!--login/logout-->
+                                <div class="right">
+                                    <div class="main-menu__right">
+                                        <div class="main-menu__right-login-register">
+                                            <ul class="list-unstyled">
+                                              {% if session['loggedin'] %}
+                                              <li>
+                                                <a class="nav-link" href="{{ url_for('login.logout') }}"
+                                                  ><i class="fas fa-sign-out-alt"></i>Logout</a
+                                                >
+                                              </li>
+                                              {% else %}
+                                                <li><a href="{{ url_for('login.login_page') }}">Login/Register</a></li>
+                                              {% endif %}
+                                        </div>
+                                        <div class="main-menu__right-cart-search">
+                                            {% if session['loggedin'] %}{% if session['role'] == 'Student' %}
+                                            <div class="main-menu__right-cart-box">
+                                                <a href="{{ url_for('student.cart') }}"><span class="icon-shopping-cart"></span></a>
+                                            </div>
+                                            {% endif %}{% endif %}
+                                            <div class="main-menu__right-search-box">
+                                                <a href="#" class="thm-btn search-toggler">Search</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </nav>
+
+                    </div>
+                </div>
+            </div>
+
+        </header>
+             
+
+    <div class="content">{% block content %}{% endblock %}</div>
+
+
+        <!--Start Footer One-->
+        <footer class="footer-one">
+          <div class="footer-one__bg" style="background-image: url({{ url_for('static', filename='images/footer-v1-bg.jpg') }});">
+          </div><!-- /.footer-one__bg -->
+          <div class="footer-one__top">
+              <div class="container">
+                  <div class="row">
+                      <!--Start Footer Widget Column-->
+                      <div class="col-xl-2 col-lg-4 col-md-4 wow animated fadeInUp" data-wow-delay="0.1s">
+                          <div class="footer-widget__column footer-widget__about">
+                              <div class="footer-widget__about-logo">
+                                  <a href="{{ url_for('visitor_home') }}"><img src="{{ url_for('static', filename='picture/footer-logo.png') }}"  alt="" style="width: 180px; height: auto;"></a>
+                              </div>
+                          </div>
+                      </div>
+                      <!--End Footer Widget Column-->
+
+                      <!--Start Footer Widget Column-->
+                      <div class="col-xl-2 col-lg-4 col-md-4 wow animated fadeInUp" data-wow-delay="0.3s">
+                          <div class="footer-widget__column footer-widget__courses">
+                              <h3 class="footer-widget__title">Courses</h3>
+                              {% for language in languages %}      
+                              <ul class="footer-widget__courses-list list-unstyled">
+                                  <li><a href="{{ url_for('courses') }}?language_id={{ language[0] }}">{{ language[1] }}</a></li>
+                                {% endfor %}
+                              </ul>
+                          </div>
+                      </div>
+                      <!--End Footer Widget Column-->
+
+                      <!--Start Footer Widget Column-->
+                      <div class="col-xl-2 col-lg-4 col-md-4 wow animated fadeInUp" data-wow-delay="0.5s">
+                          <div class="footer-widget__column footer-widget__links">
+                              <h3 class="footer-widget__title">Links</h3>
+                              <ul class="footer-widget__links-list list-unstyled">
+                                  <li><a href="{{ url_for('about') }}">About Us</a></li>
+                                  <li><a href="{{ url_for('teachers') }}">Teachers</a></li>
+                                  <li><a href="{{ url_for('login.login_page') }}">Join Us</a></li>
+                                  <li><a href="#">Our News</a></li>
+                              </ul>
+                          </div>
+                      </div>
+                      <!--End Footer Widget Column-->
+
+                      <!--Start Footer Widget Column-->
+                      <div class="col-xl-3 col-lg-6 col-md-6 wow animated fadeInUp" data-wow-delay="0.7s">
+                          <div class="footer-widget__column footer-widget__contact">
+                              <h3 class="footer-widget__title">Contact</h3>
+                              <p class="text">New Zealand</p>
+                              <p><a href="mailto:info@templatepath.com">contact@lingoamigo.com</a></p>
+                              <p class="phone"><a href="tel:123456789">0312312345</a></p>
+                          </div>
+                      </div>
+                      <!--End Footer Widget Column-->
+
+                      <!--Start Footer Widget Column-->
+                      <div class="col-xl-3 col-lg-6 col-md-6 wow animated fadeInUp" data-wow-delay="0.9s">
+                          <div class="footer-widget__column footer-widget__social-links">
+                              <ul class="footer-widget__social-links-list list-unstyled clearfix">
+                                  <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                                  <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                  <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                                  <li><a href="#"><i class="fab fa-dribbble"></i></a></li>
+                              </ul>
+                          </div>
+                      </div>
+                      <!--End Footer Widget Column-->
+
+                  </div>
+              </div>
+          </div>
+
+          <!--Start Footer One Bottom-->
+          <div class="footer-one__bottom">
+              <div class="container">
+                  <div class="row">
+                      <div class="col-xl-12">
+                          <div class="footer-one__bottom-inner">
+                              <div class="footer-one__bottom-text text-center">
+                                  <p>Copyright &copy; 2024.Company name All rights reserved.<a target="_blank" >&#x7F51;&#x9875;&#x6A21;&#x677F;</a></p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!--End Footer One Bottom-->
+      </footer>
+      <!--End Footer One-->
+
+    <script>
+        document.querySelector(".preloader").style.display = 'none';
+    </script>
+  </body>
+</html>

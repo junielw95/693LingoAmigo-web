@@ -1,0 +1,161 @@
+{% extends 'layout.html' %} {% block title %} LingoAmigo - Administrator dashboard{% endblock %} {% block
+        content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Profile</title>
+    <meta name="description" content="Crsine HTML Template For Car Services" />
+
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content">
+
+            </div><!-- /.sticky-header__content -->
+        </div><!-- /.stricky-header -->
+
+
+    <!--Page Header Start-->
+    <section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="page-header__wrapper clearfix">
+                        <div class="page-header__title">
+                            <h2>Edit My profile</h2>
+                        </div>
+                        <div class="page-header__menu">
+                            <ul class="page-header__menu-list list-unstyled clearfix">
+                                <li><a href="{{ url_for('visitor_home') }}">Home</a></li>
+                                <li class="active">My profile</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</head>
+    <!--Page Header End-->
+    <div class="container mt-5">
+        <h2 class="mb-4" style="text-align:center">Administrator Profile</h2>
+        <div class="card">
+          <div class="card-body">
+            <form method="POST" class="row"  enctype="multipart/form-data">
+                <div class="col-md-6">
+                    <!--`first_name`, `last_name`, `email`, `title`, `description`, `phone`, `image_url`, `status`, -->
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">First Name:</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ admin_profile[1] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Last Name:</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ admin_profile[2] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email">Email Address:</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ admin_profile[3] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="title">Title:</label>
+                        <select class="form-control" id="title" name="title">
+                            <option value="Mr" {% if admin_profile[4] == "Mr" %}selected{% endif %}>Mr</option>
+                            <option value="Ms" {% if admin_profile[4] == "Ms" %}selected{% endif %}>Ms</option>
+                            <option value="Miss" {% if admin_profile[4] == "Miss" %}selected{% endif %}>Miss</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone Number:</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" value="{{ admin_profile[6] }}">
+                        <small id="phoneHelp" class="form-text text-muted">Please enter phone number in New Zealand format (e.g., 021-123-4567 or 0211234567 )</small>
+                            <div class="invalid-feedback">
+                                Phone number must be in New Zealand format (e.g., 021-123-4567 or 0211234567)
+                            </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description">Description:</label>
+                        <input type="text" class="form-control" id="description" name="description" value="{{ admin_profile[5] }}">
+                    </div>
+                    
+                    
+                </div>
+                <div class="col-md-6 text-center">
+                    <label for="image_url" class="form-label" >Profile Image</label>
+                    <input type="file" class="form-control" id="image_url" name="image_url">
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </div>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+    <br><br><br>
+    
+    <script>
+        document.querySelector(".preloader").style.display = 'none';
+        document.addEventListener('DOMContentLoaded', function(){
+            const phoneInput = document.getElementById('phone')
+            const form = document.querySelector('form');
+    
+            phoneInput.addEventListener('input', function(){
+                validatePhoneNumber();
+            });
+    
+            form.addEventListener('submit', function(event){
+                if(!validatePhoneNumber(true)){
+                    event.preventDefault();
+                    alert('Please correct the phone number to NZ format!');
+                }
+            });
+    
+            function validatePhoneNumber(showAlert = false){
+                var nzPhonePattern = /^(\+64|0)([2-9]\d{1}|[27]\d{2})[-\s]?\d{3}[-\s]?\d{4}$/;
+                var isValid = nzPhonePattern.test(phoneInput.value);
+                if(!isValid){
+                    phoneInput.classList.add('is-invalid');
+                    document.getElementById('phoneHelp').textContent = 'Please enter phone number in New Zealand format';
+                    document.getElementById('phoneHelp').classList.add('text-danger');
+                    document.getElementById('phoneHelp').classList.remove('text-muted');
+                    if (showAlert){
+                        alert('Invalid phone number format.')
+                    }
+                } else {
+                    phoneInput.classList.remove('is-invalid');
+                    document.getElementById('phoneHelp').textContent = 'Please enter phone number in New Zealand format';
+                    document.getElementById('phoneHelp').classList.remove('text-danger');
+                    document.getElementById('phoneHelp').classList.add('text-muted');
+                }
+                return isValid;
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function(){
+            var dateInput = document.getElementById('date_join');
+            if (dateInput.value) {
+                var dateParts = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+            }
+            dateInput.addEventListener('blur', function() {
+                if (dateInput.value) {
+                    var dateParts = dateInput.value.split('/');
+                    dateInput.value = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+                }
+            });
+
+            dateInput.addEventListener('focus', function() {
+                if (dateInput.value) {
+                    var dateParts = dateInput.value.split('-');
+                    dateInput.value = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+                }
+            });
+        });
+    </script>
+    
+    
+    
+    
+</html>
+{% endblock %}  

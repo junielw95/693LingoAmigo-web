@@ -1,0 +1,643 @@
+﻿@font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon.eot');
+  src:  url('../fonts/icomoon.eot') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf') format('truetype'),
+    url('../fonts/icomoon.woff') format('woff'),
+    url('../fonts/icomoon.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.icon-right-quotation-mark:before {
+  content: "\e900";
+}
+.icon-down-arrow:before {
+  content: "\e901";
+}
+.icon-checked:before {
+  content: "\e902";
+}
+.icon-pin:before {
+  content: "\e903";
+}
+.icon-letter:before {
+  content: "\e904";
+}
+.icon-plus:before {
+  content: "\e905";
+}
+.icon-phone-call:before {
+  content: "\e906";
+}
+.icon-envelope:before {
+  content: "\e907";
+}
+.icon-clock:before {
+  content: "\e908";
+}
+.icon-right-arrow .path1:before {
+  content: "\e909";
+  color: rgb(0, 150, 136);
+}
+.icon-right-arrow .path2:before {
+  content: "\e90a";
+  margin-left: -1em;
+  color: rgb(0, 150, 136);
+}
+.icon-right-arrow .path3:before {
+  content: "\e90b";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.icon-right-arrow .path4:before {
+  content: "\e90c";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.icon-left:before {
+  content: "\e90d";
+}
+.icon-right-arrow-angle:before {
+  content: "\e90e";
+}
+.icon-user:before {
+  content: "\e90f";
+}
+.icon-right:before {
+  content: "\e910";
+}
+.icon-left-arrow:before {
+  content: "\e911";
+}
+.icon-left-arrow-1 .path1:before {
+  content: "\e912";
+  color: rgb(0, 150, 136);
+}
+.icon-left-arrow-1 .path2:before {
+  content: "\e913";
+  margin-left: -1em;
+  color: rgb(0, 150, 136);
+}
+.icon-left-arrow-1 .path3:before {
+  content: "\e914";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.icon-left-arrow-1 .path4:before {
+  content: "\e915";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.icon-phone-call-1:before {
+  content: "\e916";
+}
+.icon-message:before {
+  content: "\e917";
+}
+.icon-shopping-cart:before {
+  content: "\e918";
+}
+.icon-lamp:before {
+  content: "\e919";
+}
+.icon-human-resources:before {
+  content: "\e91a";
+}
+.icon-empowerment:before {
+  content: "\e91b";
+}
+.icon-human-resources-1:before {
+  content: "\e91c";
+}
+.icon-recruitment:before {
+  content: "\e91d";
+}
+.icon-relationship:before {
+  content: "\e91e";
+}
+.icon-confirmation:before {
+  content: "\e91f";
+}
+.icon-online-course:before {
+  content: "\e920";
+}
+.icon-paper-plane:before {
+  content: "\e921";
+}
+.icon-chat:before {
+  content: "\e922";
+}
+.icon-message-1:before {
+  content: "\e923";
+}
+.icon-creativity:before {
+  content: "\e924";
+}
+.icon-needs:before {
+  content: "\e925";
+}
+.icon-photo-camera:before {
+  content: "\e926";
+}
+.icon-target:before {
+  content: "\e927";
+}
+.icon-desk:before {
+  content: "\e928";
+}
+.icon-professor:before {
+  content: "\e929";
+}
+.icon-knowledge:before {
+  content: "\e92a";
+}
+.icon-teacher:before {
+  content: "\e92b";
+}
+.icon-student:before {
+  content: "\e92c";
+}
+.icon-address:before {
+  content: "\e92d";
+}
+.icon-play:before {
+  content: "\e92e";
+}
+
+#login_page_body {
+  background-color: #144a74;
+  margin: 0;
+}
+body.login-background {
+  background-image: url('/static/picture/login-background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+}
+.login,
+
+.register {
+  width: 400px;
+  background-color: #ffffff;
+  box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+  margin: 100px auto;
+}
+.login h1,
+.register h1 {
+  text-align: center;
+  color: #5b6574;
+  font-size: 24px;
+  padding: 20px 0 20px 0;
+  border-bottom: 1px solid #dee0e4;
+}
+.login .links,
+.register .links {
+  display: flex;
+  padding: 0 15px;
+}
+.login .links a,
+.register .links a {
+  color: #adb2ba;
+  text-decoration: none;
+  display: inline-flex;
+  padding: 0 10px 10px 10px;
+  font-weight: bold;
+}
+.login .links a:hover,
+.register .links a:hover {
+  color: #9da3ac;
+}
+.login .links a.active,
+.register .links a.active {
+  border-bottom: 3px solid #4c82d8;
+  color: #4c82d8;
+}
+.login form,
+.register form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 20px;
+}
+.login form label,
+.register form label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  background-color: #4c82d8;
+  color: #ffffff;
+}
+.login form input[type="password"],
+.login form input[type="text"],
+.login form input[type="email"],
+.register form input[type="password"],
+.register form input[type="tel"],
+.register form input[type="text"],
+.register form input[type="email"] {
+  width: 310px;
+  height: 50px;
+  border: 1px solid #dee0e4;
+  margin-bottom: 10px;
+  padding: 0 15px;
+}
+
+.login form input[type="submit"],
+.register form input[type="submit"] {
+  width: 100%;
+  padding: 30px;
+  margin-top: 20px;
+  background-color: #4c82d8;
+  border: 0;
+  cursor: pointer;
+  font-weight: bold;
+  color: #ffffff;
+  transition: background-color 0.2s;
+}
+.login form input[type="submit"]:hover,
+.register form input[type="submit"]:hover {
+  background-color: #4c82d8;
+  transition: background-color 0.2s;
+}
+
+.card{
+  border:1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgb(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  background-color: #fff;
+}
+.card:hover {
+  background-color: #f5f5f5;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.flash-messages {
+  background: linear-gradient(to right, #d7c6e9 0%, #bbcbea 100%);
+  border: none;
+  border-radius: 10px;
+  padding: 15px 25px;
+  margin: 20px auto;
+  list-style-type: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 600px;
+  animation: none;
+}
+.flash-messages li {
+  margin-bottom: 5px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  animation: blinkText 1s infinite;
+}
+.flash-messages li i {
+  color: #ffd700;
+  margin-right: 10px;
+  font-size: 16px;
+  animation: blinkText 1s infinite;
+}
+
+@keyframes blinkText {
+  0%, 100% { color: #ffffff; }
+  50% { color: #f7d05c; }
+}
+
+.faq-section {
+  background-color: #f9f9f9;
+  padding:  20px;
+  border-radius: 8px;
+}
+.faq-toggle { 
+  cursor: pointer;
+  padding: 10px;
+  background-color: white;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+.faq-toggle:hover {
+  background-color: #f1f1f1;
+}
+
+.faq-toggle:focus { box-shadow: 0 0 0 2px #cbd5e1; }
+
+.hidden { display: none; }
+
+.faq-answer {
+  padding: 10px;
+  background-color: #fff;
+  border-left: 3px solid #607e9d;
+}
+.toggle-icon.fa-plus {
+  transition: transform 0.3s ease;
+}
+.toggle-icon.fa-minus {
+  transform: rotate(45deg);
+}
+
+.teacher-profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  background: #f9f9f9;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+.teacher-photo {
+  order: 2;
+  margin-left: 20px;
+}
+.teacher-photo img {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border: 5px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+.teacher-info {
+  order: 1;
+  flex: 1;
+  padding-right: 20px;
+}
+.teacher-info p {
+  font-size: 18px;
+  color: #666;
+  line-height: 3;
+  margin-bottom: 10px;
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+.search-form input[type='text'] {
+  width: 40%;
+  padding: 10px;
+  border-radius: 5px 0 0 5px;
+  border: 1px solid #ccc;
+  outline: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.search-form input[type='text']::placeholder {
+  color: #ccc;
+}
+.search-form button {
+  padding: 12px 25px;
+  border: none;
+  background-color: #0a69ce;
+  color: white;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.search-form button:hover {
+  background-color: #004494;
+}
+
+.cart-items-container {
+  display: flex;
+  flex-direction: column !important;
+}
+.cart-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  width: 100%;
+  max-width: 100%;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #e2e8f0;
+  box-sizing: border-box;
+}
+.cart-item:hover {
+  background-color: #edf2f7;
+}
+.cart-product {
+  display: flex;
+  align-items: center;
+}
+.course-incart-photo {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-right: 20px;
+}
+.cart-product-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.cart-product-title {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.cart-product-link {
+  font-weight: 600;
+  color: #718096;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.cart-product-link:hover {
+  color: #e53e3e;
+}
+.cart-price {
+  text-align: right;
+  margin-right: 20px;
+  width: auto;
+}
+.cart-remove {
+  width: auto;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.cart-remove button {
+  padding: 10px 20px;
+  background-color: #e53e3e;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+.item-checkbox {
+  margin-right: 10px;
+}
+.checkout-button {
+  padding: 6px 12px;
+  background-color: #5a67d8;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  border: none;
+  margin-top: 20px;
+  align-self: flex-end;
+}
+.checkout-button:hover {
+  background-color: #434190;
+}
+.checkout-button:focus {
+  outline: none;
+}
+
+.checkout-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.payment-form {
+  background: #f7f7f7;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.payment-options button {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333333;
+  outline: none;
+  margin-right: 10px;
+  box-shadow: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+.payment-options button.active,
+.payment-options button:hover {
+  background-color: #e6e6e6;
+  color: #333333;
+  border-color: #bbbbbb;
+}
+.payment-options button i {
+  margin-right: 5px;
+}
+.make-payment {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+.input-group {
+  margin-bottom: 20px;
+}
+.input-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.input-group input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.input-group input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.input-group.full-width {
+  grid-column: 1 / -1;
+}
+.input-group.full-width input {
+  width: 100%;
+  padding-right: 60px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.pay-button {
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-with-icon input {
+  flex-grow: 1;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  padding-right: 80px;
+}
+.card-icons {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  height: 24px;
+}
+@media (max-width: 768px) {
+  .input-with-icon input {
+    padding-right: 50px;
+  }
+}

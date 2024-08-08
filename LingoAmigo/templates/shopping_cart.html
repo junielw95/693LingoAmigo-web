@@ -1,0 +1,120 @@
+{% extends 'layout.html' %} {% block title %}LingoAmigo{% endblock %} {% block
+    content %}
+
+    {% with messages = get_flashed_messages() %} {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+            <li><strong><i class="fas fa-lightbulb"></i>{{ message }}</strong></li>
+            {% endfor %}
+        </ul>
+    {% endif %} {% endwith %}
+
+    <!-- Product list -->
+    <div class="container mx-auto mt-10">
+        <div class="w-full bg-white px-10 py-10">
+          <h1 class="font-semibold text-2xl">Shopping Cart</h1>
+          <span>{{ cart_items|length }} Items</span>
+        </div>
+                  
+        {% if cart_items %}
+        <div class="cart-items-container">
+          {% for item in cart_items %}
+          <div class="cart-item">
+            <input type="checkbox" class="item-checkbox" data-price="{{ item[2] }}" data-id="{{ item[0] }}">
+            <div class="cart-product">
+              <img
+                src="{{ url_for('static', filename='course/' + item[3]) }}"
+                alt="Product Image"
+                class="course-incart-photo"
+              />
+              <div class="cart-product-details">
+                  <span class="cart-product-title">{{ item[1] }}</span>
+                  <a href="{{ url_for('course_details', course_id=item[0]) }}" class="cart-product-link">See more</a>
+              </div>
+            </div>
+            <span class="cart-price">${{ item[2] }}</span>
+            <div class="cart-remove">
+              <button
+                  type="button"
+                  class="text-red-500 focus:outline-none"
+                  onclick="removeFromCart('{{ item[4] }}')">
+                  Remove
+                </button>
+            </div>
+          </div>
+          {% endfor %}
+          </div>
+        <div>Total Price: <span id="total-price">0</span></div>
+        <div class="mt-10 flex justify-end">
+          <button
+            class="checkout-button"
+            onclick="proceedToCheckout()"
+          >
+            Checkout
+          </button>
+        </div>
+        {% else %}
+        <p class="text-center py-6">Your cart is empty.</p>
+        {% endif %}   
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.querySelectorAll('.item-checkbox').forEach(item => {
+    item.addEventListener('change', function() {
+      let total = 0;
+      document.querySelectorAll('.item-checkbox:checked').forEach(checkedItem => {
+        total += parseFloat(checkedItem.getAttribute('data-price'));
+      });
+      document.getElementById('total-price').textContent = total.toFixed(2);
+    });
+  });
+  function removeFromCart(orderId) {
+    Swal.fire({
+        title: 'Are you sure!',
+        text: 'You will not be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, remove it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+              fetch(`/student/remove_from_cart/${orderId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                      Swal.fire(
+                        'Removed',
+                        'The course has been removed from your cart.',
+                        'success'
+                      ).then((result) => {
+                        if (result.isConfirmed) {
+                                window.location.reload();
+                            }
+                      });
+                    } else {
+                      Swal.fire(
+                        'Failed!',
+                        'Failed to remove the course from the cart.',
+                        'error'
+                      );
+                    }
+                });
+          }
+      });
+  }
+
+  function proceedToCheckout() {
+    let selectedCourse = []
+    document.querySelectorAll('.item-checkbox:checked').forEach(checkedItem => {
+      selectedCourse.push(checkedItem.getAttribute('data-id'));
+    });
+    if (selectedCourse.length > 0) {
+      window.location.href = "{{ url_for('student.checkout') }}?selected_courses=" + selectedCourse.join(',');
+    } else {
+      alert('Please select at least one course to checkout.');
+    }
+  }
+</script>
+
+{% endblock %}
