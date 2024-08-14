@@ -14,7 +14,7 @@
    |    | -- visitor.py                     # for visitor functionalities
    |    |
    |    |-- static/
-   |    |    |-- <css, js, images, fonts, course, picture, uploads, resources>         # CSS files, Javascripts files and pictures
+   |    |    |-- <css, js, images, fonts, course, picture, uploads, resources, videos>         # CSS files, Javascripts files and pictures
    |    |
    |    |-- templates/
    |    |    |
@@ -50,7 +50,7 @@
    |    |    |-- shopping_cart.html                      # Student add courses to the shopping cart
    |    |    |-- course_checkout.html                      # Student checkout selected cources and make a payment
    |    |    |-- student_courses.html                      # Show the student's courses that are paid
-   |    |    |-- .html                      # 
+   |    |    |-- video.html                      # Student watch course video
 
    |    |    |
    |
