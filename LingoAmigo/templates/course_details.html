@@ -42,6 +42,14 @@
     </section>
     <!--Page Header End-->
 
+{% with messages = get_flashed_messages() %} {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+            <li><strong><i class="fas fa-lightbulb"></i>{{ message }}</strong></li>
+            {% endfor %}
+        </ul>
+    {% endif %} {% endwith %}
+
     <!--Start Course Details-->
     <section class="course-details">
         <div class="container">

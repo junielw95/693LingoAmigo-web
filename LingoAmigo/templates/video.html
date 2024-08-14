@@ -68,6 +68,8 @@
                     <div class="description">
                     <p>{{ section_content }}</p></div>
                 </div>
+
+
                 <!--Start Course Details Reviews-->
                     <div class="course-details__reviews">
                         <h3 class="course-details__reviews-title">Reviews</h3>
@@ -175,6 +177,29 @@
                                 </div>
                             </div>
                         </div>
+                {% if comments %}
+                    {% for comment in comments %}
+                        <div class="course-details__comment-single">
+                                <div class="course-details__comment-img">
+                                    <img src="#" alt=""/>
+                                </div>
+                                <div class="course-details__comment-text">
+                                    <div class="course-details__comment-text-top">
+                                        <h3 class="course-details__comment-text-name">{{ comment[2] }}</h3>
+                                        <p>{{ comment[1].strftime('%d-%m-%Y %H:%M') }}</p>
+                                        <div class="course-details__comment-review-stars">
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                        </div>
+                                    </div>
+                                    <p class="course-details__comment-text-bottom">{{ comment[0] }}</p>
+                                </div>
+                            </div>
+                    {% endfor %}
+                {% endif %}
                         <!--End Course Details Comment-->
 
                         <div class="course-details__add-review">
@@ -189,21 +214,11 @@
                             </p>
 
                             <div class="course-details__add-review-form">
-                                <form action="assets/inc/sendemail.php" class="comment-one__form contact-form-validated" novalidate="novalidate">
-                                    <div class="row">
-                                        <div class="col-xl-6 col-lg-6">
-                                            <div class="comment-form__input-box">
-                                                <input type="text" placeholder="Your name" name="name">
-                                            </div>
-                                            <div class="comment-form__input-box">
-                                                <input type="email" placeholder="Email address" name="email">
-                                            </div>
-                                        </div>
-                                    </div>
+                                <form method="POST" action="{{ url_for('student.add_comment', video_id=video_id) }}" class="comment-one__form contact-form-validated" novalidate="novalidate">
                                     <div class="row">
                                         <div class="col-xl-12 col-lg-12">
                                             <div class="comment-form__input-box">
-                                                <textarea name="message" placeholder="Write message"></textarea>
+                                                <textarea name="content" placeholder="Write message"></textarea>
                                             </div>
                                             <button type="submit" class="thm-btn comment-form__btn">Submit review</button>
                                         </div>

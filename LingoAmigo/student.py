@@ -357,15 +357,42 @@ def play_video(video_id):
         #Fetch video
         cursor.execute("SELECT video_url, section_id FROM Video WHERE video_id = %s", (video_id,))
         video_details = cursor.fetchone()
-
+        #Fetch video description
         cursor.execute("SELECT title, content FROM Section WHERE section_id = %s", (section_id,))
         section_details = cursor.fetchone()
-
+        #Fetch comments
+        comments_query = '''
+                            SELECT c.content, c.timestamp, CONCAT(s.first_name, ' ', s.last_name) AS full_name
+                            FROM VideoComments c
+                            JOIN Student s ON c.user_id = s.student_id
+                            WHERE c.video_id = %s
+                            ORDER BY c.timestamp DESC
+                        '''
+        cursor.execute(comments_query, (video_id,))
+        comments = cursor.fetchall()
         if video_details:
-            return render_template('video.html', video_url=video_details[0], course_id=course_id, section_title=section_details[0], section_content=section_details[1])
+            return render_template('video.html', video_url=video_details[0], course_id=course_id, section_title=section_details[0], section_content=section_details[1], comments=comments, video_id=video_id)
         else:
             flash('Video details not found.', 'error')
             return redirect(url_for('visitor.course_details', course_id=course_id))
     finally:
         cursor.close()
         connection.close()
+
+
+@student.route('/add_comment/<int:video_id>', methods=['POST'])
+def add_comment(video_id):
+    content = request.form.get('content')
+    user_id = session.get('id', None)
+    cursor, connection = get_cursor()
+    try:
+        cursor.execute("INSERT INTO VideoComments (video_id, user_id, content, timestamp) VALUES (%s, %s, %s, NOW())", (video_id, user_id, content))
+        connection.commit()
+        flash('Comment added successfully.', 'success')
+    except Exception as e:
+        connection.rollback()
+        flash(f"Error adding comment: {str(e)}", 'error')
+    finally:
+        cursor.close()
+        connection.close()
+    return redirect(url_for('student.play_video', video_id=video_id))

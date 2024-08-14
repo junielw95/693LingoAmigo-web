@@ -867,3 +867,14 @@ VALUES
 (114,'Japanese'),
 (115,'Japanese'),
 (116,'Japanese');
+
+INSERT INTO `VideoComments`
+(`video_id`, `user_id`, `content`, `timestamp`)
+VALUES
+(74, 1, 'Really helpful video for beginners. Thanks!', '2024-08-04 14:00:00'),
+(88, 1, 'Could you clarify the part about verb tenses?', '2024-08-11 14:00:00'),
+(76, 2, 'Great explanation on vocabulary building!', '2024-08-12 14:00:00'),
+(92, 2, 'More examples would be great for the next video.', '2024-08-01 14:00:00'),
+(80, 3, 'I love how practical this guide is. It really helps with real-life conversations.', '2024-08-01 14:00:00'),
+(96, 3, 'Could you do a video on medical English?', '2024-08-02 14:00:00');
+
