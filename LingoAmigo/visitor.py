@@ -162,6 +162,16 @@ def courses():
 def course_details(course_id):
     cursor, connection = get_cursor()
     user_role = session.get('role', None)
+    user_id = session.get('id', None)
+
+    #Check the student purchase the course
+    purchase_check_query = '''
+                            SELECT *
+                            FROM `Order`
+                            WHERE user_id = %s AND course_id = %s AND status = 'Completed'
+                            '''
+    cursor.execute(purchase_check_query, (user_id, course_id))
+    user_has_access = cursor.fetchone() is not None
     #Fetch all courses
     course_query = '''
                     SELECT c.course_id, c.course_name, c.description, c.duration, c.price, c.image_url, c.status,
@@ -179,8 +189,9 @@ def course_details(course_id):
     if course is None:
         return "Course not found", 404
     section_query = '''
-                    SELECT s.title, s.content
+                    SELECT s.title, s.content, v.video_id
                     FROM Section s
+                    JOIN Video v ON s.section_id = v.section_id
                     WHERE s.course_id = %s
                     '''
     cursor.execute(section_query, (course_id,))
@@ -205,7 +216,7 @@ def course_details(course_id):
     related_courses = cursor.fetchall()
     cursor.close()  
     connection.close() 
-    return render_template('course_details.html', course=course, sections=sections, user_role=user_role, section_count=section_count, related_courses=related_courses)
+    return render_template('course_details.html', course=course, sections=sections, user_role=user_role, section_count=section_count, related_courses=related_courses, user_has_access=user_has_access)
 
 @app.route('/news')
 def news():

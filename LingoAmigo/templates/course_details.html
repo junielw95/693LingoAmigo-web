@@ -97,7 +97,11 @@
                                             <div class="course-details__curriculum-list-left-icon">
                                                 <i class="fa fa-play" aria-hidden="true"></i>
                                             </div>
-                                            <a href="#" class="course-details__curriculum-list-left-title">{{ section[0] }}</a>
+                                            {% if user_has_access %}
+                                            <a href="{{ url_for('student.play_video', video_id=section[2]) }}" class="course-details__curriculum-list-left-title">{{ section[0] }}</a>
+                                            {% else %}
+                                            <span class="course-details__curriculum-list-left-title">{{ section[0] }}</span>
+                                            {% endif %}
                                         </div>
                                         <br>
                                         <div class="course-details__curriculum-list-right course-details__curriculum-content">

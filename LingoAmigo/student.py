@@ -337,3 +337,35 @@ def unsubscribe(order_id):
         cursor.close()
         connection.close()
     return jsonify({'success': True})
+
+@student.route('/play_video/<int:video_id>')
+def play_video(video_id):
+    cursor, connection = get_cursor()
+    try:
+        cursor.execute("SELECT s.course_id, s.section_id FROM Section s JOIN Video v ON s.section_id = v.section_id WHERE v.video_id = %s", (video_id,))
+        course_result = cursor.fetchone()
+        if not course_result:
+            flash('Video not found.', 'error')
+            return redirect(url_for('student.student_dashboard'))
+        course_id, section_id = course_result
+
+        cursor.execute("SELECT 1 FROM `Order` WHERE user_id = %s AND course_id = %s AND status = 'Completed'", (session.get('id'), course_id))
+        if cursor.fetchone() is None:
+            flash('You do not have access to this video.', 'error')
+            return redirect(url_for('visitor.course_details', course_id=course_id))
+        
+        #Fetch video
+        cursor.execute("SELECT video_url, section_id FROM Video WHERE video_id = %s", (video_id,))
+        video_details = cursor.fetchone()
+
+        cursor.execute("SELECT title, content FROM Section WHERE section_id = %s", (section_id,))
+        section_details = cursor.fetchone()
+
+        if video_details:
+            return render_template('video.html', video_url=video_details[0], course_id=course_id, section_title=section_details[0], section_content=section_details[1])
+        else:
+            flash('Video details not found.', 'error')
+            return redirect(url_for('visitor.course_details', course_id=course_id))
+    finally:
+        cursor.close()
+        connection.close()

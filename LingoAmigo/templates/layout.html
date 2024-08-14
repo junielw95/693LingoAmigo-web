@@ -6,7 +6,7 @@
     <title>{% block title %}{% endblock %}</title>
     <!-- fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="static/css/5248609259be45f6be1b103744028964.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/5248609259be45f6be1b103744028964.css') }}" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/animate.min.css') }}" />

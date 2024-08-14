@@ -1,0 +1,287 @@
+{% extends 'layout.html' %} {% block title %}LingoAmigo{% endblock %} {% block
+    content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video || LingoAmigo</title>
+    <meta name="description" content="Crsine HTML Template For Car Services" />
+</head>
+
+<body>
+
+
+    <!-- /.preloader -->
+    <div class="page-wrapper">
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content">
+
+            </div><!-- /.sticky-header__content -->
+        </div><!-- /.stricky-header -->
+
+
+
+    <!--Page Header Start-->
+    <section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="page-header__wrapper clearfix">
+                        <div class="page-header__title">
+                            <h2>{{ section_title }}</h2>
+                        </div>
+                        <div class="page-header__menu">
+                            <ul class="page-header__menu-list list-unstyled clearfix">
+                                <li><a href="index.html">Home</a></li>
+                                <li><a href="{{ url_for('course_details', course_id=course_id) }}">Course details</a></li>
+                                <li class="active">Video</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!--Page Header End-->
+
+<section class="course-details">
+        <div class="container">
+            <div class="row">
+
+                <div class="video-container">
+                    <video id="videoPlayer" controls>
+                        <source src="{{ url_for('static', filename='videos/' + video_url + '.mp4') }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <!--
+                    <div class="controls">
+                        <button id="playVideo">Play</button>
+                        <button id="pauseVideo">Pause</button>
+                        <button id="fastForward">Fast Forward 10s</button>
+                        <button id="rewind">Rewind 10s</button>
+                        <label for="volumeControl">Volume:</label>
+                        <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5" onchange="adjustVolume()">
+                    </div>-->
+                    <div class="description">
+                    <p>{{ section_content }}</p></div>
+                </div>
+                <!--Start Course Details Reviews-->
+                    <div class="course-details__reviews">
+                        <h3 class="course-details__reviews-title">Reviews</h3>
+                        <div class="course-details__progress-review">
+                            <div class="row">
+                                <div class="col-xl-7 col-lg-7 col-md-7">
+                                    <div class="course-details__progress clearfix">
+                                        <div class="course-details__progress-item">
+                                            <p class="course-details__progress-text">Excellent</p>
+                                            <div class="course-details__progress-bar">
+                                                <span style="width: 90%;"></span>
+                                            </div>
+                                            <p class="course-details__progress-count">2</p>
+                                        </div>
+
+                                        <div class="course-details__progress-item">
+                                            <p class="course-details__progress-text">Very Good</p>
+                                            <div class="course-details__progress-bar">
+                                                <span style="width: 80%;"></span>
+                                            </div>
+                                            <p class="course-details__progress-count">1</p>
+                                        </div>
+
+                                        <div class="course-details__progress-item">
+                                            <p class="course-details__progress-text">Average</p>
+                                            <div class="course-details__progress-bar">
+                                                <span style="width: 70%;"></span>
+                                            </div>
+                                            <p class="course-details__progress-count">1</p>
+                                        </div>
+
+                                        <div class="course-details__progress-item">
+                                            <p class="course-details__progress-text">Poor</p>
+                                            <div class="course-details__progress-bar">
+                                                <span style="width: 0%;" class="no-bubble"></span>
+                                            </div>
+                                            <p class="course-details__progress-count">0</p>
+                                        </div>
+
+                                        <div class="course-details__progress-item">
+                                            <p class="course-details__progress-text">Terrible</p>
+                                            <div class="course-details__progress-bar">
+                                                <span style="width: 0%;" class="no-bubble"></span>
+                                            </div>
+                                            <p class="course-details__progress-count">0</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-5 col-lg-5 col-md-5">
+                                    <div class="course-details__review-box">
+                                        <h2 class="course-details__review-count">4.6</h2>
+                                        <div class="course-details__review-stars">
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                        </div>
+                                        <p class="course-details__review-text">30 reviews</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Start Course Details Comment-->
+                        <div class="course-details__comment">
+                            <div class="course-details__comment-single">
+                                <div class="course-details__comment-img">
+                                    <img src="#" alt=""/>
+                                </div>
+                                <div class="course-details__comment-text">
+                                    <div class="course-details__comment-text-top">
+                                        <h3 class="course-details__comment-text-name">David Marks</h3>
+                                        <p>3 hours ago</p>
+                                        <div class="course-details__comment-review-stars">
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                        </div>
+                                    </div>
+                                    <p class="course-details__comment-text-bottom">Cursus massa at urnaaculis estie. Sed aliquamellus vitae ultrs condmentum lightly believable. If you are going to use a of you need to be sure there.</p>
+                                </div>
+                            </div>
+
+                            <div class="course-details__comment-single">
+                                <div class="course-details__comment-img">
+                                    <img src="#" alt=""/>
+                                </div>
+                                <div class="course-details__comment-text">
+                                    <div class="course-details__comment-text-top">
+                                        <h3 class="course-details__comment-text-name">Christine Eve</h3>
+                                        <p>3 hours ago</p>
+                                        <div class="course-details__comment-review-stars">
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                            <i class="fas fa-star"></i><!-- /.fas fa-star -->
+                                        </div>
+                                    </div>
+                                    <p class="course-details__comment-text-bottom">Cursus massa at urnaaculis estie. Sed aliquamellus vitae ultrs condmentum lightly believable. If you are going to use a of you need to be sure there.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--End Course Details Comment-->
+
+                        <div class="course-details__add-review">
+                            <h2 class="course-details__add-review-title">Add a Review</h2>
+                            <p class="course-details__add-review-text">
+                                Rate this Course?
+                                <a href="#" class="fas fa-star active pd-left"></a>
+                                <a href="#" class="fas fa-star active"></a>
+                                <a href="#" class="fas fa-star active"></a>
+                                <a href="#" class="fas fa-star"></a>
+                                <a href="#" class="fas fa-star"></a>
+                            </p>
+
+                            <div class="course-details__add-review-form">
+                                <form action="assets/inc/sendemail.php" class="comment-one__form contact-form-validated" novalidate="novalidate">
+                                    <div class="row">
+                                        <div class="col-xl-6 col-lg-6">
+                                            <div class="comment-form__input-box">
+                                                <input type="text" placeholder="Your name" name="name">
+                                            </div>
+                                            <div class="comment-form__input-box">
+                                                <input type="email" placeholder="Email address" name="email">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-12 col-lg-12">
+                                            <div class="comment-form__input-box">
+                                                <textarea name="message" placeholder="Write message"></textarea>
+                                            </div>
+                                            <button type="submit" class="thm-btn comment-form__btn">Submit review</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!--End Course Details Reviews-->
+                </div>
+            </div>
+            <!--End Course Details Content-->
+</section>
+
+
+
+    </div><!-- /.page-wrapper -->
+
+
+
+
+    <div class="search-popup">
+        <div class="search-popup__overlay search-toggler"></div>
+        <!-- /.search-popup__overlay -->
+        <div class="search-popup__content">
+            <form action="#">
+                <label for="search" class="sr-only">search here</label><!-- /.sr-only -->
+                <input type="text" id="search" placeholder="Search Here..." />
+                <button type="submit" aria-label="search submit" class="thm-btn2">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
+        <!-- /.search-popup__content -->
+    </div>
+    <!-- /.search-popup -->
+
+
+
+    <a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+
+
+<script>
+var video, volumeControl;
+
+document.addEventListener('DOMContentLoaded', function () {
+    var video = document.getElementById('videoPlayer');
+    var volumeControl = document.getElementById('volumeControl');
+
+    document.getElementById('playButton').addEventListener('click', playVideo);
+    document.getElementById('pauseButton').addEventListener('click', pauseVideo);
+    document.getElementById('fastForwardButton').addEventListener('click', fastForward);
+    document.getElementById('rewindButton').addEventListener('click', rewind);
+});
+    function playVideo() {
+        video.play();
+    }
+
+    function pauseVideo() {
+        video.pause();
+    }
+
+    function fastForward() {
+        video.currentTime += 10;
+    }
+
+    function rewind() {
+        video.currentTime -= 10;
+    }
+
+    function adjustVolume() {
+        video.volume = volumeControl.value;
+    }
+
+
+</script>
+
+</body>
+
+</html>
+{% endblock %}

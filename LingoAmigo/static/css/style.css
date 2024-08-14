@@ -641,3 +641,29 @@ body.login-background {
     padding-right: 50px;
   }
 }
+
+.video-container {
+  width: 800px;
+  margin: 20px auto;
+  padding: 10px;
+  position: relative;
+}
+
+video {
+  width: 100%;
+  height: auto;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+@media (max-width: 600px) {
+  .video-container {
+    width: 80%;
+  }
+  .controls {
+    flex-direction: column;
+  }
+}
