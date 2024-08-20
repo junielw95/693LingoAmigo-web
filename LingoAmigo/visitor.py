@@ -205,6 +205,13 @@ def course_details(course_id):
     cursor.execute(section_count, (course_id,))
     section_count = cursor.fetchone()[0]
 
+    #Fetch quiz for course
+    quiz_query = '''
+                SELECT quiz_id FROM Quiz WHERE course_id = %s
+                '''
+    cursor.execute(quiz_query, (course_id,))
+    quiz = cursor.fetchone()
+    quiz_id = quiz[0] if quiz else None
     related_courses = '''
                         SELECT course_id, course_name, price, image_url
                         FROM Course
@@ -216,7 +223,7 @@ def course_details(course_id):
     related_courses = cursor.fetchall()
     cursor.close()  
     connection.close() 
-    return render_template('course_details.html', course=course, sections=sections, user_role=user_role, section_count=section_count, related_courses=related_courses, user_has_access=user_has_access)
+    return render_template('course_details.html', course=course, sections=sections, user_role=user_role, section_count=section_count, related_courses=related_courses, user_has_access=user_has_access, course_id=course_id, quiz_id=quiz_id)
 
 @app.route('/news')
 def news():

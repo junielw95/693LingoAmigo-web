@@ -1,0 +1,141 @@
+{% extends 'layout.html' %} {% block title %}LingoAmigo{% endblock %} {% block
+content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quiz || LingoAmigo</title>
+<meta name="description" content="Crsine HTML Template For Car Services" />
+</head>
+
+<body>
+
+
+<!-- /.preloader -->
+<div class="page-wrapper">
+    <div class="stricky-header stricked-menu main-menu">
+        <div class="sticky-header__content">
+
+        </div><!-- /.sticky-header__content -->
+    </div><!-- /.stricky-header -->
+
+
+
+<!--Page Header Start-->
+<section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="page-header__wrapper clearfix">
+                    <div class="page-header__title">
+                        <h2>{{ quiz[2] }}</h2>
+                    </div>
+                    <div class="page-header__menu">
+                        <ul class="page-header__menu-list list-unstyled clearfix">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="{{ url_for('course_details', course_id=course_id) }}">Course details</a></li>
+                            <li class="active">Quiz</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Page Header End-->
+<!--quiz form-->
+{% if results %}
+<div class="quiz-container">
+    <div>
+        <div class="results-container">
+            <div class="results-header">Quiz Results</div>
+            <div class="results-score">Your score: {{ score }}</div><br>
+        </div>
+        {% for result in results %}
+        <div class="question-container">
+            <p class="question-text">{{ result.question[2] }}<br>
+                - {{ result.question[3] }}<br>
+                - {{ result.question[4] }}<br>
+                - {{ result.question[5] }}<br>
+                <br>
+             <p class="{{ 'correct' if result.is_correct else 'incorrect' }}">{{ 'Correct' if result.is_correct else 'Incorrect' }}</p> - Your answer was: {{ result.student_answer }}</p>
+        </div>
+        {% endfor %}
+        <a href="{{ url_for('student.reset_quiz', course_id=course_id, quiz_id=quiz_id) }}" class="restart-btn">Restart Quiz</a>
+    </div>
+    </div>
+    {% else %}
+    <div class="quiz-container">
+        {% for quiz in quizs %}
+        <div class="results-container">
+            <div class="results-header">{{ quiz[2] }}</div>
+            <div class="results-score">{{ quiz[3] }}</div><br>
+        </div>
+        {% endfor %}
+        <form action="{{ url_for('student.submit_quiz', quiz_id=quiz[0]) }}" method="post">
+            <input type="hidden" name="course_id" value="{{ course_id }}">
+            <input type="hidden" name="quiz_id" value="{{ quiz[0] }}">
+            {% for question in questions %}
+            <div class="question-container">
+                <p class="question-text">{{ question[2] }}</p>
+                <div class="answer">
+                    <input type="radio" name="question{{ question[0] }}" value="A"> {{ question[3] }}<br>
+                    <input type="radio" name="question{{ question[0] }}" value="B"> {{ question[4] }}<br>
+                    <input type="radio" name="question{{ question[0] }}" value="C"> {{ question[5] }}<br>
+                    <br>
+                </div>
+                {% if results %}
+                <p>{{ 'Correct' if results[loop.index0].is_correct else 'Incorrect' }}</p>
+                <p>Your answer: {{ results[loop.index0].student_answer }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="thm-btn comment-form__btn">Submit Quiz</button>
+
+        </form>
+    {% endif %}
+    <!--quiz form end-->
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+</div><!-- /.page-wrapper -->
+
+
+
+
+<div class="search-popup">
+    <div class="search-popup__overlay search-toggler"></div>
+    <!-- /.search-popup__overlay -->
+    <div class="search-popup__content">
+        <form action="#">
+            <label for="search" class="sr-only">search here</label><!-- /.sr-only -->
+            <input type="text" id="search" placeholder="Search Here..." />
+            <button type="submit" aria-label="search submit" class="thm-btn2">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
+        </form>
+    </div>
+    <!-- /.search-popup__content -->
+</div>
+<!-- /.search-popup -->
+
+
+
+<a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+
+</body>
+
+</html>
+{% endblock %}

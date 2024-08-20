@@ -123,10 +123,14 @@
                                             <div class="course-details__curriculum-list-left-icon style2">
                                                 <i class="fa fa-comment" aria-hidden="true"></i>
                                             </div>
-                                            <a href="#" class="course-details__curriculum-list-left-title">Quiz</a>
+                                            {% if user_has_access %}
+                                            <a href="{{ url_for('student.quiz_page', course_id=course_id, quiz_id=quiz_id) }}" class="course-details__curriculum-list-left-title">Quiz</a>
+                                            {% else %}
+                                            <span class="course-details__curriculum-list-left-title">Quiz</span>
+                                            {% endif %}
                                         </div>
                                         <div class="course-details__curriculum-list-right">
-                                            <p>6 questions</p>
+                                            <p>3 questions</p>
                                         </div>
                                     </li>
 

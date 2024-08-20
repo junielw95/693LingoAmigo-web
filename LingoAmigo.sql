@@ -1,5 +1,6 @@
 -- MySQL Workbench Forward Engineering
 
+
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
@@ -7,30 +8,28 @@ Use LingoAmigo;
 -- -----------------------------------------------------
 -- Schema LingoAmigo
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `VideoComments`;
+
+CREATE SCHEMA IF NOT EXISTS `LingoAmigo` DEFAULT CHARACTER SET utf8mb4 ;
+USE `LingoAmigo` ;
+
 DROP TABLE IF EXISTS `StudentAnswer`;
+DROP TABLE IF EXISTS `VideoComments`;
 DROP TABLE IF EXISTS `Post`;
 DROP TABLE IF EXISTS `Video`;
 DROP TABLE IF EXISTS `Question`;
 DROP TABLE IF EXISTS `Quiz`;
-DROP TABLE IF EXISTS `Section`;
 DROP TABLE IF EXISTS `Session`;
 DROP TABLE IF EXISTS `Order`;
 DROP TABLE IF EXISTS `Resource`;
 DROP TABLE IF EXISTS `DiscussionBoard`;
+DROP TABLE IF EXISTS `Section`;
 DROP TABLE IF EXISTS `Course`;
 DROP TABLE IF EXISTS `Student`;
 DROP TABLE IF EXISTS `Teacher`;
 DROP TABLE IF EXISTS `Expert`;
 DROP TABLE IF EXISTS `Administrator`;
-DROP TABLE IF EXISTS `Language`;
 DROP TABLE IF EXISTS `User`;
-
--- -----------------------------------------------------
--- Schema LingoAmigo
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `LingoAmigo` DEFAULT CHARACTER SET utf8 ;
-USE `LingoAmigo` ;
+DROP TABLE IF EXISTS `Language`;
 
 -- -----------------------------------------------------
 -- Table `LingoAmigo`.`User`
@@ -216,6 +215,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `LingoAmigo`.`Quiz` (
   `quiz_id` INT NOT NULL AUTO_INCREMENT,
   `course_id` INT NOT NULL,
+  `title` VARCHAR(255) NOT NULL,
   `description` TEXT NULL,
   PRIMARY KEY (`quiz_id`),
   INDEX `fk_quiz_course_id_idx` (`course_id` ASC) VISIBLE,
@@ -233,7 +233,10 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `LingoAmigo`.`Question` (
   `question_id` INT NOT NULL AUTO_INCREMENT,
   `quiz_id` INT NOT NULL,
-  `content` TEXT NOT NULL,
+  `question` TEXT NOT NULL,
+  `A` TEXT NOT NULL,
+  `B` TEXT NOT NULL,
+  `C` TEXT NOT NULL,
   `answer` TEXT NOT NULL,
   PRIMARY KEY (`question_id`),
   INDEX `fk_quiz_id_idx` (`quiz_id` ASC) VISIBLE,
@@ -877,4 +880,139 @@ VALUES
 (92, 2, 'More examples would be great for the next video.', '2024-08-01 14:00:00'),
 (80, 3, 'I love how practical this guide is. It really helps with real-life conversations.', '2024-08-01 14:00:00'),
 (96, 3, 'Could you do a video on medical English?', '2024-08-02 14:00:00');
+
+INSERT INTO `Quiz`
+(`course_id`, `title`, `description`)
+VALUES
+(1, 'Beginner English Quiz', 'Test your understanding of basic English grammar, pronunciation, and vocabulary.'),
+(2, 'Business English Quiz', 'Evaluate your skills in professional English communication and business terminology.'),
+(3, 'Beginner Chinese Quiz', 'Assess your grasp of fundamental Mandarin phrases and character recognition.'),
+(4, 'Business Chinese Quiz', 'Determine your proficiency in Chinese business language and etiquette.'),
+(5, 'Advanced Chinese Quiz', 'Challenge your knowledge of advanced Chinese grammar and vocabulary.'),
+(6, 'Beginner Korean Quiz', 'Check your understanding of basic Korean grammar and vocabulary.'),
+(7, 'Business Korean Quiz', 'Test your knowledge of Korean business language and cultural practices.'),
+(8, 'Travel Korean Quiz', 'Examine your ability to use Korean in travel-related scenarios.'),
+(9, 'Beginner Japanese Quiz', 'Assess your basic knowledge of Japanese expressions and vocabulary.'),
+(10, 'Business Japanese Quiz', 'Evaluate your proficiency in Japanese for business contexts.'),
+(11, 'Travel Japanese Quiz', 'Test your practical Japanese language skills for tourism.'),
+(12, 'Beginner French Quiz', 'Assess your basic knowledge of French language and cultural insights.'),
+(13, 'Business French Quiz', 'Evaluate your French communication skills in business settings.'),
+(14, 'Beginner German Quiz', 'Test your foundation in German grammar, vocabulary, and pronunciation.'),
+(15, 'Business German Quiz', 'Assess your knowledge of German used in professional contexts.'),
+(16, 'Beginner Spanish Quiz', 'Evaluate your basic Spanish communication skills.'),
+(17, 'Business Spanish Quiz', 'Test your Spanish language proficiency for business interactions.'),
+(18, 'Conversational English Quiz', 'Assess your fluency in everyday English conversation.'),
+(19, 'English for Tourism Quiz', 'Test your knowledge of English for the tourism and hospitality sector.'),
+(20, 'English Literature Quiz', 'Evaluate your understanding of both classic and contemporary English literature.'),
+(21, 'Intermediate Chinese Quiz', 'Test your skills in more complex Mandarin grammar and sentences.'),
+(22, 'Chinese for Kids Quiz', 'Assess your understanding of basic Mandarin suitable for young learners.'),
+(23, 'Chinese Calligraphy Quiz', 'Evaluate your knowledge of the art and techniques of Chinese calligraphy.'),
+(24, 'Basic Korean Quiz', 'Test your knowledge of fundamental Korean language skills.'),
+(25, 'Korean Drama Quiz', 'Assess your understanding of Korean through popular dramas.'),
+(26, 'Korean History Quiz', 'Evaluate your knowledge of significant events and figures in Korean history.'),
+(27, 'Japanese Culture Quiz', 'Test your understanding of traditional and modern Japanese culture.'),
+(28, 'Anime Japanese Quiz', 'Assess your knowledge of Japanese as used in popular anime.'),
+(29, 'Japanese Cooking Terms Quiz', 'Test your familiarity with specific culinary terms used in Japanese cuisine.');
+
+INSERT INTO `Question` 
+(`quiz_id`, `question`, `A`, `B`, `C`, `answer`)
+VALUES
+(1, 'What is the correct plural form of "child"?', 'A) Childs', 'B) Children', 'C) Childes', 'B'),
+(1, 'Which tense is used to describe an action happening right now?', 'A) Past continuous', 'B) Present simple', 'C) Present continuous', 'C'),
+(1, 'Choose the word that correctly fills in the blank: "She ___ a book yesterday."', 'A) reads', 'B) read', 'C) reading', 'B'),
+(2, 'What is the term for a formal discussion between people who are trying to reach an agreement?', 'A) Agreement', 'B) Negotiation', 'C) Conversation', 'B'),
+(2, 'Which of the following is NOT a part of business etiquette?', 'A) Arriving late to meetings', 'B) Dressing appropriately', 'C) Sending follow-up emails', 'A'),
+(2, 'What does "CC" mean in an email?', 'A) Carbon copy', 'B) Creative content', 'C) Close colleague', 'A'),
+(3, 'Which character means "good" in Chinese?', 'A) 好', 'B) 吗', 'C) 是', 'A'),
+(3, 'What is the correct way to say "thank you" in Mandarin?', 'A) 你好', 'B) 谢谢', 'C) 再见', 'B'),
+(3, 'How do you ask "Is it okay?" in Mandarin?', 'A) 可以吗', 'B) 你好吗', 'C) 是不是', 'A'),
+(4, 'Which phrase is commonly used in business meetings to mean "Let us discuss"?', 'A) 我们看看', 'B) 我们讨论一下', 'C) 我们玩玩', 'B'),
+(4, 'What is the correct term for "contract" in Chinese?', 'A) 合同', 'B) 同意', 'C) 方案', 'A'),
+(4, 'Which of the following means "profit"?', 'A) 赚钱', 'B) 利润', 'C) 成本', 'B'),
+(5, 'Which idiom is used to describe a win-win situation?', 'A) 马马虎虎', 'B) 双赢', 'C) 画蛇添足', 'B'),
+(5, 'Choose the correct character for "to develop":', 'A) 发达', 'B) 发展', 'C) 发明', 'B'),
+(5, 'What is the term for "globalization" in Chinese?', 'A) 国际化', 'B) 全球化', 'C) 地球化', 'B'),
+(6, 'How do you say "hello" in Korean?', 'A) 안녕', 'B) 감사합니다', 'C) 잘 지내요', 'A'),
+(6, 'What is the Korean word for "school"?', 'A) 학생', 'B) 학교', 'C) 교실', 'B'),
+(6, 'Which phrase means "thank you" in Korean?', 'A) 안녕하세요', 'B) 감사합니다', 'C) 좋아요', 'B'),
+(7, 'What is the Korean term for "meeting"?', 'A) 회의', 'B) 만남', 'C) 조우', 'A'),
+(7, 'Which word means "to negotiate" in Korean?', 'A) 협상하다', 'B) 설득하다', 'C) 이해하다', 'A'),
+(7, 'How do you say "profit" in Korean?', 'A) 손실', 'B) 이윤', 'C) 비용', 'B'),
+(8, 'How do you ask "How much is this?" in Korean?', 'A) 이거 얼마예요?', 'B) 이거 뭐예요?', 'C) 이거 어디예요?', 'A'),
+(8, 'What is the Korean word for "airport"?', 'A) 버스정류장', 'B) 기차역', 'C) 공항', 'C'),
+(8, 'Which phrase would you use to find a bathroom in Korea?', 'A) 화장실이 어디에 있습니까?', 'B) 식당이 어디에 있습니까?', 'C) 지하철역이 어디에 있습니까?', 'A'),
+(9, 'Choose the correct greeting for "good morning" in Japanese.', 'A) こんにちは', 'B) こんばんは', 'C) おはようございます', 'おはようございます'),
+(9, 'What is the Japanese word for "water"?', 'A) 水 (みず)', 'B) 食べ物 (たべもの)', 'C) 木 (き)', 'A'),
+(9, 'How do you say "thank you" in Japanese?', 'A) ありがとう', 'B) さようなら', 'C) お願いします', 'A'),
+(10, 'Which phrase is used in Japanese business to express agreement?', 'A) 了解です (りょうかいです)', 'B) 失礼します (しつれいします)', 'C) 気をつけて (きをつけて)', 'A'),
+(10, 'What is the term for "client" in Japanese?', 'A) 上司 (じょうし)', 'B) 顧客 (こきゃく)', 'C) 同僚 (どうりょう)', 'B'),
+(10, 'How do you say "contract" in Japanese?', 'A) 契約 (けいやく)', 'B) 提案 (ていあん)', 'C) 規定 (きてい)', 'A'),
+(11, 'Which phrase would you use to ask for directions in Japanese?', 'A) 方向を教えてください (ほうこうをおしえてください)', 'B) 料理を注文します (りょうりをちゅうもんします)', 'C) 支払いをします (しはらいをします)', 'A'),
+(11, 'How do you say "How much does this cost?" in Japanese?', 'A) これはいくらですか (これはいくらですか)', 'B) これは何ですか (これはなんですか)', 'C) これはどこですか (これはどこですか)', 'A'),
+(11, 'What is the Japanese term for "train station"?', 'A) バス停 (ばすてい)', 'B) 駅 (えき)', 'C) 空港 (くうこう)', 'B'),
+(12, 'How do you say "Hello" in French?', 'A) Bonsoir', 'B) Bonjour', 'C) Merci', 'B'),
+(12, 'What is the French word for "book"?', 'A) Chaise', 'B) Table', 'C) Livre', 'C'),
+(12, 'Choose the French phrase for "Where is the bathroom?"', 'A) Où est la salle de bain?', 'B) Où est la cuisine?', 'C) Quelle heure est-il?', 'A'),
+(13, 'What is the French term for "meeting"?', 'A) Rencontre', 'B) Réunion', 'C) Bureau', 'B'),
+(13, 'How do you ask "Do you speak English?" in French?', 'A) Parlez-vous anglais?', 'B) Parlez-vous français?', 'C) Où est langlais?', 'A'),
+(13, 'Which term refers to "client" in French?', 'A) Ami', 'B) Client', 'C) Patron', 'B'),
+(14, 'How do you greet someone in German during the morning?', 'A) Guten Morgen', 'B) Guten Abend', 'C) Guten Tag', 'A'),
+(14, 'What is the German word for "water"?', 'A) Wasser', 'B) Brot', 'C) Milch', 'A'),
+(14, 'Which phrase in German means "Thank you"?', 'A) Bitte', 'B) Danke', 'C) Hallo', 'B'),
+(15, 'How do you ask "Can you send me the report?" in German?', 'A) Können Sie mir den Bericht senden?', 'B) Können Sie mir das Buch geben?', 'C) Können Sie mir helfen?', 'A'),
+(15, 'What is the German term for "contract"?', 'A) Vertrag', 'B) Verbindung', 'C) Versuch', 'A'),
+(15, 'Choose the correct translation for "meeting" in German.', 'A) Besprechung', 'B) Unterhaltung', 'C) Begrüßung', 'A'),
+(16, 'What is the Spanish word for "hello"?', 'A) Adiós', 'B) Hola', 'C) Gracias', 'B'),
+(16, 'How do you say "What is your name?" in Spanish?', 'A) ¿Cómo estás?', 'B) ¿Cómo te llamas?', 'C) ¿Dónde estás?', 'B'),
+(16, 'Choose the Spanish term for "please".', 'A) Por favor', 'B) Gracias', 'C) Bien', 'A'),
+(17, 'How do you ask "Do you agree?" in Spanish?', 'A) ¿Estás listo?', 'B) ¿Estás seguro?', 'C) ¿Estás de acuerdo?', 'C'),
+(17, 'What is the Spanish word for "budget"?', 'A) Presupuesto', 'B) Programa', 'C) Proyecto', 'A'),
+(17, 'Choose the correct translation for "employee" in Spanish.', 'A) Empleado', 'B) Empresario', 'C) Cliente', 'A'),
+(18, 'Which phrase is used to ask for a recommendation in English?', 'A) Can you help me?', 'B) What do you recommend?', 'C) Where are you?', 'B'),
+(18, 'How do you say "I want to drink coffee" in English?', 'A) I like coffee', 'B) I would like coffee', 'C) I need coffee', 'B'),
+(18, 'What is the polite way to ask someone to repeat something in English?', 'A) Say again?', 'B) What?', 'C) Could you repeat that, please?', 'C'),
+(19, 'What is the correct way to ask for directions in English?', 'A) Where I go?', 'B) How is the way?', 'C) Could you please tell me how to get to the museum?', 'C'),
+(19, 'Choose the appropriate phrase for checking into a hotel.', 'A) I have a reservation.', 'B) I have a recommendation.', 'C) I have a request.', 'A'),
+(19, 'How do you politely ask for a menu in a restaurant in English?', 'A) Give me the menu.', 'B) Can I see the menu, please?', 'C) Menu please.', 'B'),
+(20, 'Who wrote "Romeo and Juliet"?', 'A) Charles Dickens', 'B) William Shakespeare', 'C) Jane Austen', 'B'),
+(20, 'What genre does "1984" by George Orwell belong to?', 'A) Romance', 'B) Dystopian', 'C) Comedy', 'B'),
+(20, 'Which novel begins with the line "Call me Ishmael"?', 'A) Moby Dick', 'B) Great Expectations', 'C) To Kill a Mockingbird', 'A'),
+(21, 'How do you say "library" in Mandarin?', 'A) 图书馆 (tú shū guǎn)', 'B) 学校 (xué xiào)', 'C) 银行 (yín háng)', 'A'),
+(21, 'Choose the correct word for "tomorrow" in Mandarin.', 'A) 昨天 (zuótiān)', 'B) 今天 (jīntiān)', 'C) 明天 (míngtiān)', 'C'),
+(21, 'What is the Mandarin term for "doctor"?', 'A) 老师 (lǎoshī)', 'B) 医生 (yīshēng)', 'C) 学生 (xuésheng)', 'B'),
+(22, 'What is the Mandarin word for "cat"?', 'A) 猫 (māo)', 'B) 狗 (gǒu)', 'C) 鸟 (niǎo)', 'A'),
+(22, 'How do you say "thank you" in Mandarin?', 'A) 你好 (nǐ hǎo)', 'B) 谢谢 (xièxiè)', 'C) 再见 (zàijiàn)', 'B'),
+(22, 'Choose the correct Mandarin translation for "school".', 'A) 学校 (xuéxiào)', 'B) 超市 (chāoshì)', 'C) 饭店 (fàndiàn)', 'A'),
+(23, 'Which tool is not used in traditional Chinese calligraphy?', 'A) Brush', 'B) Ink stick', 'C) Ballpoint pen', 'C'),
+(23, 'What is the main purpose of the grinding stone in calligraphy?', 'A) To sharpen pencils', 'B) To grind the ink stick', 'C) To hold paper', 'B'),
+(23, 'Which style of Chinese calligraphy is known for its flowing and cursive lines?', 'A) 篆书 (zhuànshū)', 'B) 行书 (xíngshū)', 'C) 草书 (cǎoshū)', 'C'),
+(24, 'How do you say "hello" in Korean?', 'A) 안녕', 'B) 감사합니다', 'C) 잘 지내요', 'A'),
+(24, 'What is the Korean word for "school"?', 'A) 학생', 'B) 학교', 'C) 교실', 'B'),
+(24, 'Which phrase means "thank you" in Korean?', 'A) 안녕하세요', 'B) 감사합니다', 'C) 좋아요', 'B'),
+(25, 'Which phrase is commonly used to express surprise in Korean dramas?', 'A) 대박 (daebak)', 'B) 감사합니다 (gamsahabnida)', 'C) 조용히 (joyonghi)', 'A'),
+(25, 'What does "오빠 (oppa)" mean when used by a female speaker in Korean?', 'A) Older brother', 'B) Younger brother', 'C) Friend', 'A'),
+(25, 'Which term is used for a tragic twist in Korean dramas?', 'A) 행복 (haengbok)', 'B) 비극 (bigeuk)', 'C) 결말 (gyeolmal)', 'B'),
+(26, 'During which dynasty was the Hangul alphabet created?', 'A) Goryeo', 'B) Joseon', 'C) Silla', 'B'),
+(26, 'Who is the famous Korean admiral known for his victories against the Japanese navy in the 16th century?', 'A) Admiral Yi Sun-sin', 'B) King Sejong the Great', 'C) General Kim Yu-sin', 'A'),
+(26, 'What is the name of the ancient Korean kingdom known for its horse-riding and archery skills?', 'A) Baekje', 'B) Goguryeo', 'C) Jeju', 'B'),
+(27, 'What is the traditional Japanese floor mat called?', 'A) Tatami', 'B) Futon', 'C) Shoji', 'A'),
+(27, 'Which festival is celebrated to admire the beauty of cherry blossoms in Japan?', 'A) Tanabata', 'B) Hanami', 'C) Obon', 'B'),
+(27, 'What is the name of the Japanese tea ceremony that emphasizes mindfulness and respect?', 'A) Kaiseki', 'B) Sado', 'C) Ikebana', 'B'),
+(28, 'What term is used in anime for a characters transformation or power-up scene?', 'A) 変身 (henshin)', 'B) 友情 (yuujou)', 'C) 敗北 (haiboku)', 'A'),
+(28, 'In anime, what does "ツンデレ (tsundere)" describe?', 'A) A character who is initially cold but shows a warmer side over time.', 'B) A fearless hero.', 'C) A comedic sidekick.', 'A'),
+(28, 'Which phrase means "good luck" or "do your best" and is often heard in anime?', 'A) お疲れ様です (otsukaresama desu)', 'B) がんばって (ganbatte)', 'C) すごい (sugoi)', 'B'),
+(29, 'What is "刺身 (sashimi)"?', 'A) Grilled fish', 'B) Freshly sliced raw fish', 'C) Fermented soybeans', 'B'),
+(29, 'Which term refers to a Japanese cooking pot used for one-pot dishes?', 'A) 鍋 (nabe)', 'B) 焼き鳥 (yakitori)', 'C) てんぷら (tempura)', 'A'),
+(29, 'What does "だし (dashi)" refer to in Japanese cooking?', 'A) A type of sushi', 'B) A soup stock made from fish and kelp', 'C) A spice mix', 'B');
+
+INSERT INTO `StudentAnswer`
+(`question_id`, `user_id`, `student_answer`)
+VALUES
+(1, 2, 'B'),
+(2, 2, 'C'),
+(3, 2, 'B');
+
+
+
+
 

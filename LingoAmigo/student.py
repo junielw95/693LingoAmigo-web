@@ -349,6 +349,7 @@ def play_video(video_id):
             return redirect(url_for('student.student_dashboard'))
         course_id, section_id = course_result
 
+        # Check if user has purchased the course
         cursor.execute("SELECT 1 FROM `Order` WHERE user_id = %s AND course_id = %s AND status = 'Completed'", (session.get('id'), course_id))
         if cursor.fetchone() is None:
             flash('You do not have access to this video.', 'error')
@@ -396,3 +397,83 @@ def add_comment(video_id):
         cursor.close()
         connection.close()
     return redirect(url_for('student.play_video', video_id=video_id))
+
+@student.route('/quiz/<int:course_id>/<int:quiz_id>')
+def quiz_page(course_id, quiz_id, results=None, score=None):
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    user_id = session.get('id', None)
+    cursor, connection = get_cursor()
+
+    # Check if user has purchased the course
+    cursor.execute("SELECT 1 FROM `Order` WHERE user_id = %s AND course_id = %s AND status = 'Completed'", (user_id, course_id))
+    if cursor.fetchone() is None:
+        flash('You do not have access to this video.', 'error')
+        return redirect(url_for('visitor.course_details', course_id=course_id))
+    
+
+    # Fetch quiz
+    cursor.execute("SELECT * FROM Quiz WHERE course_id = %s", (course_id,))
+    quiz = cursor.fetchone()
+    quiz_id=quiz[0]
+    if not quiz:
+        flash('Quiz not found.', 'error')
+        return redirect(url_for('visitor.course_details', course_id=course_id))
+    cursor.execute("SELECT * FROM Quiz WHERE course_id = %s", (course_id,))
+    quizs = cursor.fetchall()
+
+    # Fetch questions
+    cursor.execute("SELECT * FROM Question WHERE quiz_id = %s", (quiz_id,))
+    questions = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    results = session.get('quiz_results', [])
+    score = session.get('quiz_score', 0)
+
+    return render_template('quiz.html', questions=questions, quiz=quiz, course_id=course_id, quiz_id=quiz_id, results=results, score=score, quizs=quizs)
+
+@student.route('/submit_quiz/<int:quiz_id>', methods=['POST'])
+def submit_quiz(quiz_id):
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    user_id = session.get('id', None)
+    cursor, connection = get_cursor()
+
+    # get course_id
+    course_id=request.form.get('course_id')
+
+    # Fetch questions
+    cursor.execute("SELECT * FROM Question WHERE quiz_id = %s", (quiz_id,))
+    questions = cursor.fetchall()
+
+    results = []
+    score = 0
+
+    for question in questions:
+        student_answer = request.form.get(f'question{question[0]}')
+        is_correct = student_answer == question[6]
+        score += is_correct
+        results.append({'question':question, 'is_correct': is_correct, 'student_answer': student_answer})
+        
+    cursor.close()
+    connection.close()
+
+    session['quiz_results'] = results
+    session['quiz_score'] = score
+    session.modified = True
+
+
+
+    return redirect(url_for('student.quiz_page', course_id=course_id, quiz_id=quiz_id))
+
+
+@student.route('/reset_quiz/<int:course_id>/<int:quiz_id>')
+def reset_quiz(course_id, quiz_id):
+    if 'quiz_results' in session:
+        del session['quiz_results']
+    if 'quiz_score' in session:
+        del session['quiz_score']
+    session.modified = True
+    return redirect(url_for('student.quiz_page', course_id=course_id, quiz_id=quiz_id))

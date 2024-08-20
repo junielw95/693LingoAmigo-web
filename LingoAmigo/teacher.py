@@ -162,3 +162,4 @@ def change_password():
     flash('Your password has been successfully updated.')
     return redirect(url_for('teacher.teacher_dashboard'))
 
+
