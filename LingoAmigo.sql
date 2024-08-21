@@ -14,22 +14,23 @@ USE `LingoAmigo` ;
 
 DROP TABLE IF EXISTS `StudentAnswer`;
 DROP TABLE IF EXISTS `VideoComments`;
+DROP TABLE IF EXISTS `Replies`;
 DROP TABLE IF EXISTS `Post`;
-DROP TABLE IF EXISTS `Video`;
-DROP TABLE IF EXISTS `Question`;
-DROP TABLE IF EXISTS `Quiz`;
 DROP TABLE IF EXISTS `Session`;
 DROP TABLE IF EXISTS `Order`;
-DROP TABLE IF EXISTS `Resource`;
-DROP TABLE IF EXISTS `DiscussionBoard`;
+DROP TABLE IF EXISTS `Question`;
+DROP TABLE IF EXISTS `Quiz`;
+DROP TABLE IF EXISTS `Video`;
 DROP TABLE IF EXISTS `Section`;
 DROP TABLE IF EXISTS `Course`;
+DROP TABLE IF EXISTS `DiscussionBoard`;
 DROP TABLE IF EXISTS `Student`;
 DROP TABLE IF EXISTS `Teacher`;
 DROP TABLE IF EXISTS `Expert`;
 DROP TABLE IF EXISTS `Administrator`;
-DROP TABLE IF EXISTS `User`;
+DROP TABLE IF EXISTS `Resource`;
 DROP TABLE IF EXISTS `Language`;
+DROP TABLE IF EXISTS `User`;
 
 -- -----------------------------------------------------
 -- Table `LingoAmigo`.`User`
@@ -302,7 +303,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `LingoAmigo`.`DiscussionBoard` (
   `discussion_id` INT NOT NULL AUTO_INCREMENT,
-  `course_id` INT NOT NULL,
+  `course_id` INT NULL,
   `description` TEXT NULL,
   `language_id` INT NOT NULL,
   PRIMARY KEY (`discussion_id`),
@@ -415,6 +416,31 @@ CREATE TABLE IF NOT EXISTS `LingoAmigo`.`Session` (
   CONSTRAINT `fk_session_expert_id`
     FOREIGN KEY (`expert_id`)
     REFERENCES `LingoAmigo`.`Expert` (`expert_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `LingoAmigo`.`Replies`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `LingoAmigo`.`Replies` (
+  `reply_id` INT NOT NULL AUTO_INCREMENT,
+  `post_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `content` TEXT NOT NULL,
+  `timestamp` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`reply_id`),
+  INDEX `fk_replies_post_id_idx` (`post_id` ASC) VISIBLE,
+  INDEX `fk_replies_user_id_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_replies_post_id`
+    FOREIGN KEY (`post_id`)
+    REFERENCES `LingoAmigo`.`Post` (`post_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_replies_user_id`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `LingoAmigo`.`User` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -1012,7 +1038,58 @@ VALUES
 (2, 2, 'C'),
 (3, 2, 'B');
 
+INSERT INTO `DiscussionBoard`
+(`course_id`, `language_id`)
+VALUES
+(1, 1),
+(2, 1),
+(3, 2),
+(4, 2),
+(5, 2),
+(6, 3),
+(7, 3),
+(8, 3),
+(9, 4),
+(2, 1),
+(3, 2),
+(4, 2),
+(3, 2),
+(3, 2),
+(4, 2);
 
 
+INSERT INTO `Post`
+(`discussion_id`, `user_id`, `topic`, `content`, `timestamp`)
+VALUES
+(1, 1, 'Beginning English', 'I am new to English, looking for tips!', '2024-08-15 12:00:00'),
+(2, 2, 'Problem of English', 'Can someone explain the difference between "affect" and "effect"? I always get confused.', '2024-08-13 12:00:00'),
+(3, 2, 'Inquiry about Chinese', 'I want to ask for some advises about review for test!', '2024-08-12 12:00:00'),
+(4, 3, '分享：中国传统节日', '这里有谁对中国的传统节日感兴趣？我最近在研究中秋节和端午节，想交流交流!', '2024-08-10 12:00:00'),
+(5, 3, 'Chinese dictionary', 'Can anyone recommend Chinese dictionaries for learning Chinese?', '2024-08-15 12:00:00'),
+(6, 4, '한국어 회화 연습', '안녕하세요! 한국어 회화 연습을 하고 싶은데 관심 있으신 분 계신가요?', '2024-08-05 12:00:00'),
+(7, 5, 'K-POP 가사 해석', 'BTS 노래 가사 중에 이해 안 가는 부분이 있는데 도와주실 수 있나요?', '2024-08-11 12:00:00'),
+(8, 6, 'Learning Korean through Music', 'Has anyone tried learning Korean by listening to K-pop? I find it quite engaging and fun. Any song recommendations?', '2024-08-19 12:00:00'),
+(9, 7, 'Asking for Translation Help', 'Can someone help me translate this Japanese sentence? I am stuck and need some guidance.', '2024-08-03 12:00:00'),
+(10, 11, 'Basic Grammar Questions', 'Can someone help clarify when to use "which" and "that" in a sentence?', '2024-08-13 12:00:00'),
+(11, 10, 'Understanding Chinese Characters', 'Is there a trick to learning and remembering complex Chinese characters?', '2024-08-11 10:00:00'),
+(12, 6, '汉语字词发音', '如何正确发音"nihao"这个词的声调？我总是发错音。', '2024-08-08 11:00:00'),
+(13, 8, 'Exploring Chinese Poetry', 'Would anyone like to explore traditional Chinese poetry together? Looking for study partners.', '2024-08-17 10:00:00'),
+(14, 9, 'Study Tips for Chinese Tests', 'Looking for study tips specifically for advanced Chinese language tests. Any suggestions?', '2024-08-14 11:00:00'),
+(15, 6, '实用汉语会话', '有没有人想一起练习一些实用的汉语日常会话？我们可以通过角色扮演的方式来提高口语。', '2024-08-08 11:00:00');
 
 
+INSERT INTO `Replies`
+(`post_id`, `user_id`, `content`, `timestamp`)
+VALUES
+(1, 2, 'Start with basic vocabulary and try to use it in daily conversations!', '2024-08-19 11:00:00'),
+(2, 3, '"Affect" is usually a verb meaning to influence, and "effect" is a noun meaning the result.', '2024-08-18 10:00:00'),
+(3, 5, 'Reviewing with flashcards can be really effective. Also, try to practice regularly!', '2024-08-17 11:00:00'),
+(3, 8, 'A great way of organising your notes is to create separate vocabulary lists. One for the vocabulary you need to review and get fresh in your memory again, and one for vocabulary you have completely forgotten or simply do not know.', '2024-08-16 10:00:00'),
+(3, 6, 'Reviewing your class material in a different order to when you first learnt it can be a good way to make your brain work harder to remember the content.', '2024-08-18 09:00:00'),
+(4, 9, '中秋节自古便有祭月、赏月、吃月饼、玩花灯、赏桂花、饮桂花酒等民俗，流传至今，经久不息。 中秋节以月之圆兆人之团圆，为寄托思念故乡，思念亲人之情，祈盼丰收、幸福，成为丰富多彩、弥足珍贵的文化遗产。', '2024-08-17 10:00:00'),
+(4, 10, '端午节，是中国四大传统节日之一，时间为农历五月初五，是集拜神祭祖、祈福辟邪、欢庆娱乐和饮食为一体的民俗大节。', '2024-08-19 10:00:00'),
+(6, 11, '저도요! 같이 연습하면 좋겠어요.', '2024-08-19 13:00:00'),
+(7, 14, '그 부분은 맥락에 따라 달라질 수 있어요. 구체적인 예를 들어주시면 더 정확하게 해석 가능할 것 같아요.', '2024-08-19 13:00:00'),
+(5, 13, 'The Pleco app is great for both dictionary and study tool uses.', '2024-08-20 09:00:00'),
+(8, 12, 'I totally recommend "Spring Day" by BTS, it is great for understanding emotional depth in Korean.', '2024-08-20 10:00:00'),
+(9, 10, 'Sure, post the sentence here and I will help you with the translation!', '2024-08-19 13:00:00');

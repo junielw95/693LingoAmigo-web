@@ -4,43 +4,41 @@
 <body>
 
     
+<div class="page-wrapper">
 
-    <!-- /.preloader -->
-    <div class="page-wrapper">
+    
 
-        
+    <div class="stricky-header stricked-menu main-menu">
+        <div class="sticky-header__content">
 
-        <div class="stricky-header stricked-menu main-menu">
-            <div class="sticky-header__content">
-
-            </div><!-- /.sticky-header__content -->
-        </div><!-- /.stricky-header -->
+        </div><!-- /.sticky-header__content -->
+    </div><!-- /.stricky-header -->
 
 
 
-    <!--Page Header Start-->
-    <section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="page-header__wrapper clearfix">
-                        <div class="page-header__title">
-                            <h2>My Courses</h2>
-                        </div>
-                        <div class="page-header__menu">
-                            <ul class="page-header__menu-list list-unstyled clearfix">
-                                <li><a href="index.html">Home</a></li>
-                                <li><a href="{{ url_for('courses') }}">All Courses</a></li>
-                                <li class="active">My Courses</li>
-                            </ul>
-                        </div>
+<!--Page Header Start-->
+<section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="page-header__wrapper clearfix">
+                    <div class="page-header__title">
+                        <h2>My Courses</h2>
+                    </div>
+                    <div class="page-header__menu">
+                        <ul class="page-header__menu-list list-unstyled clearfix">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="{{ url_for('courses') }}">All Courses</a></li>
+                            <li class="active">My Courses</li>
+                        </ul>
                     </div>
                 </div>
-
             </div>
+
         </div>
-    </section>
-    <!--Page Header End-->
+    </div>
+</section>
+<!--Page Header End-->
 {% with messages = get_flashed_messages() %} {% if messages %}
         <ul class="flash-messages">
             {% for message in messages %}

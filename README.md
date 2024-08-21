@@ -51,6 +51,7 @@
    |    |    |-- course_checkout.html                      # Student checkout selected cources and make a payment
    |    |    |-- student_courses.html                      # Show the student's courses that are paid
    |    |    |-- video.html                      # Student watch course video
+   |    |    |-- quiz.html                        # Student complete quiz
 
    |    |    |
    |

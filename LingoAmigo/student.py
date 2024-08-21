@@ -477,3 +477,48 @@ def reset_quiz(course_id, quiz_id):
         del session['quiz_score']
     session.modified = True
     return redirect(url_for('student.quiz_page', course_id=course_id, quiz_id=quiz_id))
+
+
+@student.route('/discussion_board')
+def discussion_board():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    user_id = session.get('id', None)
+    cursor, connection = get_cursor()
+
+    keyword = request.args.get('keyword', '')
+    language = request.args.get('language', None)
+
+    # Fetch post
+    post_query = '''
+                SELECT p.post_id, p.topic, p.content, p.timestamp, u.user_id, u.username, u.role,
+                    COALESCE(s.image_url, t.image_url, e.image_url, a.image_url) AS image_url,
+                    COALESCE(s.first_name, t.first_name, e.first_name, a.first_name) AS first_name,
+                    COALESCE(s.last_name, t.last_name, e.last_name, a.last_name) AS last_name,
+                    l.language_name
+                FROM Post p
+                JOIN User u ON p.user_id = u.user_id
+                LEFT JOIN Student s ON u.user_id = s.student_id
+                LEFT JOIN Teacher t ON u.user_id = t.teacher_id
+                LEFT JOIN Expert e ON u.user_id = e.expert_id
+                LEFT JOIN Administrator a ON u.user_id = a.admin_id
+                JOIN DiscussionBoard d ON p.discussion_id = d.discussion_id
+                JOIN Language l ON d.language_id = l.language_id
+                WHERE (p.topic LIKE %s OR p.content LIKE %s)
+                '''
+    # For search bar
+    search_values = [f'%{keyword}%', f'%{keyword}%']
+    # For filter
+    if language:
+        post_query += ' AND l.language_id = %s'
+        search_values.append(language)
+
+    post_query += ' ORDER BY p.timestamp DESC'
+    cursor.execute(post_query, search_values)
+    posts = cursor.fetchall()
+
+            
+    cursor.close()
+    connection.close()
+
+    return render_template('discussion_board.html', posts=posts)

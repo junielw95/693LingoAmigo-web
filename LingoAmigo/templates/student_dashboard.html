@@ -7,38 +7,40 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
-    <meta name="description" content="Crsine HTML Template For Car Services" />
+</head>
+
+<body>
 
 
-        <div class="stricky-header stricked-menu main-menu">
-            <div class="sticky-header__content">
+    <div class="stricky-header stricked-menu main-menu">
+        <div class="sticky-header__content">
 
-            </div><!-- /.sticky-header__content -->
-        </div><!-- /.stricky-header -->
+        </div><!-- /.sticky-header__content -->
+    </div><!-- /.stricky-header -->
 
 
-    <!--Page Header Start-->
-    <section class="page-header clearfix" style="background-image: url(static/images/page-header-bg.jpg);">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="page-header__wrapper clearfix">
-                        <div class="page-header__title">
-                            <h2>Welcome to Your Dashboard</h2>
-                        </div>
-                        <div class="page-header__menu">
-                            <ul class="page-header__menu-list list-unstyled clearfix">
-                                <li><a href="{{ url_for('visitor_home') }}">Home</a></li>
-                                <li class="active">My dashboard</li>
-                            </ul>
-                        </div>
+<!--Page Header Start-->
+<section class="page-header clearfix" style="background-image: url(static/images/page-header-bg.jpg);">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="page-header__wrapper clearfix">
+                    <div class="page-header__title">
+                        <h2>Welcome to Your Dashboard</h2>
+                    </div>
+                    <div class="page-header__menu">
+                        <ul class="page-header__menu-list list-unstyled clearfix">
+                            <li><a href="{{ url_for('visitor_home') }}">Home</a></li>
+                            <li class="active">My dashboard</li>
+                        </ul>
                     </div>
                 </div>
-
             </div>
+
         </div>
-    </section>
-</head>
+    </div>
+</section>
+
 {% with messages = get_flashed_messages() %} {% if messages %}
         <ul class="flash-messages">
             {% for message in messages %}
@@ -198,6 +200,6 @@
           document.getElementById("confirmPassword").value = ""
         }
     </script>
-    
+</body>
 </html>
 {% endblock %}

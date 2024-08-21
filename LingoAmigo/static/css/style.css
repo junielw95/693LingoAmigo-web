@@ -737,3 +737,34 @@ video {
   color: #555;
   font-weight: normal;
 }
+
+.search-filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.search-filter-container input[type="text"], .search-filter-container select {
+  flex: 1;
+  margin-right: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  height: 40px;
+}
+.search-filter-container button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 4px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.search-filter-container button:hover {
+  background-color: #0056b3;
+}
