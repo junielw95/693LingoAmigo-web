@@ -130,32 +130,85 @@ def languages():
 
     return dict(languages=g.languages)
 
+
+@app.context_processor
+def courselist():
+    if not hasattr(g, 'courselist'):
+
+        cursor, connection = get_cursor() 
+        cursor.execute('SELECT * FROM Course')
+        g.courselist = cursor.fetchall()
+
+        cursor.close()  
+        connection.close() 
+    
+
+    return dict(courselist=g.courselist)
+
+
 @app.route('/courses')
 def courses():
     cursor, connection = get_cursor() 
-    language_filter = request.args.get('language_id', type=int)
+    language_filter = request.args.get('language_id')
+   
+
+    page = request.args.get('page', 1, type=int)
+    per_page = 30
+    offset = (page - 1) * per_page
+
+    
+
+    base_query = '''
+                FROM Course c
+                JOIN Teacher t ON c.creator_id = t.teacher_id
+                JOIN Language l ON c.language_id = l.language_id
+                '''
+    where_clause = []
+    query_params = []
+    
+
+    # Apply language filter
+    if language_filter:
+        where_clause.append("l.language_id = %s")
+        query_params.append(language_filter)
+
+    # Construct the complete sql for counting filtered results
+    count_query = f"SELECT COUNT(*) {base_query}"
+    if where_clause:
+        count_query += " WHERE " + " AND ".join(where_clause)
+
+    # Execute the count query
+    cursor.execute(count_query, query_params)
+    total_courses = cursor.fetchone()[0]
+    total_pages = ceil(total_courses / per_page)
+    
     #Fetch all courses
-    course_query = '''
+    course_query = f'''
                     SELECT c.course_id, c.course_name, c.description, c.duration, c.price, c.image_url, c.status,
                             CONCAT(t.first_name, ' ', t.last_name) AS teacher_name,
                             l.language_name, l.language_id,
                             t.image_url AS teacher_image, t.teacher_id
-                    FROM Course c
-                    JOIN Teacher t ON c.creator_id = t.teacher_id
-                    JOIN Language l ON c.language_id = l.language_id 
+                    {base_query}
                     '''
-    if language_filter:
-        course_query += " WHERE l.language_id = %s"
-        cursor.execute(course_query, (language_filter,))
-    else:
-        cursor.execute(course_query)
+    if where_clause:
+        course_query += " WHERE " + " AND ".join(where_clause) 
+    course_query += " ORDER BY c.course_id LIMIT %s OFFSET %s"
+    query_params.extend([per_page, offset])
+
+    # Execute course query
+    cursor.execute(course_query, query_params)
     course_list = cursor.fetchall()
+
+    # Fetch current language name
     current_language = None
-    if language_filter and course_list:
-        current_language = course_list[0][8]
+    if language_filter:
+        cursor.execute("SELECT language_name FROM Language WHERE language_id = %s", (language_filter,))
+        current_language = cursor.fetchone()[0]
+
     cursor.close()  
     connection.close() 
-    return render_template('courses.html', course_list=course_list, language_filter=language_filter, current_language=current_language)
+
+    return render_template('courses.html', course_list=course_list, language_filter=language_filter, current_language=current_language, total_pages=total_pages, current_page=page)
 
 
 @app.route('/course_details/<int:course_id>')

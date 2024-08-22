@@ -9,6 +9,7 @@ import os
 from datetime import datetime
 from decimal import Decimal
 from datetime import datetime, timedelta, date
+from math import ceil
 
 student = Blueprint("student", __name__, static_folder="static", 
                        template_folder="templates")
@@ -484,18 +485,18 @@ def discussion_board():
     if 'loggedin' not in session:
         return redirect(url_for('login.login_page'))
     user_id = session.get('id', None)
-    cursor, connection = get_cursor()
+
+    
+    page = request.args.get('page', 1, type=int)
+    per_page = 12
+    offset = (page - 1) * per_page
 
     keyword = request.args.get('keyword', '')
     language = request.args.get('language', None)
+    
+    cursor, connection = get_cursor()
 
-    # Fetch post
-    post_query = '''
-                SELECT p.post_id, p.topic, p.content, p.timestamp, u.user_id, u.username, u.role,
-                    COALESCE(s.image_url, t.image_url, e.image_url, a.image_url) AS image_url,
-                    COALESCE(s.first_name, t.first_name, e.first_name, a.first_name) AS first_name,
-                    COALESCE(s.last_name, t.last_name, e.last_name, a.last_name) AS last_name,
-                    l.language_name
+    base_query = '''
                 FROM Post p
                 JOIN User u ON p.user_id = u.user_id
                 LEFT JOIN Student s ON u.user_id = s.student_id
@@ -508,17 +509,143 @@ def discussion_board():
                 '''
     # For search bar
     search_values = [f'%{keyword}%', f'%{keyword}%']
-    # For filter
+
+    
+    # For language filter
     if language:
-        post_query += ' AND l.language_id = %s'
+        base_query += ' AND l.language_id = %s'
         search_values.append(language)
 
-    post_query += ' ORDER BY p.timestamp DESC'
-    cursor.execute(post_query, search_values)
+    # Count total posts with filters
+    count_query = "SELECT COUNT(*) " + base_query
+    cursor.execute(count_query, search_values)
+    total_posts = cursor.fetchone()[0]
+    total_pages = ceil(total_posts / per_page)
+
+    # Fetch post
+    post_query = f'''
+                SELECT p.post_id, p.topic, p.content, p.timestamp, u.user_id, u.username, u.role,
+                    COALESCE(s.image_url, t.image_url, e.image_url, a.image_url) AS image_url,
+                    COALESCE(s.first_name, t.first_name, e.first_name, a.first_name) AS first_name,
+                    COALESCE(s.last_name, t.last_name, e.last_name, a.last_name) AS last_name,
+                    l.language_name
+                {base_query}
+                ORDER BY p.timestamp DESC
+                LIMIT %s OFFSET %s
+                '''
+    full_search_values = search_values + [per_page, offset]
+    cursor.execute(post_query, full_search_values)
     posts = cursor.fetchall()
 
             
     cursor.close()
     connection.close()
 
-    return render_template('discussion_board.html', posts=posts)
+    return render_template('discussion_board.html', posts=posts, total_pages=total_pages, current_page=page, keyword=keyword, language=language)
+
+@student.route('/submit_post', methods=['POST'])
+def submit_post():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    user_id = session.get('id', None)
+
+    topic = request.form['topic']
+    content = request.form['content']
+    language_id = request.form['language_id']
+    course_id = request.form.get('course_id')
+    
+    cursor, connection = get_cursor()
+    # Insert data to DiscussionBoard table
+    discussion_query = '''
+                        INSERT INTO DiscussionBoard (course_id, language_id)
+                        VALUES (%s, %s)
+                        '''
+    cursor.execute(discussion_query, (course_id if course_id else None, language_id))
+    discussion_id = cursor.lastrowid
+    # Insert data to Post table
+    post_query = '''
+                    INSERT INTO Post (discussion_id, user_id, topic, content)
+                    VALUES (%s, %s, %s, %s)
+                    '''
+    cursor.execute(post_query, (discussion_id, user_id, topic, content))
+
+    connection.commit()  
+    cursor.close()
+    connection.close()
+
+    return redirect(url_for('student.discussion_board'))
+
+@student.route('/post_details/<int:post_id>')
+def post_details(post_id):
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    user_id = session.get('id', None)
+    cursor, connection = get_cursor()
+
+    # Fetch posts
+    post_query = '''
+                SELECT p.post_id, p.topic, p.content, p.timestamp, u.user_id, u.username, u.role,
+                    COALESCE(s.image_url, t.image_url, e.image_url, a.image_url) AS image_url,
+                    COALESCE(s.first_name, t.first_name, e.first_name, a.first_name) AS first_name,
+                    COALESCE(s.last_name, t.last_name, e.last_name, a.last_name) AS last_name,
+                    l.language_name
+                    FROM Post p
+                JOIN User u ON p.user_id = u.user_id
+                LEFT JOIN Student s ON u.user_id = s.student_id
+                LEFT JOIN Teacher t ON u.user_id = t.teacher_id
+                LEFT JOIN Expert e ON u.user_id = e.expert_id
+                LEFT JOIN Administrator a ON u.user_id = a.admin_id
+                JOIN DiscussionBoard d ON p.discussion_id = d.discussion_id
+                JOIN Language l ON d.language_id = l.language_id
+                WHERE p.post_id = %s
+                '''
+    cursor.execute(post_query, (post_id,))
+    post = cursor.fetchone()
+
+    # Fetch replies
+    replies_query = '''
+                    SELECT r.content, r.timestamp, u.user_id, u.role,
+                        COALESCE(s.image_url, t.image_url, e.image_url, a.image_url) AS image_url,
+                        COALESCE(s.first_name, t.first_name, e.first_name, a.first_name) AS first_name,
+                        COALESCE(s.last_name, t.last_name, e.last_name, a.last_name) AS last_name,
+                        r.reply_id
+                    FROM Replies r
+                    JOIN User u ON r.user_id = u.user_id
+                    LEFT JOIN Student s ON u.user_id = s.student_id
+                    LEFT JOIN Teacher t ON u.user_id = t.teacher_id
+                    LEFT JOIN Expert e ON u.user_id = e.expert_id
+                    LEFT JOIN Administrator a ON u.user_id = a.admin_id
+                    WHERE r.post_id = %s
+                    ORDER BY r.timestamp ASC
+                    '''
+    cursor.execute(replies_query, (post_id,))
+    replies = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    return render_template('post_details.html', post=post, replies=replies)
+
+@student.route('/submit_reply/<int:post_id>', methods=['POST'])
+def submit_reply(post_id):
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    user_id = session.get('id', None)
+
+    content = request.form['reply_content']
+
+    cursor, connection = get_cursor()
+
+    # Insert reply into Replies table
+    reply_query = '''
+                    INSERT INTO Replies (post_id, user_id, content)
+                    VALUES (%s, %s, %s)
+                    '''
+    cursor.execute(reply_query, (post_id, user_id, content))
+    reply_id = cursor.lastrowid
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return redirect(url_for('student.post_details', post_id=post_id, reply_id=reply_id))

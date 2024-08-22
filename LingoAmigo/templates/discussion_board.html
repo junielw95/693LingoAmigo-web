@@ -34,9 +34,7 @@
         </div>
     </div>
 </section>
-    <!--Page Header End-->
-
-    <!--Search and filter-->
+<!--Search and filter-->
 <div class="search-filter-container">
     <form method="GET" action="{{ url_for('student.discussion_board') }}">
         <input type="text" name="keyword" placeholder="Search posts..." value="{{ request.args.get('keyword', '') }}">
@@ -48,12 +46,61 @@
             </option>
             {% endfor %}
         </select>
-        <button type="submit" class="thm-btn search-toggler">Search</button>
+        <button type="submit" class="thm-btn">Search</button>
     </form>
 </div>
-    <!--Blog One Start-->
+
+<br><br>
+
+<!--Post submission form-->
+<div class="container">
+            <div class="row">
+                <div class="col-xl-4 col-lg-4">
+                    <div class="contact-page__left">
+                        <div class="section-title">
+                            <span class="section-title__tagline">Ask what you confused</span>
+                            <h2 class="section-title__title">Post <br>New Topic</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-8 col-lg-8">
+                    <div class="contact-page__right">
+                        <div class="post-submission-form">
+                            <h3></h3>
+                            <form method="POST" action="{{ url_for('student.submit_post') }}">
+                                <input type="text" name="topic" placeholder="Enter topic title..." required>
+                                <textarea name="content" placeholder="Write your post content here..." required></textarea>
+                                <select name="language_id" required>
+                                    <option value="">Select language</option>
+                                    {% for language in languages %}
+                                    <option value="{{ language[0] }}">
+                                        {{ language[1] }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <select name="course_id">
+                                    <option value="">Select Course (Optional)</option>
+                                    {% for course in courselist %}
+                                    <option value="{{ course[0] }}">
+                                        {{ course[1] }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="thm-btn">Submit Post</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    <!--Posts-->
     <section class="blog-one blog-one--blog">
         <div class="container">
+            <div class="company-logos-one__title text-center">
+                <h6>View All Posts</h6>
+            </div>
             <div class="row">
                 {% for post in posts %}
                 <!--Start Single Blog One-->
@@ -69,15 +116,28 @@
                                     <li><a href="#"><span class="icon-user"></span> {{ post[8] }}  {{ post[9] }}</a></li>
                                 </ul>
                             </div>
-                            <h4><a href="#"> {{ post[1] }}</a></h4>
+                            <h4><a href="{{ url_for('student.post_details', post_id=post[0]) }}"> {{ post[1] }}</a></h4>
                         </div>
                     </div>
                 </div>
                 <!--End Single Blog One-->
                 {% endfor %}
-
-             
             </div>
+            <!--Page number-->
+            <div class="pagination-container">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        {% for page_num in range(1, total_pages + 1) %}
+                            <li class="page-item {% if page_num == current_page %}active{% endif %}">
+                                <a class="page-link" href="{{ url_for('student.discussion_board', page=page_num, keyword=keyword, language=language) }}">
+                                    {{ page_num }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+            <!--Page num end-->
         </div>
     </section>
     <!--Blog One End-->

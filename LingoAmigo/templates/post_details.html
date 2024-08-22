@@ -1,0 +1,135 @@
+{% extends 'layout.html' %} {% block title %}LingoAmigo{% endblock %} {% block
+    content %}
+
+
+<body>
+
+<div class="page-wrapper">
+    <div class="stricky-header stricked-menu main-menu">
+        <div class="sticky-header__content">
+
+        </div><!-- /.sticky-header__content -->
+    </div><!-- /.stricky-header -->
+
+
+
+<!--Page Header Start-->
+<section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="page-header__wrapper clearfix">
+                    <div class="page-header__title">
+                        <h2>{{ post[1] }}</h2>
+                    </div>
+                    <div class="page-header__menu">
+                        <ul class="page-header__menu-list list-unstyled clearfix">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="{{ url_for('student.discussion_board') }}">Back to Discussion Board</a></li>
+                            <li class="active">Post</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<div class="container mt-5 mb-5">
+    <!--Post content-->
+    <div class="post-box d-flex">
+        <div class="box-left pr-4">
+            <img src="{{ url_for('static', filename='uploads/' + post[7]) }}" alt="User Image" class="img-fluid">
+            <div class="mt-2">
+                <img src="{{ url_for('static', filename='images/posticon.jpg') }}" alt="Post Icon" class="icon-small">
+            </div>
+            <p class="post-name"><span class="icon-user"></span> {{ post[8] }} {{ post[9] }} </p>
+            <p class="post-name"><i class="fas fa-user-tag"></i> {{ post[6] }}</p>
+        </div>
+        <div class="box-right pl-4">
+            <h2 class="post-topic">{{ post[1] }}</h2>
+            <hr>
+            <p class="post-content">{{ post[2] }}</p>
+            <div class="text-right">
+                <p><small class="post-date">Posted on {{ post[3].strftime('%d-%m-%Y') }}</small></p>
+            </div>
+        </div>
+    </div>
+    <!--Post box end-->
+
+
+    <!--Replies content-->
+        {% for reply in replies %}
+            <div id="reply-{{ reply[7] }}" class="reply-box d-flex mt-3">
+                <div class="box-left pr-4">
+                    <img src="{{ url_for('static', filename='uploads/' + reply[4]) }}" alt="User Image">
+                    <div class="mt-2">
+                        <img src="{{ url_for('static', filename='images/replyicon.jpg') }}" alt="Reply Icon" class="icon-small">
+                    </div> 
+                    <p class="post-name"><span class="icon-user"></span> {{ reply[5] }} {{ reply[6] }} </p>                 
+                    <p class="post-name"><i class="fas fa-user-tag"></i> {{ reply[3] }}</p>
+                </div>
+                <div class="box-right pl-4">
+                    <p>{{ reply[0] }}</p>
+                    <div class="text-right">
+                        <p><small class="reply-date">Posted on {{ reply[1].strftime('%d-%m-%Y') }}</small></p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    <!--replies box end-->
+
+    <!--Submit reply-->
+    <div class="reply-form mt-3">
+        <h3>Leave a Reply</h3>
+        <form action="{{ url_for('student.submit_reply', post_id=post[0]) }}" method="POST">
+            <textarea name="reply_content" required placeholder="Type your reply here..." class="form-control mb-2"></textarea>
+            <button type="submit" class="thm-btn">Submit Reply</button>
+        </form>
+    </div>
+
+</div>
+
+
+
+
+    </div><!-- /.page-wrapper -->
+
+
+
+
+    <div class="search-popup">
+        <div class="search-popup__overlay search-toggler"></div>
+        <!-- /.search-popup__overlay -->
+        <div class="search-popup__content">
+            <form action="#">
+                <label for="search" class="sr-only">search here</label><!-- /.sr-only -->
+                <input type="text" id="search" placeholder="Search Here..." />
+                <button type="submit" aria-label="search submit" class="thm-btn2">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
+        <!-- /.search-popup__content -->
+    </div>
+    <!-- /.search-popup -->
+<a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const replyId = urlParams.get('reply_id');
+    if (replyId) {
+        const replyElement = document.getElementById('reply-' + replyId);
+        if (replyElement) {
+            replyElement.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+});
+
+</script>
+</body>
+
+{% endblock %}

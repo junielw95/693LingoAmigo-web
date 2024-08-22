@@ -128,6 +128,21 @@
                 {% endfor %}
                 <!--End Single Courses One-->
             </div>
+            <!--Page number-->
+            <div class="pagination-container">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        {% for page_num in range(1, total_pages + 1) %}
+                            <li class="page-item {% if page_num == current_page %}active{% endif %}">
+                                <a class="page-link" href="{{ url_for('courses', page=page_num, language_id=language_filter if language_filter) }}">
+                                    {{ page_num }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+            <!--Page num end-->
         </div>
     </section>
     <!--Courses One End-->
@@ -193,14 +208,14 @@
     <script>
         document.querySelectorAll('.project-filter li').forEach(item => {
             item.addEventListener('click', function(event) {
-                event.stopPropagation();
-                let filter = this.getAttribute('data-filter');
-                applyFilter(filter);
+                //event.stopPropagation();
+                //let filter = this.getAttribute('data-filter');
+                //applyFilter(filter);
             });
         });
-        function applyFilter(filter) {
+        //function applyFilter(filter) {
             
-        }
+        //}
     </script>
 </body>
 

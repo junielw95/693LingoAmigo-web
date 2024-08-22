@@ -744,9 +744,16 @@ video {
   align-items: center;
   margin: 20px 0;
   padding: 10px;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.search-filter-container form {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 .search-filter-container input[type="text"], .search-filter-container select {
   flex: 1;
@@ -754,7 +761,17 @@ video {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  height: 40px;
+  height: 45px;
+}
+.search-filter-container input::placeholder {
+  color: #808080;
+  opacity: 1;
+}
+.search-filter-container select {
+  color: #808080;
+}
+.search-filter-container select option {
+  color: black;
 }
 .search-filter-container button {
   background-color: #007BFF;
@@ -768,3 +785,168 @@ video {
 .search-filter-container button:hover {
   background-color: #0056b3;
 }
+
+.post-submission-form {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.post-submission-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.post-submission-form input, .post-submission-form textarea, .post-submission-form select {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+.post-submission-form input::placeholder, .post-submission-form textarea::placeholder {
+  color: #808080;
+  opacity: 1;
+}
+.post-submission-form select {
+  color: #808080;
+  height: 45px;
+}
+.post-submission-form select option {
+  color: black;
+}
+.post-submission-form button {
+  background-color: #0056b3;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.post-submission-form button:hover {
+  background-color: #004494;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.pagination li {
+  display: inline-block;
+}
+.pagination li a {
+  color: #007bff;
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+}
+.pagination li.active a {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+.pagination li a:hover {
+  background-color: #ddd;
+}
+.post-box {
+  display: flex;
+  align-items: center;
+  margin-top: 3rem;
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 2px solid #555;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background: #f9f9f9;
+}
+.reply-box {
+  display: flex;
+  align-items: center;
+  margin-top: 3rem;
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+.box-left {
+  flex: 0 1 15%;
+  border-right: 1px solid #ccc;
+  padding-right: 1rem;
+}
+.box-left img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+.box-right {
+  flex: 1;
+  padding-left: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.post-content {
+  margin-top: 10px;
+}
+.post-topic {
+  font-size: 1.25rem;
+}
+.hr {
+  margin: 0.5rem 0;
+}
+.text-right {
+  margin-top: auto;
+  padding: 0.5rem 0;
+  align-self: flex-end;
+}
+.post-date, .reply-date {
+  font-size: 0.8em;
+  color: #777;
+}
+.icon-small {
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+}
+.post-name {
+  font-size: 0.75rem;
+}
+
+.reply-form{
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+}
+.reply-form h3{
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+textarea {
+  width: 100%;
+  height: 200px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 15px;
+  font-size: 1rem;
+  font-family: 'Arial', sans-serif;
+  resize: none;
+}
+textarea:focus {
+  border-color: #0056b3;
+  box-shadow: 0 0 8px rgba(0, 86, 179, 0.2);
+}
+
