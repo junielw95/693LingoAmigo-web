@@ -52,7 +52,8 @@
    |    |    |-- student_courses.html                      # Show the student's courses that are paid
    |    |    |-- video.html                      # Student watch course video
    |    |    |-- quiz.html                        # Student complete quiz
-
+   |    |    |-- discussion_board.html         # Student submit posts to ask questions or discuss with others
+   |    |    |-- post_details.html             # Student can view post content. All users can reply posts
    |    |    |
    |
    |-- requirements.txt                    # Application Dependencies
