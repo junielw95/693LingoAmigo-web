@@ -54,6 +54,7 @@
    |    |    |-- quiz.html                        # Student complete quiz
    |    |    |-- discussion_board.html         # Student submit posts to ask questions or discuss with others
    |    |    |-- post_details.html             # Student can view post content. All users can reply posts
+   |    |    |-- student_session.html             # Student choose a expert, and start session with the expert
    |    |    |
    |
    |-- requirements.txt                    # Application Dependencies
