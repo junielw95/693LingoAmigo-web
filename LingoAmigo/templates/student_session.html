@@ -1,0 +1,268 @@
+{% extends 'layout.html' %} {% block title %}LingoAmigo{% endblock %} {% block
+    content %}
+
+
+<body>
+
+<div class="page-wrapper">
+    <div class="stricky-header stricked-menu main-menu">
+        <div class="sticky-header__content">
+
+        </div><!-- /.sticky-header__content -->
+    </div><!-- /.stricky-header -->
+
+
+
+<!--Page Header Start-->
+<section class="page-header clearfix" style="background-image: url(static/images/page-header-bg.jpg);">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="page-header__wrapper clearfix">
+                    <div class="page-header__title">
+                        <h2>Session with expert</h2>
+                    </div>
+                    <div class="page-header__menu">
+                        <ul class="page-header__menu-list list-unstyled clearfix">
+                            <li><a href="index.html">Home</a></li>
+                            <li class="active">Session</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+    <!--Start Meet Teachers One-->
+    <section class="meet-teachers-one">
+        <div class="container">
+            <div class="section-title text-center">
+                <span class="section-title__tagline">Skilled & Qualified</span>
+                <h2 class="section-title__title">Meet the Experts</h2>
+            </div>
+            <div class="row">
+                {% for expert in experts %}
+                <!--Start Single Meet Teachers One-->
+                <div class="col-xl-4 col-lg-4">
+                    <div class="meet-teachers-one__single wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
+                        <div class="meet-teachers-one__single-img">
+                            <img src="{{ url_for('static', filename='uploads/' + expert[8]) }}" alt="{{ expert[1] }} {{ expert[2] }}">
+                        </div>
+                        
+                        <div class="meet-teachers-one__single-content">
+                            <div class="meet-teachers-one__single-middle-content">
+                                <div class="title">
+                                    <h4><a href="{{ url_for('expert_profile', expert_id=expert[0]) }}">{{ expert[1] }} {{ expert[2] }}</a></h4>
+                                    <p>Expert</p>
+                                </div>
+                                
+                            </div>
+                        
+                            <div class="meet-teachers-one__single-bottom-content">
+                                <div class="meet-teachers-one__single-content-courses-box">
+                                    <div class="text">
+                                        <p>Contact</p>
+                                    </div>
+                                    <div class="social-icon">
+                                        <ul class="list-unstyled">
+                                            <li><a href="#" data-expert-id="{{ expert[0] }}" class="start-session"><i class="fas fa-message"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!--End Meet Teachers One-->
+    
+    <div id="chat-container" style="display: none;">
+        <div id="chat-header">Session
+            <button id="close-chat" style="float:right;">x</button>
+        </div>
+        <div id="messages"></div>
+        <form id="send-message-form">
+            <input type="text" id="message-input" placeholder="Type your message here..." />
+            <button type="submit">Send</button>
+            <button type="button" id="complete-session">Complete</button>
+        </form>
+    </div>
+
+
+    </div><!-- /.page-wrapper -->
+
+
+
+
+    <div class="search-popup">
+        <div class="search-popup__overlay search-toggler"></div>
+        <!-- /.search-popup__overlay -->
+        <div class="search-popup__content">
+            <form action="#">
+                <label for="search" class="sr-only">search here</label><!-- /.sr-only -->
+                <input type="text" id="search" placeholder="Search Here..." />
+                <button type="submit" aria-label="search submit" class="thm-btn2">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
+        <!-- /.search-popup__content -->
+    </div>
+    <!-- /.search-popup -->
+
+<a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+
+
+    <script src="static/js/jquery-3.5.1.min.js"></script>
+    <script src="static/js/bootstrap.bundle.min.js"></script>
+    <script src="static/js/jarallax.min.js"></script>
+    <script src="static/js/jquery.ajaxchimp.min.js"></script>
+    <script src="static/js/jquery.appear.min.js"></script>
+    <script src="static/js/jquery.circle-progress.min.js"></script>
+    <script src="static/js/jquery.magnific-popup.min.js"></script>
+    <script src="static/js/jquery.validate.min.js"></script>
+    <script src="static/js/nouislider.min.js"></script>
+    <script src="static/js/odometer.min.js"></script>
+    <script src="static/js/swiper.min.js"></script>
+    <script src="static/js/tiny-slider.min.js"></script>
+    <script src="static/js/wnumb.min.js"></script>
+    <script src="static/js/wow.js"></script>
+    <script src="static/js/isotope.js"></script>
+    <script src="static/js/countdown.min.js"></script>
+    <script src="static/js/owl.carousel.min.js"></script>
+    <script src="static/js/twentytwenty.js"></script>
+    <script src="static/js/jquery.event.move.js"></script>
+
+
+    <script src="static/js/74ebec82705a46348cb0d31f8a8da95b.js"></script>
+    <script src="static/js/lingoamigo.js"></script>
+
+<script>
+
+$(document).ready(function() {
+    var refreshTimer;
+  $('.start-session').click(function(e) {
+    e.preventDefault();
+    var expertId = $(this).data('expert-id');
+// start session
+    $.ajax({
+      url: '/student/start_session',
+      type: 'POST',
+      data: {
+        expert_id: expertId,
+        student_id: '{{ session['id'] }}'
+      },
+      success: function(response) {
+        if (response.session_id) {
+            $('#chat-container').show();
+            loadMessages(response.session_id)
+            $('#send-message-form').data('session-id', response.session_id);
+            startAutoRefresh(response.session_id);
+        }
+      },
+      error: function(xhr) {
+        var errorMsg = "Error starting session. Please try again." + xhr.responseText;
+        alert(errorMsg)
+      }
+    });
+  });
+
+  // auto refresh mesages
+    function startAutoRefresh(sessionId) {
+        if(refreshTimer) {
+            clearInterval(refreshTimer);
+        }
+        refreshTimer = setInterval(function() {
+            loadMessages(sessionId);
+        }, 3000);
+    }
+    
+// send message
+    $('#send-message-form').submit(function(e) {
+        e.preventDefault();
+        var message = $('#message-input').val();
+        var sessionId = $(this).data('session-id');
+        if (message !== "") {
+            $.ajax({
+                url: '/student/send_message',
+                type: 'POST',
+                data: {
+                    message: message,
+                    session_id: sessionId
+                },
+                success: function(response) {
+                    $('#message-input').val('');
+                    loadMessages(sessionId);
+                },
+                error: function(xhr) {
+                    var errorMsg = "Error sending message:" + xhr.responseText;
+                    alert(errorMsg);
+                }
+            });
+        }
+    });
+// load message
+    function loadMessages(sessionId) {
+        console.log("Loading messages for session:", sessionId);
+        if (!sessionId) {
+            console.error('Session ID is missing');
+            return;
+        }
+        $.ajax({
+            url: '/student/get_message',
+            type: 'GET',
+            data: { session_id: sessionId },
+            success: function(response) {
+                console.log("Messages received:", response);
+                var messages = response.messages;
+                $('#messages').empty();
+                if(messages.length === 0) {
+                    console.log("No messages to display.");
+                }
+                messages.forEach(function(message) {
+                    console.log("Message:", message);
+                    var msgContainer = $('<div>').addClass('message-container');
+                    var msgContent = $('<div>').addClass('message-text').text(message[0]);
+                    var msgTimestamp = $('<div>').addClass('timestamp').text(message[1]);
+                    msgContainer.append(msgContent).append(msgTimestamp);
+                    $('#messages').append(msgContainer);
+                });
+            }
+        });
+    }
+
+
+    $('#close-chat, #complete-session').on('click', function() {
+        var sessionId = $('#send-message-form').data('session-id');
+        clearInterval(refreshTimer);
+        if ($(this).attr('id') === 'complete-session') {
+            $.ajax({
+                url: '/student/complete_session',
+                type: 'POST',
+                data: { session_id: sessionId },
+                success: function() {
+                        $('#chat-container').hide();
+                },
+                error: function(xhr) {
+                    var errorMsg = "Error completing session. Please try again." + xhr.responseText;
+                    alert(errorMsg)
+                }
+            });
+        } else {
+            $('#chat-container').hide();
+        }
+    });
+});
+
+
+
+</script>
+</body>
+
+{% endblock %}

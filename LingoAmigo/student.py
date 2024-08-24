@@ -649,3 +649,87 @@ def submit_reply(post_id):
     connection.close()
 
     return redirect(url_for('student.post_details', post_id=post_id, reply_id=reply_id))
+
+@student.route('/student_session')
+def student_session():
+    return render_template('student_session.html')
+    
+
+@student.route('/start_session', methods=['POST'])
+def start_session():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    student_id = request.form['student_id']
+    expert_id = request.form['expert_id']
+    try:
+        cursor, connection = get_cursor()
+
+        cursor.execute("INSERT INTO Session (student_id, expert_id, start_time, status) VALUES (%s, %s, NOW(), 'InProgress')", (student_id, expert_id))
+        session_id = cursor.lastrowid
+
+        connection.commit()
+        return jsonify({'session_id': session_id}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+    
+
+@student.route('send_message', methods=['POST'])
+def send_message():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    session_id = request.form['session_id']
+    message = request.form['message']
+    try:
+        cursor, connection = get_cursor()
+
+        cursor.execute("INSERT INTO Messages (session_id, message, timestamp) VALUES (%s, %s, NOW())", (session_id, message))
+        
+        connection.commit()
+        return jsonify({'message': 'Message sent'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+        connection.close()
+    
+
+@student.route('get_message', methods=['GET'])
+def get_message():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    session_id = request.args.get('session_id')
+    try:
+        cursor, connection = get_cursor()
+
+        cursor.execute("SELECT message, timestamp FROM Messages WHERE session_id = %s ORDER BY timestamp ASC", (session_id,))
+        messages = cursor.fetchall()
+        return jsonify({'messages': messages}), 200
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+    
+
+@student.route('complete_session', methods=['POST'])
+def complete_session():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    session_id = request.form['session_id']
+    try:
+        cursor, connection = get_cursor()
+
+        cursor.execute("UPDATE Session SET status='Completed' WHERE session_id=%s", (session_id,))
+        connection.commit()
+        return jsonify({'status': 'Session completed'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+        connection.close()

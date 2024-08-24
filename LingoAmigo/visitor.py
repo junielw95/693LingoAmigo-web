@@ -146,6 +146,20 @@ def courselist():
     return dict(courselist=g.courselist)
 
 
+@app.context_processor
+def experts():
+    if not hasattr(g, 'experts'):
+
+        cursor, connection = get_cursor() 
+        cursor.execute('SELECT * FROM Expert')
+        g.experts = cursor.fetchall()
+
+        cursor.close()  
+        connection.close() 
+    
+
+    return dict(experts=g.experts)
+
 @app.route('/courses')
 def courses():
     cursor, connection = get_cursor() 

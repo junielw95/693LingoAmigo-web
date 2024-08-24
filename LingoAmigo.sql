@@ -16,9 +16,10 @@ DROP TABLE IF EXISTS `StudentAnswer`;
 DROP TABLE IF EXISTS `VideoComments`;
 DROP TABLE IF EXISTS `Replies`;
 DROP TABLE IF EXISTS `Post`;
-DROP TABLE IF EXISTS `Session`;
 DROP TABLE IF EXISTS `Order`;
 DROP TABLE IF EXISTS `Question`;
+DROP TABLE IF EXISTS `Messages`;
+DROP TABLE IF EXISTS `Session`;
 DROP TABLE IF EXISTS `Quiz`;
 DROP TABLE IF EXISTS `Video`;
 DROP TABLE IF EXISTS `Section`;
@@ -445,6 +446,23 @@ CREATE TABLE IF NOT EXISTS `LingoAmigo`.`Replies` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `LingoAmigo`.`Messages`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `LingoAmigo`.`Messages` (
+  `message_id` INT NOT NULL AUTO_INCREMENT,
+  `session_id` INT NOT NULL,
+  `message` TEXT NULL,
+  `timestamp` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`message_id`),
+  INDEX `fk_session_id_idx` (`session_id` ASC) VISIBLE,
+  CONSTRAINT `fk_session_id`
+    FOREIGN KEY (`session_id`)
+    REFERENCES `LingoAmigo`.`Session` (`session_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -1093,3 +1111,26 @@ VALUES
 (5, 13, 'The Pleco app is great for both dictionary and study tool uses.', '2024-08-20 09:00:00'),
 (8, 12, 'I totally recommend "Spring Day" by BTS, it is great for understanding emotional depth in Korean.', '2024-08-20 10:00:00'),
 (9, 10, 'Sure, post the sentence here and I will help you with the translation!', '2024-08-19 13:00:00');
+
+INSERT INTO `Session`
+(`student_id`, `expert_id`, `start_time`, `end_time`, `status`)
+VALUES
+(1, 23, '2024-08-21 09:00:00', '2024-08-21 10:00:00', 'Completed'),
+(2, 24, '2024-08-22 08:00:00', NULL, 'InProgress'),
+(3, 25, '2024-08-20 09:00:00', '2024-08-20 10:00:00', 'Completed'),
+(4, 23, '2024-08-19 09:00:00', '2024-08-19 10:00:00', 'Completed'),
+(5, 24, '2024-08-19 09:00:00', '2024-08-19 10:00:00', 'Completed');
+
+INSERT INTO `Messages`
+(`session_id`, `message`, `timestamp`)
+VALUES
+(1, 'Hello, can you help me with my question?', '2024-08-21 09:01:00'),
+(1, 'Of course!', '2024-08-21 09:02:00'),
+(2, 'Hi, I am ready to start our session now.', '2024-08-22 08:01:00'),
+(2, 'Hi, just give me a moment to set everything up.', '2024-08-22 08:02:00'),
+(3, 'Hello, can you help me with my question?', '2024-08-21 10:01:00'),
+(3, 'Of course!', '2024-08-21 10:02:00'),
+(4, 'Hello, can you help me with my question?', '2024-08-19 09:01:00'),
+(4, 'Of course!', '2024-08-19 09:02:00'),
+(5, 'Hello, can you help me with my question?', '2024-08-19 09:01:00'),
+(5, 'Of course!', '2024-08-19 09:02:00');

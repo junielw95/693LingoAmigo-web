@@ -984,6 +984,3 @@ function projectMasonaryLayout() {
 
 
 
-
-
-
