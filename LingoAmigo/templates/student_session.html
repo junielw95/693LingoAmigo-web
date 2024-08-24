@@ -68,7 +68,7 @@
                                     </div>
                                     <div class="social-icon">
                                         <ul class="list-unstyled">
-                                            <li><a href="#" data-expert-id="{{ expert[0] }}" class="start-session"><i class="fas fa-message"></i></a></li>
+                                            <li><a href="#" data-expert-id="{{ expert[0] }}" data-expert-name="{{ expert[1] }} {{ expert[2] }}" class="start-session"><i class="fas fa-message"></i></a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -83,15 +83,18 @@
     <!--End Meet Teachers One-->
     
     <div id="chat-container" style="display: none;">
-        <div id="chat-header">Session
-            <button id="close-chat" style="float:right;">x</button>
-        </div>
-        <div id="messages"></div>
-        <form id="send-message-form">
-            <input type="text" id="message-input" placeholder="Type your message here..." />
-            <button type="submit">Send</button>
-            <button type="button" id="complete-session">Complete</button>
-        </form>
+        <fieldset class="chat-fiedset">
+            <div id="chat-header">
+            </div>
+            <div id="messages" class="chat-messages"></div>
+            <form id="send-message-form" class="message-form">
+                <input type="text" id="message-input" placeholder="Type your message here..." />
+                <div class="form-actions">
+                    <button type="submit" class="btn-send">Send</button>
+                    <button type="button" id="complete-session" class="btn-complete">Complete</button>
+                </div>
+            </form>
+        </fieldset>
     </div>
 
 
@@ -150,6 +153,7 @@ $(document).ready(function() {
   $('.start-session').click(function(e) {
     e.preventDefault();
     var expertId = $(this).data('expert-id');
+    var expertName = $(this).data('expert-name');
 // start session
     $.ajax({
       url: '/student/start_session',
@@ -160,6 +164,7 @@ $(document).ready(function() {
       },
       success: function(response) {
         if (response.session_id) {
+            $('#chat-header').html("Session with " + expertName + '<button id="close-chat" style="float:right;">x</button>')
             $('#chat-container').show();
             loadMessages(response.session_id)
             $('#send-message-form').data('session-id', response.session_id);
@@ -237,8 +242,14 @@ $(document).ready(function() {
         });
     }
 
+// close session container    
+    $(document).on('click', '#close-chat', function() {
+        clearInterval(refreshTimer);
+        $('#chat-container').hide();
+    });
 
-    $('#close-chat, #complete-session').on('click', function() {
+// complete session
+    $('#complete-session').on('click', function() {
         var sessionId = $('#send-message-form').data('session-id');
         clearInterval(refreshTimer);
         if ($(this).attr('id') === 'complete-session') {
