@@ -1,4 +1,4 @@
-< LingoAmigo >
+< LingoAmigo > -- Wenjing Wang 1157756
    |
    |-- app/
    |    |
@@ -62,3 +62,5 @@
    |-- run.py                              # Start the app in development and production
    |
    |-- LingoAmigo.sql                    # Database
+
+
