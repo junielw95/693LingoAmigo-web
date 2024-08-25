@@ -36,12 +36,26 @@ def visitor_home():
     current_language = None
     if language_filter and course_list:
         current_language = course_list[0][8]
-    cursor.close()  
-    connection.close() 
+    
+    news_query = '''
+                    SELECT r.resource_id, r.topic, r.content, r.published_date, r.image_url,
+                    COALESCE(e.first_name, a.first_name) AS first_name,
+                    COALESCE(e.last_name, a.last_name) AS last_name,
+                    r.creator_id
+                    FROM Resource r
+                    LEFT JOIN Expert e ON r.creator_id = e.expert_id
+                    LEFT JOIN Administrator a ON r.creator_id = a.admin_id
+                    WHERE r.type = 'Article'
+                    ORDER BY r.published_date DESC
+                    LIMIT 3
+                    '''
+    cursor.execute(news_query)
+    news_items = cursor.fetchall()
 
     cursor.close()  
     connection.close() 
-    return render_template('index.html', teachers=teachers, course_list=course_list, current_language=current_language)
+
+    return render_template('index.html', teachers=teachers, course_list=course_list, current_language=current_language, news_items=news_items)
 
 
 @app.route('/about')

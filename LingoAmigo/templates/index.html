@@ -720,9 +720,8 @@
                                 <span class="section-title__tagline">Why Choose Us?</span>
                                 <h2 class="section-title__title">Benefits of Learning <br>from LingoAmigo</h2>
                             </div>
-                            <p class="why-choose-one__left-text">There cursus massa at urnaaculis estie. Sed
-                                aliquamellus vitae ultrs condmentum leo massa mollis estiegittis miristum nulla sed medy
-                                fringilla vitae.</p>
+                            <p class="why-choose-one__left-text">LingoAmigo is an innovative language learning platform designed to connect language learners with native speakers from around the globe. 
+                                  Whether you're a beginner or advancing your skills, LingoAmigo offers the tools and community support to achieve fluency and confidence in your chosen language.</p>
                             <div class="why-choose-one__left-learning-box">
                                 <div class="icon">
                                     <span class="icon-professor"></span>
@@ -794,78 +793,30 @@
                     <h2 class="section-title__title">Latest Articles</h2>
                 </div>
                 <div class="row">
+                    {% for news in news_items %}
                     <!--Start Single Blog One-->
                     <div class="col-xl-4 col-lg-4 wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
                         <div class="blog-one__single">
                             <div class="blog-one__single-img">
-                                <img src="static/picture/blog-v1-img1.jpg" alt="" />
+                                <img src="{{ url_for('static', filename='resources/' + news[4]) }}" alt="{{ news[0] }}"/>
                             </div>
                             <div class="blog-one__single-content">
                                 <div class="blog-one__single-content-overlay-mata-info">
                                     <ul class="list-unstyled">
-                                        <li><a href="#"><span class="icon-clock"></span>20 June</a></li>
-                                        <li><a href="#"><span class="icon-user"></span>Admin </a></li>
-                                        <li><a href="#"><span class="icon-chat"></span> Comments</a></li>
+                                        <li><a href="#"><span class="icon-clock"></span> {{ news[3].strftime('%d-%m-%Y') }}</a></li>
+                                        <li><a href="{{ url_for('expert_profile', expert_id=news[7]) }}"><span class="icon-user"></span> {{ news[5] }}  {{ news[6] }}</a></li>
                                     </ul>
                                 </div>
-                                <h2 class="blog-one__single-content-title"><a href="news-details.html">Helping Answers
-                                        Stand out in Discussions</a></h2>
-                                <p class="blog-one__single-content-text">Lorem ipsum is simply free text on used by
-                                    copytyping refreshing the whole area.</p>
+                                <h2 class="blog-one__single-content-title"><a href="{{ url_for('resource_details', resource_id=news[0]) }}"> {{ news[1] }}</a></h2>
+                                <p class="blog-one__single-content-text"> {{ news[2] }}</p>
                             </div>
                         </div>
                     </div>
                     <!--End Single Blog One-->
-
-                    <!--Start Single Blog One-->
-                    <div class="col-xl-4 col-lg-4 wow fadeInLeft" data-wow-delay="300ms" data-wow-duration="1500ms">
-                        <div class="blog-one__single">
-                            <div class="blog-one__single-img">
-                                <img src="static/picture/blog-v1-img2.jpg" alt="" />
-                            </div>
-                            <div class="blog-one__single-content">
-                                <div class="blog-one__single-content-overlay-mata-info">
-                                    <ul class="list-unstyled">
-                                        <li><a href="#"><span class="icon-clock"></span>20 June</a></li>
-                                        <li><a href="#"><span class="icon-user"></span>Admin </a></li>
-                                        <li><a href="#"><span class="icon-chat"></span> Comments</a></li>
-                                    </ul>
-                                </div>
-                                <h2 class="blog-one__single-content-title"><a href="news-details.html">Helping Answers
-                                        Stand out in Discussions</a></h2>
-                                <p class="blog-one__single-content-text">Lorem ipsum is simply free text on used by
-                                    copytyping refreshing the whole area.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!--End Single Blog One-->
-
-                    <!--Start Single Blog One-->
-                    <div class="col-xl-4 col-lg-4 wow fadeInLeft" data-wow-delay="600ms" data-wow-duration="1500ms">
-                        <div class="blog-one__single">
-                            <div class="blog-one__single-img">
-                                <img src="static/picture/blog-v1-img3.jpg" alt="" />
-                            </div>
-                            <div class="blog-one__single-content">
-                                <div class="blog-one__single-content-overlay-mata-info">
-                                    <ul class="list-unstyled">
-                                        <li><a href="#"><span class="icon-clock"></span>20 June</a></li>
-                                        <li><a href="#"><span class="icon-user"></span>Admin </a></li>
-                                        <li><a href="#"><span class="icon-chat"></span> Comments</a></li>
-                                    </ul>
-                                </div>
-                                <h2 class="blog-one__single-content-title"><a href="news-details.html">Helping Answers
-                                        Stand out in Discussions</a></h2>
-                                <p class="blog-one__single-content-text">Lorem ipsum is simply free text on used by
-                                    copytyping refreshing the whole area.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!--End Single Blog One-->
+                    {% endfor %}
                 </div>
             </div>
         </section>
-        <!--Blog One End-->
 
     </div><!-- /.page-wrapper -->
 
