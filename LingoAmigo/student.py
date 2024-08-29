@@ -343,19 +343,27 @@ def unsubscribe(order_id):
 def play_video(video_id):
     cursor, connection = get_cursor()
     try:
-        cursor.execute("SELECT s.course_id, s.section_id FROM Section s JOIN Video v ON s.section_id = v.section_id WHERE v.video_id = %s", (video_id,))
+        cursor.execute("SELECT s.course_id, s.section_id, c.creator_id FROM Section s JOIN Video v ON s.section_id = v.section_id JOIN Course c ON s.course_id = c.course_id WHERE v.video_id = %s", (video_id,))
         course_result = cursor.fetchone()
         if not course_result:
             flash('Video not found.', 'error')
             return redirect(url_for('student.student_dashboard'))
-        course_id, section_id = course_result
+        course_id, section_id, creator_id = course_result
 
         # Check if user has purchased the course
-        cursor.execute("SELECT 1 FROM `Order` WHERE user_id = %s AND course_id = %s AND status = 'Completed'", (session.get('id'), course_id))
-        if cursor.fetchone() is None:
-            flash('You do not have access to this video.', 'error')
-            return redirect(url_for('visitor.course_details', course_id=course_id))
-        
+        user_id = session.get('id')
+        user_role = session.get('role')
+        has_access = False
+        if user_role in ['Administrator', 'Expert'] or user_id == creator_id:
+            has_access = True
+        else:
+            if user_role == 'Student':
+                cursor.execute("SELECT 1 FROM `Order` WHERE user_id = %s AND course_id = %s AND status = 'Completed'", (session.get('id'), course_id))
+                has_access = cursor.fetchone() is not None
+        if not has_access:
+                flash('You do not have access to this video.', 'error')
+                return redirect(url_for('visitor.course_details', course_id=course_id))
+            
         #Fetch video
         cursor.execute("SELECT video_url, section_id FROM Video WHERE video_id = %s", (video_id,))
         video_details = cursor.fetchone()
@@ -404,14 +412,20 @@ def quiz_page(course_id, quiz_id, results=None, score=None):
     if 'loggedin' not in session:
         return redirect(url_for('login.login_page'))
     user_id = session.get('id', None)
+    user_role = session.get('role', None)
     cursor, connection = get_cursor()
 
-    # Check if user has purchased the course
-    cursor.execute("SELECT 1 FROM `Order` WHERE user_id = %s AND course_id = %s AND status = 'Completed'", (user_id, course_id))
-    if cursor.fetchone() is None:
-        flash('You do not have access to this video.', 'error')
-        return redirect(url_for('visitor.course_details', course_id=course_id))
-    
+    # Check if user is expert or admin or the teacher who create the course
+    cursor.execute("SELECT creator_id FROM Course WHERE course_id = %s", (course_id,))
+    course_creator = cursor.fetchone()
+    if course_creator and (session['role'] == 'Teacher' and course_creator[0] == user_id) or user_role in ['Expert', 'Administrator']:
+        pass
+    else:
+        cursor.execute("SELECT 1 FROM `Order` WHERE user_id = %s AND course_id = %s AND status = 'Completed'", (user_id, course_id)) # Check if user has purchased the course
+        if cursor.fetchone() is None:
+            flash('You do not have access to this quiz.', 'error')
+            return redirect(url_for('course_details', course_id=course_id))
+        
 
     # Fetch quiz
     cursor.execute("SELECT * FROM Quiz WHERE course_id = %s", (course_id,))

@@ -1,0 +1,91 @@
+{% extends 'layout.html' %} {% block title %}LingoAmigo - course_details{% endblock %} {% block
+    content %}
+
+<body>
+
+    
+<div class="page-wrapper">
+
+    
+
+    <div class="stricky-header stricked-menu main-menu">
+        <div class="sticky-header__content">
+
+        </div><!-- /.sticky-header__content -->
+    </div><!-- /.stricky-header -->
+
+
+
+<!--Page Header Start-->
+<section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="page-header__wrapper clearfix">
+                    <div class="page-header__title">
+                        <h2>My Courses</h2>
+                    </div>
+                    <div class="page-header__menu">
+                        <ul class="page-header__menu-list list-unstyled clearfix">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="{{ url_for('courses') }}">All Courses</a></li>
+                            <li class="active">My Courses</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!--Page Header End-->
+{% with messages = get_flashed_messages() %} {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+            <li><strong><i class="fas fa-lightbulb"></i>{{ message }}</strong></li>
+            {% endfor %}
+        </ul>
+    {% endif %} {% endwith %}
+    <!--Course list-->
+    <section class="course-section">
+        <div class="container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Language</th>
+                        <th>Course Name</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in teacher_courses %}
+                    <tr>
+                        <td><a href="{{ url_for('course_details', course_id=course[0]) }}"><img
+                                src="{{ url_for('static', filename='course/' + course[2]) }}"
+                                alt="Product Image"
+                                class="course-incart-photo"
+                            /></a></td>
+                        <td>{{ course[5] }}</td>
+                        <td><a href="{{ url_for('course_details', course_id=course[0]) }}">{{ course[1] }}</a></td>
+                        <td>{{ course[3] }}</td>
+                        <td>
+                            <div class="col-auto">
+                                <a
+                                    href="{{ url_for('teacher.view_students', course_id=course[0]) }}"
+                                    class="btn btn-primary"
+                                    >View Students</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ 
+</body>
+{% endblock %}

@@ -102,11 +102,11 @@
                                             <div class="course-details__curriculum-list-left-icon">
                                                 <i class="fa fa-play" aria-hidden="true"></i>
                                             </div>
-                                            {% if user_has_access %}
+                                            {% if session['loggedin'] %} {% if user_has_access or session['role'] == 'Expert' or session['role'] == 'Administrator' or (session['role'] == 'Teacher' and course[12] == session['id']) %}
                                             <a href="{{ url_for('student.play_video', video_id=section[2]) }}" class="course-details__curriculum-list-left-title">{{ section[0] }}</a>
                                             {% else %}
                                             <span class="course-details__curriculum-list-left-title">{{ section[0] }}</span>
-                                            {% endif %}
+                                            {% endif %} {% endif %}
                                         </div>
                                         <br>
                                         <div class="course-details__curriculum-list-right course-details__curriculum-content">
@@ -120,11 +120,11 @@
                                             <div class="course-details__curriculum-list-left-icon style2">
                                                 <i class="fa fa-comment" aria-hidden="true"></i>
                                             </div>
-                                            {% if user_has_access %}
+                                            {% if session['loggedin'] %} {% if user_has_access or session['role'] == 'Expert' or session['role'] == 'Administrator' or (session['role'] == 'Teacher' and course[12] == session['id']) %}
                                             <a href="{{ url_for('student.quiz_page', course_id=course_id, quiz_id=quiz_id) }}" class="course-details__curriculum-list-left-title">Quiz</a>
                                             {% else %}
                                             <span class="course-details__curriculum-list-left-title">Quiz</span>
-                                            {% endif %}
+                                            {% endif %} {% endif %}
                                         </div>
                                         <div class="course-details__curriculum-list-right">
                                             <p>3 questions</p>

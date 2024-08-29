@@ -39,6 +39,7 @@ def teacher_dashboard():
         cursor.execute('SELECT * FROM User WHERE user_id = %s',(session['id'],))
         teacher_info = cursor.fetchone()
 
+        print("Session Data:", session)
         cursor.close()  
         connection.close() 
         
@@ -163,3 +164,40 @@ def change_password():
     return redirect(url_for('teacher.teacher_dashboard'))
 
 
+
+@teacher.route("/teacher_courses")
+def teacher_courses():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    user_id = session.get('id', None)
+    user_role = session.get('role', None)
+    cursor, connection = get_cursor()
+    courses_query = '''
+                    SELECT c.course_id, c.course_name, c.image_url, c.status, l.language_id, l.language_name
+                    FROM Course c
+                    JOIN Language l ON c.language_id = l.language_id
+                    WHERE c.creator_id = %s
+                    '''
+    cursor.execute(courses_query, (user_id,))
+    teacher_courses = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template('teacher_courses.html', teacher_courses=teacher_courses, user_role=user_role)
+
+@teacher.route('view_students/<int:course_id>')
+def view_students(course_id):
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    
+    cursor, connection = get_cursor()
+    student_query = '''
+                    SELECT s.student_id, s.first_name, s.last_name, s.email, s.phone, s.image_url, s.status
+                    FROM Student s
+                    JOIN `Order` o ON s.student_id = o.user_id
+                    WHERE o.course_id = %s AND o.status = 'Completed'
+                    '''
+    cursor.execute(student_query, (course_id,))
+    students = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template('teacher_view_students.html', students=students, course_id=course_id)

@@ -258,7 +258,7 @@ def course_details(course_id):
                     SELECT c.course_id, c.course_name, c.description, c.duration, c.price, c.image_url, c.status,
                             CONCAT(t.first_name, ' ', t.last_name) AS teacher_name, t.image_url AS teacher_image,
                             l.language_name, l.language_id,
-                            t.teacher_id
+                            t.teacher_id, c.creator_id
                     FROM Course c
                     JOIN Teacher t ON c.creator_id = t.teacher_id
                     JOIN Language l ON c.language_id = l.language_id
