@@ -25,6 +25,7 @@ def visitor_home():
                     FROM Course c
                     JOIN Teacher t ON c.creator_id = t.teacher_id
                     JOIN Language l ON c.language_id = l.language_id 
+                    WHERE c.status = 'Active'
                     LIMIT 8
                     '''
     if language_filter:
@@ -150,7 +151,7 @@ def courselist():
     if not hasattr(g, 'courselist'):
 
         cursor, connection = get_cursor() 
-        cursor.execute('SELECT * FROM Course')
+        cursor.execute('SELECT * FROM Course WHERE status = %s', ('Active',))
         g.courselist = cursor.fetchall()
 
         cursor.close()  
@@ -190,6 +191,7 @@ def courses():
                 FROM Course c
                 JOIN Teacher t ON c.creator_id = t.teacher_id
                 JOIN Language l ON c.language_id = l.language_id
+                WHERE c.status = 'Active'
                 '''
     where_clause = []
     query_params = []
@@ -203,7 +205,7 @@ def courses():
     # Construct the complete sql for counting filtered results
     count_query = f"SELECT COUNT(*) {base_query}"
     if where_clause:
-        count_query += " WHERE " + " AND ".join(where_clause)
+        count_query += " AND " + " AND ".join(where_clause)
 
     # Execute the count query
     cursor.execute(count_query, query_params)
@@ -219,7 +221,7 @@ def courses():
                     {base_query}
                     '''
     if where_clause:
-        course_query += " WHERE " + " AND ".join(where_clause) 
+        course_query += " AND " + " AND ".join(where_clause) 
     course_query += " ORDER BY c.course_id LIMIT %s OFFSET %s"
     query_params.extend([per_page, offset])
 
@@ -294,9 +296,9 @@ def course_details(course_id):
     quiz = cursor.fetchone()
     quiz_id = quiz[0] if quiz else None
     related_courses = '''
-                        SELECT course_id, course_name, price, image_url
+                        SELECT course_id, course_name, price, image_url, status
                         FROM Course
-                        WHERE language_id = %s AND course_id !=%s
+                        WHERE language_id = %s AND course_id !=%s AND status = 'Active'
                         ORDER BY RAND()
                         LIMIT 6
                     '''

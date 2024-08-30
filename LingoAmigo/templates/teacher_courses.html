@@ -1,4 +1,4 @@
-{% extends 'layout.html' %} {% block title %}LingoAmigo - course_details{% endblock %} {% block
+{% extends 'layout.html' %} {% block title %}LingoAmigo - teacher_courses{% endblock %} {% block
     content %}
 
 <body>
@@ -71,11 +71,20 @@
                         <td><a href="{{ url_for('course_details', course_id=course[0]) }}">{{ course[1] }}</a></td>
                         <td>{{ course[3] }}</td>
                         <td>
-                            <div class="col-auto">
+                            <div class="d-flex flex-column flex-md-row">
                                 <a
                                     href="{{ url_for('teacher.view_students', course_id=course[0]) }}"
-                                    class="btn btn-primary"
+                                    class="btn btn-primary btn-action"
                                     >View Students</a>
+                                <a
+                                    href="{{ url_for('teacher.edit_course', course_id=course[0]) }}"
+                                    class="btn btn-secondary btn-action"
+                                    >Edit Course</a>
+                                <a
+                                    href="javascript:void(0)"
+                                    onclick="confirmDelete({{ course[0] }})"
+                                    class="btn btn-danger btn-action"
+                                    >Delete Course</a>
                             </div>
                         </td>
                     </tr>
@@ -85,7 +94,54 @@
         </div>
     </section>
 
+</div><!-- /.page-wrapper -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
- 
+
+<script>
+function confirmDelete(courseId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This will deactivate the course and it will no longer be available to students.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, deactivate it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/teacher/delete_course/${courseId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire(
+                            'Deactived!',
+                            'Your course has been deactived.',
+                            'success'
+                        ).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            data.error,
+                            'error'
+                        );
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire(
+                        'Error!',
+                        'There was an error processing your request.',
+                        'error'
+                    );
+                });
+        }
+    });
+}
+
+</script>
+
 </body>
 {% endblock %}

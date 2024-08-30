@@ -1,4 +1,4 @@
-{% extends 'layout.html' %} {% block title %}LingoAmigo - course_details{% endblock %} {% block
+{% extends 'layout.html' %} {% block title %}LingoAmigo - view students{% endblock %} {% block
     content %}
 
 <body>
@@ -46,7 +46,7 @@
             {% endfor %}
         </ul>
     {% endif %} {% endwith %}
-    <!--Course list-->
+    <!--students list-->
     <section class="course-section">
         <div class="container">
             {% if students %}
@@ -89,7 +89,7 @@
             {% endif %}
         </div>
     </section>
-
+</div><!-- /.page-wrapper -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="http://kit.fontawesome.com/a076d05399.js"></script>
  

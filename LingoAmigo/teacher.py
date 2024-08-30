@@ -176,7 +176,7 @@ def teacher_courses():
                     SELECT c.course_id, c.course_name, c.image_url, c.status, l.language_id, l.language_name
                     FROM Course c
                     JOIN Language l ON c.language_id = l.language_id
-                    WHERE c.creator_id = %s
+                    WHERE c.creator_id = %s AND c.status IN ('Active', 'Pending')
                     '''
     cursor.execute(courses_query, (user_id,))
     teacher_courses = cursor.fetchall()
@@ -201,3 +201,87 @@ def view_students(course_id):
     cursor.close()
     connection.close()
     return render_template('teacher_view_students.html', students=students, course_id=course_id)
+
+
+@teacher.route("/edit_course/<int:course_id>", methods=['GET', 'POST'])
+def edit_course(course_id):
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    cursor, connection = get_cursor()
+    # Edit course info
+    if request.method == 'POST':
+        course_name = request.form['courseName']
+        description = request.form['description']
+        duration = request.form['duration']
+        price = request.form['price']
+        image_url = request.files.get('image_url')
+
+        update_query = '''
+                        UPDATE Course
+                        SET course_name = %s, description = %s, duration = %s, price = %s
+                        WHERE course_id = %s
+                        '''
+        cursor.execute(update_query, (course_name, description, duration, price, course_id))
+
+        if image_url and image_url.filename:
+            image_path = upload(image_url)
+            if image_path:
+                cursor.execute('UPDATE Course SET image_url = %s WHERE course_id = %s', (image_path, course_id))
+        # Edit section
+        sections = [key for key in request.form.keys() if key.startswith('sectionTitle')]
+        for key in sections:
+            section_id = key.split('sectionTitle')[1]
+            title = request.form[key]
+            content = request.form['sectionContent' + section_id]
+            cursor.execute('UPDATE Section SET title = %s, content = %s WHERE section_id = %s', (title, content, section_id))
+
+        connection.commit()
+        flash('Course updated successfully!')
+
+        return redirect(url_for('teacher.teacher_courses'))
+    # Fetch course
+    course_query = "SELECT * FROM Course WHERE course_id = %s"
+    cursor.execute(course_query, (course_id,))
+    course = cursor.fetchone()
+    # Fetch section
+    section_query = "SELECT * FROM Section WHERE course_id = %s"
+    cursor.execute(section_query, (course_id,))
+    sections = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+    return render_template('teacher_edit_course.html', course=course, sections=sections)
+def upload(file):
+    if file and file.filename:
+                filename = secure_filename(file.filename)
+                uploads_dir =os.path.join(current_app.root_path,'static','course')
+                os.makedirs(uploads_dir, exist_ok=True)
+                filepath = os.path.join(uploads_dir, filename)
+                file.save(filepath.replace("\\", "/"))
+                return filename
+
+@teacher.route("/delete_course/<int:course_id>", methods=['POST'])
+def delete_course(course_id):
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    cursor, connection = get_cursor()
+    try:
+        cursor.execute('''
+                        SELECT 1 FROM `Order`
+                        WHERE course_id = %s AND status IN ('Pending', 'Completed')
+                        LIMIT 1
+                        ''', (course_id,))
+        if cursor.fetchone():
+            return jsonify({'succuss': False, 'error': 'Cannot deactivate course with active or pending enrollments.'}), 400
+        # Delete course
+        cursor.execute("UPDATE Course SET status = %s WHERE course_id = %s", ('Inactive', course_id,))
+        connection.commit()
+        return jsonify({'success': True}), 200
+    except Exception as e:
+        connection.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+
