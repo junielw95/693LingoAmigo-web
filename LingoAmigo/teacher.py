@@ -210,12 +210,23 @@ def edit_course(course_id):
     cursor, connection = get_cursor()
     # Edit course info
     if request.method == 'POST':
+        # course info
         course_name = request.form['courseName']
         description = request.form['description']
         duration = request.form['duration']
         price = request.form['price']
         image_url = request.files.get('image_url')
-
+        # quiz
+        quiz_title = request.form['quizTitle']
+        quiz_description = request.form['quizDescription']
+        if quiz_title and quiz_description:
+            cursor.execute("SELECT quiz_id FROM Quiz WHERE course_id = %s", (course_id,))
+            quiz = cursor.fetchone()
+            if quiz:
+                cursor.execute("UPDATE Quiz SET title = %s, description = %s WHERE course_id = %s", (quiz_title, quiz_description, course_id))
+            else:
+                cursor.execute("INSERT INTO Quiz (course_id, title, description) VALUES (%s, %s, %s)", (course_id, quiz_title, quiz_description))
+        # Edit course info
         update_query = '''
                         UPDATE Course
                         SET course_name = %s, description = %s, duration = %s, price = %s
@@ -234,7 +245,23 @@ def edit_course(course_id):
             title = request.form[key]
             content = request.form['sectionContent' + section_id]
             cursor.execute('UPDATE Section SET title = %s, content = %s WHERE section_id = %s', (title, content, section_id))
+        # Edit question
 
+        cursor.execute("SELECT quiz_id FROM Quiz WHERE course_id = %s", (course_id,))
+        quiz_id = cursor.fetchone()[0]
+        questions = request.form.getlist('questionIds')
+        for question_id in questions:
+            question_text = request.form[f'question{question_id}']
+            answerA = request.form[f'answerA{question_id}']
+            answerB = request.form[f'answerB{question_id}']
+            answerC = request.form[f'answerC{question_id}']
+            correct_answer = request.form[f'correctAnswer{question_id}']
+            update_question = '''
+                                UPDATE Question
+                                SET question = %s, A = %s, B = %s, C = %s, answer = %s
+                                WHERE question_id = %s AND quiz_id = %s
+                                '''
+            cursor.execute(update_question, (question_text, answerA, answerB, answerC, correct_answer, question_id, quiz_id))
         connection.commit()
         flash('Course updated successfully!')
 
@@ -248,9 +275,20 @@ def edit_course(course_id):
     cursor.execute(section_query, (course_id,))
     sections = cursor.fetchall()
 
+    # Fetch quiz and question
+    cursor.execute("SELECT * FROM Quiz WHERE course_id = %s", (course_id,))
+    quizzes = cursor.fetchall()
+    print(quizzes)
+    quiz_questions = {}
+    for quiz in quizzes:
+        cursor.execute("SELECT * FROM Question WHERE quiz_id = %s", (quiz[0],))
+        questions = cursor.fetchall()
+        quiz_questions[quiz[0]] = questions
+    print(quiz_questions)
+
     cursor.close()
     connection.close()
-    return render_template('teacher_edit_course.html', course=course, sections=sections)
+    return render_template('teacher_edit_course.html', course=course, sections=sections, quizzes=quizzes, quiz_questions=quiz_questions)
 def upload(file):
     if file and file.filename:
                 filename = secure_filename(file.filename)

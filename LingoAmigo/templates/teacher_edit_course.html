@@ -53,6 +53,7 @@
     <div class="card">
         <div class="card-body">
             <form method="POST" enctype="multipart/form-data">
+                <!-- Course info -->
                 <h4>Course Info</h4><br>
                 <div class="form-group">
                     <label for="courseName">Course Name</label>
@@ -76,7 +77,8 @@
                     <img src="{{ url_for('static', filename='course/' + course[5]) }}" alt="Current Image" class="course-incart-photo">
                 </div>
                 <br><hr><br>
-                <h4>Sections</h4>
+                <!-- Section -->
+                <h4>Sections</h4><br>
                 {% for section in sections %}
                 <div class="form-group">
                     <label for="sectionTitle{{ loop.index }}">Title</label>
@@ -87,6 +89,46 @@
                     <textarea class="form-control" name="sectionContent{{ section[0] }}" required>{{ section[3] }}</textarea>
                 </div>
                 {% endfor %}
+                <br><hr><br>
+                <!-- Quiz -->
+                <h4>Quiz</h4><br>
+                {% if quizzes %}
+                    {% for quiz in quizzes %}
+                    <div class="form-group">
+                        <label for="quizTitle">Quiz Title</label>
+                        <input type="text" class="form-control" name="quizTitle" value="{{ quiz[2] }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quizDescription">Quiz Description</label>
+                        <textarea class="form-control" name="quizDescription">{{ quiz[3] }}</textarea>
+                    </div>
+                    
+                    <div>
+                        {% for question in quiz_questions[quiz[0]] %}
+                        <input type="hidden" name="questionIds" value="{{ question[0] }}">
+                        <div class="form-group">
+                            <label for="question{{ question[0] }}">##Question</label>
+                            <input type="text" class="form-control" name="question{{ question[0] }}" value="{{ question[2] }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="answerA{{ question[0] }}">--Option A</label>
+                            <input type="text" class="form-control" name="answerA{{ question[0] }}" value="{{ question[3] }}" required>
+                            <label for="answerB{{ question[0] }}">--Option B</label>
+                            <input type="text" class="form-control" name="answerB{{ question[0] }}" value="{{ question[4] }}" required>
+                            <label for="answerC{{ question[0] }}">--Option C</label>
+                            <input type="text" class="form-control" name="answerC{{ question[0] }}" value="{{ question[5] }}" required>
+                            <label for="correctAnswer{{ question[0] }}">Correct Answer</label>
+                            <select class="form-control" name="correctAnswer{{ question[0] }}" required>
+                                <option value="A" {% if question[6] == 'A' %}selected{% endif %}>A</option>
+                                <option value="B" {% if question[6] == 'B' %}selected{% endif %}>B</option>
+                                <option value="C" {% if question[6] == 'C' %}selected{% endif %}>C</option>
+                            </select>
+
+                        </div>
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+                </div>
                 <br>
                 <button type="submit" class="thm-btn comment-form__btn">Save Changes</button>
             </form>
