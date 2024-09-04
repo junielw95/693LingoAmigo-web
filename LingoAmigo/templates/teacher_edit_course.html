@@ -80,6 +80,7 @@
                 <!-- Section -->
                 <h4>Sections</h4><br>
                 {% for section in sections %}
+                <br>
                 <div class="form-group">
                     <label for="sectionTitle{{ loop.index }}">Title</label>
                     <input type="text" class="form-control" name="sectionTitle{{ section[0] }}" value="{{ section[2] }}" required>
@@ -88,6 +89,15 @@
                     <label for="sectionContent{{ loop.index }}">Content</label>
                     <textarea class="form-control" name="sectionContent{{ section[0] }}" required>{{ section[3] }}</textarea>
                 </div>
+                <br>
+                <div class="form-group">
+                    <label for="sectionVideo{{ section[0] }}">Video</label>
+                    <input type="file" class="form-control-file" name="sectionVideo{{ section[0] }}">
+                    <video class="responsive-video" controls>
+                        <source src="{{ url_for('static', filename='videos/' + section[4]) }}" type="video/mp4">
+                    </video>
+                </div>
+                <br>
                 {% endfor %}
                 <br><hr><br>
                 <!-- Quiz -->

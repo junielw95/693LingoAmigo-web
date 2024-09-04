@@ -244,9 +244,13 @@ def edit_course(course_id):
             section_id = key.split('sectionTitle')[1]
             title = request.form[key]
             content = request.form['sectionContent' + section_id]
+            video_file = request.files.get(f'sectionVideo{section_id}')
             cursor.execute('UPDATE Section SET title = %s, content = %s WHERE section_id = %s', (title, content, section_id))
-        # Edit question
 
+            if video_file and video_file.filename:
+                video_path = upload_video(video_file)
+                cursor.execute('UPDATE Video SET video_url = %s WHERE section_id = %s', (video_path, section_id))
+        # Edit question
         cursor.execute("SELECT quiz_id FROM Quiz WHERE course_id = %s", (course_id,))
         quiz_id = cursor.fetchone()[0]
         questions = request.form.getlist('questionIds')
@@ -271,7 +275,12 @@ def edit_course(course_id):
     cursor.execute(course_query, (course_id,))
     course = cursor.fetchone()
     # Fetch section
-    section_query = "SELECT * FROM Section WHERE course_id = %s"
+    section_query = '''
+                    SELECT s.section_id, s.course_id, s.title, s.content, v.video_url
+                    FROM Section s
+                    LEFT JOIN Video v ON s.section_id = v.section_id
+                    WHERE s.course_id = %s 
+                    '''
     cursor.execute(section_query, (course_id,))
     sections = cursor.fetchall()
 
@@ -293,6 +302,14 @@ def upload(file):
     if file and file.filename:
                 filename = secure_filename(file.filename)
                 uploads_dir =os.path.join(current_app.root_path,'static','course')
+                os.makedirs(uploads_dir, exist_ok=True)
+                filepath = os.path.join(uploads_dir, filename)
+                file.save(filepath.replace("\\", "/"))
+                return filename
+def upload_video(file):
+    if file and file.filename:
+                filename = secure_filename(file.filename)
+                uploads_dir =os.path.join(current_app.root_path,'static','videos')
                 os.makedirs(uploads_dir, exist_ok=True)
                 filepath = os.path.join(uploads_dir, filename)
                 file.save(filepath.replace("\\", "/"))
