@@ -340,3 +340,106 @@ def delete_course(course_id):
         connection.close()
 
 
+@teacher.route("/create_course", methods=['GET', 'POST'])
+def create_course():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    cursor, connection = get_cursor()
+    # Create course info
+    try:
+        if request.method == 'POST':
+            # course info
+            course_name = request.form['courseName']
+            description = request.form['description']
+            duration = request.form['duration']
+            price = request.form['price']
+            image_url = request.files.get('image_url')
+            creator_id = session['id']
+            language_id = request.form['language_id']
+            insert_query = '''
+                            INSERT INTO Course (course_name, description, duration, price, image_url, status, creator_id, language_id)
+                            VALUES (%s, %s, %s, %s, %s, 'Pending', %s, %s)
+                            '''
+            if image_url and image_url.filename:
+                image_path = upload(image_url)
+            else:
+                image_path = None
+            cursor.execute(insert_query, (course_name, description, duration, price, image_path, creator_id, language_id))
+
+            course_id = cursor.lastrowid
+
+            # Create section
+            i = 0
+            while f'sectionTitle{i}' in request.form:
+                title = request.form[f'sectionTitle{i}']
+                content = request.form[f'sectionContent{i}']
+                video_file = request.files.get(f'sectionVideo{i}')
+                
+                insert_section = '''
+                                INSERT INTO Section (course_id, title, content)
+                                VALUES (%s, %s, %s)
+                                '''
+                cursor.execute(insert_section, (course_id, title, content))
+                section_id = cursor.lastrowid
+
+                if video_file and video_file.filename:
+                    video_path = upload_video(video_file)
+                    insert_video = '''
+                                    INSERT INTO Video (section_id, video_url)
+                                    VALUES (%s, %s)
+                                '''
+                    cursor.execute(insert_video, (section_id, video_path))
+                i += 1
+                    
+            # Create quiz
+            quiz_title = request.form['quizTitle']
+            quiz_description = request.form['quizDescription']
+            cursor.execute("INSERT INTO Quiz (course_id, title, description) VALUES (%s, %s, %s)", (course_id, quiz_title, quiz_description))
+            quiz_id = cursor.lastrowid
+            print(f"Newly created quiz ID: {quiz_id}")
+
+            # Create question
+            j = 0
+            while f'question{j}' in request.form:
+                questions = request.form.get(f'question{j}')
+                if questions is None:
+                    break
+                answerA = request.form.get(f'answerA{j}')
+                answerB = request.form.get(f'answerB{j}')
+                answerC = request.form.get(f'answerC{j}')
+                correct_answer = request.form.get(f'correctAnswer{j}')
+                insert_question = '''
+                                INSERT INTO Question (quiz_id, question, A, B, C, answer)
+                                VALUES (%s, %s, %s, %s, %s, %s)
+                                '''
+                cursor.execute(insert_question, (quiz_id, questions, answerA, answerB, answerC, correct_answer))
+                j += 1
+            connection.commit()
+            flash('Course created successfully! Waiting for Admin approved!')
+            return redirect(url_for('teacher.teacher_courses'))
+    except Exception as e:
+        print(f'Error occured: {e}')
+        connection.rollback()
+        return f"Error processing your request: {str(e)}", 400
+    finally:
+        cursor.close()
+        connection.close()
+
+    return render_template('teacher_create_course.html')
+
+def upload(file):
+    if file and file.filename:
+                filename = secure_filename(file.filename)
+                uploads_dir =os.path.join(current_app.root_path,'static','course')
+                os.makedirs(uploads_dir, exist_ok=True)
+                filepath = os.path.join(uploads_dir, filename)
+                file.save(filepath.replace("\\", "/"))
+                return filename
+def upload_video(file):
+    if file and file.filename:
+                filename = secure_filename(file.filename)
+                uploads_dir =os.path.join(current_app.root_path,'static','videos')
+                os.makedirs(uploads_dir, exist_ok=True)
+                filepath = os.path.join(uploads_dir, filename)
+                file.save(filepath.replace("\\", "/"))
+                return filename

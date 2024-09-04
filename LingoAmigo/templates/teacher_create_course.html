@@ -1,0 +1,180 @@
+{% extends 'layout.html' %} {% block title %}LingoAmigo - Create course{% endblock %} {% block
+    content %}
+
+<body>
+
+    
+<div class="page-wrapper">
+
+    
+
+    <div class="stricky-header stricked-menu main-menu">
+        <div class="sticky-header__content">
+
+        </div><!-- /.sticky-header__content -->
+    </div><!-- /.stricky-header -->
+
+
+
+<!--Page Header Start-->
+<section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="page-header__wrapper clearfix">
+                    <div class="page-header__title">
+                        <h2>Create New course</h2>
+                    </div>
+                    <div class="page-header__menu">
+                        <ul class="page-header__menu-list list-unstyled clearfix">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="{{ url_for('teacher.teacher_courses') }}">My Courses</a></li>
+                            <li class="active">Create New Course</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!--Page Header End-->
+{% with messages = get_flashed_messages() %} {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+            <li><strong><i class="fas fa-lightbulb"></i>{{ message }}</strong></li>
+            {% endfor %}
+        </ul>
+    {% endif %} {% endwith %}
+
+
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                <!-- Course info -->
+                <h4>Course Info</h4><br>
+                <div class="form-group">
+                    <label for="language_id">Language</label>
+                    <select class="form-contaol" name="language_id" id="language_id" required>
+                        {% for language in languages %}
+                        <option value="{{ language[0] }}">{{ language[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="courseName">Course Name</label>
+                    <input type="text" class="form-control" name="courseName" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" name="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration (weeks)</label>
+                    <input type="number" class="form-control" name="duration" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" class="form-control" name="price" required>
+                </div>
+                <div class="form-group">
+                    <label for="image_url" class="form-label">Course Image</label>
+                    <input type="file" class="form-control-file" id="image_url" name="image_url">
+                </div>
+                <br><hr><br>
+                <!-- Section -->
+                <h4>Sections</h4><br>
+                <br>
+                <div id="sections-container">
+                </div>
+                <button type="button" onclick="addSection()" class="btn btn-info">Add Section</button>
+                
+                <br><hr><br>
+                <!-- Quiz -->
+                <h4>Quiz</h4><br>
+                    <div id="quiz-container">
+                    <div class="form-group">
+                        <label for="quizTitle">Quiz Title</label>
+                        <input type="text" class="form-control" name="quizTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quizDescription">Quiz Description</label>
+                        <textarea class="form-control" name="quizDescription"></textarea>
+                    </div>
+                    </div>
+                    <button type="button" onclick="addQuestion()" class="btn btn-info">Add Question</button>
+                    
+                    
+                <br><br><br>
+                <button type="submit" class="thm-btn comment-form__btn">Create Course</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+</div><!-- /.page-wrapper -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="http://kit.fontawesome.com/a076d05399.js"></script>
+ 
+
+<script>
+let sectionIndex = 0;
+function addSection() {
+    const container = document.getElementById('sections-container');
+    const section = document.createElement('div');
+    section.innerHTML = `
+                <div class="form-group">
+                    <label for="sectionTitle${sectionIndex}">Title</label>
+                    <input type="text" class="form-control" name="sectionTitle${sectionIndex}" required>
+                </div>
+                <div class="form-group">
+                    <label for="sectionContent${sectionIndex}">Content</label>
+                    <textarea class="form-control" name="sectionContent${sectionIndex}" required></textarea>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="sectionVideo${sectionIndex}">Video</label>
+                    <input type="file" class="form-control-file" name="sectionVideo${sectionIndex}">
+                </div>
+                <br>
+            `;
+            container.appendChild(section);
+            sectionIndex++;
+}
+let questionIndex = 0;
+function addQuestion() {
+    const container = document.getElementById('quiz-container');
+    const question = document.createElement('div');
+    question.innerHTML = `
+                        <div class="form-group">
+                            <label for="question${questionIndex}">##Question</label>
+                            <input type="text" class="form-control" name="question${questionIndex}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="answerA${questionIndex}">--Option A</label>
+                            <input type="text" class="form-control" name="answerA${questionIndex}" required>
+                            <label for="answerB${questionIndex}">--Option B</label>
+                            <input type="text" class="form-control" name="answerB${questionIndex}" required>
+                            <label for="answerC${questionIndex}">--Option C</label>
+                            <input type="text" class="form-control" name="answerC${questionIndex}" required>
+                            <label for="correctAnswer${questionIndex}">Correct Answer</label>
+                            <select class="form-control" name="correctAnswer${questionIndex}" required>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </select>
+
+                        </div>
+                        `;
+                        container.appendChild(question);
+                        questionIndex++;                
+}
+</script>
+</body>
+{% endblock %}

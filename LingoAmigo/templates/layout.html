@@ -132,6 +132,11 @@
                                                     <i class="fas fa-book"></i>Manage My Courses
                                                   </a>
                                                 </li>
+                                                <li class="nav-item">
+                                                  <a class="nav-link" href="{{ url_for('teacher.create_course') }}">
+                                                    <i class="fas fa-book"></i>Create New Courses
+                                                  </a>
+                                                </li>
                                                 {% endif %} {% endif %}
                                                 <!--login as expert-->
                                                 {% if session['loggedin'] %} {% if
