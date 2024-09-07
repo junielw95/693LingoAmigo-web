@@ -382,7 +382,7 @@ CREATE TABLE IF NOT EXISTS `LingoAmigo`.`Resource` (
   `type` VARCHAR(255) NOT NULL COMMENT 'News, Research, Article, Tutorial',
   `topic` TEXT NOT NULL,
   `content` TEXT NOT NULL,
-  `published_date` DATE NOT NULL,
+  `published_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `creator_id` INT NOT NULL,
   `image_url` VARCHAR(255) NULL,
   `details` TEXT NOT NULL,

@@ -1,0 +1,91 @@
+{% extends 'layout.html' %} {% block title %}LingoAmigo - Add Resource{% endblock %} {% block
+    content %}
+
+<body>
+
+    
+<div class="page-wrapper">
+
+    
+
+    <div class="stricky-header stricked-menu main-menu">
+        <div class="sticky-header__content">
+
+        </div><!-- /.sticky-header__content -->
+    </div><!-- /.stricky-header -->
+
+
+
+<!--Page Header Start-->
+<section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="page-header__wrapper clearfix">
+                    <div class="page-header__title">
+                        <h2>Add new resource</h2>
+                    </div>
+                    <div class="page-header__menu">
+                        <ul class="page-header__menu-list list-unstyled clearfix">
+                            <li><a href="index.html">Home</a></li>
+                            <li class="active">Add new resource</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!--Page Header End-->
+
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <form action="{{ url_for('expert.add_resource') }}" method="POST" enctype="multipart/form-data">
+                <h4>Resource</h4><br>
+                <div class="form-group">
+                    <label for="type">Type:</label>
+                    <select class="form-control" name="type" id="type" required>
+                        <option value="News">News</option>
+                        <option value="Research">Research</option>
+                        <option value="Article">Article</option>
+                        <option value="Tutorial">Tutorial</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="topic">Topic:</label>
+                    <input type="text" class="form-control" name="topic" id="topic" required>
+                </div>
+                <div class="form-group">
+                    <label for="content">Content:</label>
+                    <textarea class="form-control" name="content" id="content" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="details">Details</label>
+                    <textarea class="form-control" name="details" id="details" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="image_url" class="form-label">Image</label>
+                    <input type="file" class="form-control-file" id="image_url" name="image_url">
+                </div>
+
+                <br><br><br>
+                <button type="submit" class="thm-btn comment-form__btn">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+</div><!-- /.page-wrapper -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="http://kit.fontawesome.com/a076d05399.js"></script>
+ 
+
+</body>
+{% endblock %}

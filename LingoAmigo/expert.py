@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta, date, time
 import os
 import re
+import time
 from . import connect
 from .database import get_cursor, get_dict_cursor
 from flask_wtf import FlaskForm
@@ -161,3 +162,91 @@ def change_password():
     flash('Your password has been successfully updated.')
     return redirect(url_for('expert.expert_dashboard'))
 
+
+@expert.route("/add_resource", methods=["GET", "POST"])
+def add_resource():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+
+    cursor, connection = get_cursor()
+    if request.method == 'POST':
+        resource_type = request.form['type']
+        topic = request.form['topic']
+        content = request.form['content']
+        image_url = request.files['image_url']
+        details = request.form['details']
+
+
+        image_path = upload(image_url) if image_url else None
+
+        resource_query = '''
+                        INSERT INTO Resource (type, topic, content, creator_id, image_url, details)
+                        VALUES (%s, %s, %s, %s, %s, %s)
+                        '''
+        cursor.execute(resource_query, (resource_type, topic, content, session['id'], image_path, details))
+        connection.commit()
+        flash('Resource added successfully!', 'success')
+        return redirect(url_for('expert.expert_dashboard'))
+    return render_template('add_resource.html')
+
+def upload(file):
+    if file and file.filename:
+            filename = secure_filename(file.filename)
+            uploads_dir =os.path.join(current_app.root_path,'static','resources')
+            os.makedirs(uploads_dir, exist_ok=True)
+            filepath = os.path.join(uploads_dir, filename)
+            file.save(filepath.replace("\\", "/"))
+            return filename
+
+
+@expert.route("/check_sessions", methods=["GET"])
+def check_sessions():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+
+
+    expert_id = session['id']
+
+    try:
+        cursor, connection = get_cursor()
+        cursor.execute("SELECT * FROM Session WHERE expert_id = %s AND status = 'InProgress'", (expert_id))
+        sessions = cursor.fetchall()
+        return jsonify(sessions), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+@expert.route("/receive_messages", methods=["GET"])
+def receive_messages():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    session_id = request.args.get('session_id')
+    try:
+        cursor, connection = get_cursor()
+        cursor.execute("SELECT * FROM Messages WHERE session_id = %s ORDER BY timestamp ASC", (session_id))
+        messages = cursor.fetchall()
+        return jsonify(messages), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+@expert.route("/send_message", methods=["POST"])
+def send_message():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    session_id = request.form['session_id']
+    message = request.form['message']
+    try:
+        cursor, connection = get_cursor()
+        cursor.execute("INSERT INTO Messages (session_id, message, timestamp) VALUES (%s, %s, NOW())", (session_id, message))
+        connection.commit()
+        return jsonify({'message': 'Message sent'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+        connection.close()
