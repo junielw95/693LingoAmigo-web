@@ -197,10 +197,11 @@ $(document).ready(function() {
             $.ajax({
                 url: '/student/send_message',
                 type: 'POST',
-                data: {
-                    message: message,
-                    session_id: sessionId
-                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                  message: message,
+                  session_id: sessionId
+                  }),
                 success: function(response) {
                     $('#message-input').val('');
                     loadMessages(sessionId);

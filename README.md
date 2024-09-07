@@ -55,7 +55,14 @@
    |    |    |-- discussion_board.html         # Student submit posts to ask questions or discuss with others
    |    |    |-- post_details.html             # Student can view post content. All users can reply posts
    |    |    |-- student_session.html             # Student choose a expert, and start session with the expert
-   |    |    |
+   |    |    |Teacher pages:
+   |    |    |-- teacher_courses.html          # Teacher view their own courses
+   |    |    |-- teacher_create_course.html    # Teacher upload new courses
+   |    |    |-- student_edit_course.html      # Teacher edit their own courses
+   |    |    |-- teacher_view_students.html    # Teacher view students who subscribe the course
+   |    |    |Expert pages:
+   |    |    |-- 
+   |    |    |-- 
    |
    |-- requirements.txt                    # Application Dependencies
    |

@@ -1,15 +1,9 @@
 {% extends 'layout.html' %} {% block title %} LingoAmigo - Expert dashboard{% endblock %} {% block
         content %}
-<!DOCTYPE html>
-<html lang="en">
-    
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard</title>
-</head>
-<body>
 
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/socket.io-client@5.11.4/dist/socket.io.min.js"></script>
         <div class="stricky-header stricked-menu main-menu">
             <div class="sticky-header__content">
 
@@ -38,7 +32,7 @@
             </div>
         </div>
     </section>
-</head>
+
 {% with messages = get_flashed_messages() %} {% if messages %}
         <ul class="flash-messages">
             {% for message in messages %}
@@ -197,19 +191,187 @@
     <br><br><br>
       
 
-    <script>
-        document.querySelector(".preloader").style.display = 'none';
-        document.getElementById("changePasswordLink").onclick = function () {
-          var form = document.getElementById("changePasswordForm")
-          form.style.display = form.style.display === "none" ? "block" : "none"
+    <div id="chat-container" style="display: none;" data-session-id="{{ session_id }}">
+        <fieldset class="chat-fiedset">
+            <div id="chat-header">
+            </div>
+            <div id="messages" class="chat-messages"></div>
+            <form id="send-message-form" class="message-form" action="{{ url_for('expert.send_message') }}" method="POST">
+                <input type="text" id="message-input" placeholder="Type your message here..." />
+                <div class="form-actions">
+                    <button type="submit" class="btn-send">Send</button>
+                    <button type="button" id="complete-session" class="btn-complete">Complete</button>
+                </div>
+            </form>
+        </fieldset>
+    </div>
+
+<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+
+<script>
+    document.querySelector(".preloader").style.display = 'none';
+    document.getElementById("changePasswordLink").onclick = function () {
+      var form = document.getElementById("changePasswordForm")
+      form.style.display = form.style.display === "none" ? "block" : "none"
+    }
+    document.getElementById("cancelChangePassword").onclick = function () {
+      var form = document.getElementById("changePasswordForm")
+      form.style.display = "none"
+      document.getElementById("newPassword").value = ""
+      document.getElementById("confirmPassword").value = ""
+    }
+
+var socket;
+document.addEventListener('DOMContentLoaded', function() {
+  socket = io.connect(location.protocol + '//' + document.domain +':' + location.port);
+  socket.on('connect', function() {
+    console.log('Connected to WebSocket server!')
+  });
+  socket.on('new_message', function(data) {
+    console.log('New message received:', data);
+    var messageContainer = $('<div>').addClass('message-container');
+    var messageContent = $('<div>').addClass('message-text').text(data.message);
+    var messageTimestamp = $('<div>').addClass('timestamp').text(new Date(data.timestamp).toLocalTimeString());
+    messageContainer.append(messageContent).append(messageTimestamp);
+    console.log(messageContainer.html());
+    $('#messages').append(messageContainer);
+    $('#messages').scrollTop($('#messages')[0].scrollHeight)
+    alert('New message received from session ' + data.session_id + ': ' + data.message);
+  });
+});
+
+        
+$(document).ready(function() {
+  var session_id = $('#chat-container').data('session-id');
+  socket.emit('join', { session_id: session_id })
+  var refreshTimer;
+  var currentSessionId = null;
+
+  function checkSessions() {
+    $.ajax({
+      url: '/expert/check_sessions',
+      type: 'GET',
+      success: function(response) {
+        if (response.session_id) {
+            var session_id = response.session_id;
+            if (currentSessionId !== session_id) {
+              currentSessionId = session_id;
+              $('#chat-header').html("Session"+ '<button id="close-chat" style="float:right;">x</button>')
+            $('#chat-container').show();
+            $('#send-message-form').data('session-id', session_id);
+            loadMessages(session_id)
+            startAutoRefresh(session_id);
+            alert('New session started!')
+            }
         }
-        document.getElementById("cancelChangePassword").onclick = function () {
-          var form = document.getElementById("changePasswordForm")
-          form.style.display = "none"
-          document.getElementById("newPassword").value = ""
-          document.getElementById("confirmPassword").value = ""
+      },
+      error: function(xhr) {
+        console.log('Error fetching sessions:', xhr.responseText);
+      }
+    });
+  }
+
+// load message
+    function loadMessages(session_id) {
+        $.ajax({
+            url: '/expert/receive_messages',
+            type: 'GET',
+            data: { session_id: session_id },
+            success: function(data) {
+                $('#messages').empty();
+                data.forEach(function(msg) {
+                  $('#messages').append(`<div>${msg.message} - ${new Date(msg.timestamp).toLocaleTimeString()}<div>`);
+                   
+                });
+            },
+            error: function(xhr) {
+              console.log('Error loading messages:', xhr.responseText);
+            }
+        });
+    }
+
+    
+// auto refresh mesages
+    function startAutoRefresh(session_id) {
+        if(refreshTimer) {
+            clearInterval(refreshTimer);
         }
+        refreshTimer = setInterval(function() {
+            loadMessages(session_id);
+        }, 3000);
+
+// send message
+    $('#send-message-form').submit(function(e) {
+        e.preventDefault();
+        var message = $('#message-input').val();
+
+        var timestamp = new Date();
+        if (message && session_id) {
+          socket.emit('message_received', {
+            message: message,
+            session_id: session_id,
+            timestamp: timestamp
+          }, function(response) {
+            console.log('Message sent. Timestamp:', timestamp); 
+            console.log('Message sent:', response);
+          });
+          
+            $.ajax({
+                url: '/expert/send_message',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                  message: message,
+                  session_id: session_id
+                }),
+                success: function(response) {
+                    $('#message-input').val('');
+                    console.log('Message sent:', response)
+                    loadMessages(session_id);
+                },
+                error: function(xhr) {
+                  console.error('Error sending message:', xhr.responseText);
+                }
+            });
+        }
+    });
+
+
+// complete session
+    $('#complete-session').on('click', function() {
+        var session_id = $('#send-message-form').data('session-id');
+        clearInterval(refreshTimer);
+        if ($(this).attr('id') === 'complete-session') {
+            $.ajax({
+                url: '/expert/complete_session',
+                type: 'POST',
+                data: { session_id: session_id },
+                success: function() {
+                        $('#chat-container').hide();
+                },
+                error: function(xhr) {
+                    var errorMsg = "Error completing session. Please try again." + xhr.responseText;
+                    alert(errorMsg)
+                }
+            });
+        } else {
+            $('#chat-container').hide();
+        }
+    });
+
+
+// close session container    
+    $(document).on('click', '#close-chat', function() {
+        clearInterval(refreshTimer);
+        $('#chat-container').hide();
+    });
+
+    }
+    checkSessions();
+});
+
+
+
     </script>
 </body>
-</html>
 {% endblock %}    

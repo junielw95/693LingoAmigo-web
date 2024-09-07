@@ -1,10 +1,12 @@
 from flask import Flask
 from flask import Blueprint
-
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
 
 app.secret_key = 'your secret key'
+
+socketio = SocketIO(app)
 
 from LingoAmigo import student
 from LingoAmigo import teacher
@@ -13,6 +15,7 @@ from LingoAmigo import administrator
 from LingoAmigo import visitor
 from LingoAmigo import register
 from LingoAmigo import login
+
 
 from .student import student
 from .teacher import teacher

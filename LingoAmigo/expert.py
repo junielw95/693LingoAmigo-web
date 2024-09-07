@@ -1,9 +1,11 @@
 from LingoAmigo import app
 from LingoAmigo import Blueprint
+from LingoAmigo import socketio
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify,current_app
 from flask_hashing import Hashing
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta, date, time
+from flask_socketio import send, emit, join_room
 import os
 import re
 import time
@@ -31,19 +33,19 @@ def expert_dashboard():
         cursor, connection = get_cursor() 
 
         #Fetch expert profile info
-        cursor.execute('SELECT * FROM Expert WHERE expert_id = %s', (session['id'],))
+        cursor.execute('SELECT * FROM Expert WHERE expert_id = %s', (user_id,))
         expert_profile = cursor.fetchone()
 
          
         #Fetch user account info
-        cursor.execute('SELECT * FROM User WHERE user_id = %s',(session['id'],))
+        cursor.execute('SELECT * FROM User WHERE user_id = %s',(user_id,))
         expert_info = cursor.fetchone()
 
         cursor.close()  
         connection.close() 
         
 
-        return render_template('expert_dashboard.html',expert_info = expert_info, expert_profile = expert_profile)
+        return render_template('expert_dashboard.html', expert_info = expert_info, expert_profile = expert_profile)
     return redirect(url_for('login.login_page'))
 
 
@@ -198,22 +200,42 @@ def upload(file):
             file.save(filepath.replace("\\", "/"))
             return filename
 
+@socketio.on('message_received')
+def handle_message(data):
+    try:
+        session_id = data['session_id']
+        print('Handling message:', data)
+        print('Emitting message:', {'message': data['message'], 'timestamp': data['timestamp']})
+        emit('new_message', {'message': data['message'], 'timestamp': datetime.now().isoformat()}, room=session_id)
+    except Exception as e:
+        print('Error handing message:', str(e))
+@socketio.on('join')
+def on_join(data):
+    session_id = data['session_id']
+    join_room(session_id)
+    print(f"Client joined room {session_id}")
 
 @expert.route("/check_sessions", methods=["GET"])
 def check_sessions():
     if 'loggedin' not in session:
         return redirect(url_for('login.login_page'))
-
-
+    
     expert_id = session['id']
-
+    
     try:
         cursor, connection = get_cursor()
-        cursor.execute("SELECT * FROM Session WHERE expert_id = %s AND status = 'InProgress'", (expert_id))
+    
+        cursor.execute("SELECT * FROM Session WHERE expert_id = %s AND status = 'InProgress'", (expert_id,))
         sessions = cursor.fetchall()
-        return jsonify(sessions), 200
+        if sessions:
+            session_id = sessions[0][0]
+            return jsonify({'session_id': session_id}), 200
+        else:
+            return jsonify({'session_id': None}), 200
     except Exception as e:
+        print(e)
         return jsonify({'error': str(e)}), 500
+        
     finally:
         cursor.close()
         connection.close()
@@ -225,9 +247,10 @@ def receive_messages():
     session_id = request.args.get('session_id')
     try:
         cursor, connection = get_cursor()
-        cursor.execute("SELECT * FROM Messages WHERE session_id = %s ORDER BY timestamp ASC", (session_id))
+        cursor.execute("SELECT * FROM Messages WHERE session_id = %s ORDER BY `timestamp` ASC", (session_id,))
         messages = cursor.fetchall()
-        return jsonify(messages), 200
+        result = [{'message': msg[2], 'timestamp': msg[3]} for msg in messages]
+        return jsonify(result), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     finally:
@@ -238,13 +261,35 @@ def receive_messages():
 def send_message():
     if 'loggedin' not in session:
         return redirect(url_for('login.login_page'))
-    session_id = request.form['session_id']
-    message = request.form['message']
+    data = request.get_json()
+    print("Received data:", data)
+    if not data or 'session_id' not in data or 'message' not in data:
+        return jsonify({'error': 'Missing data, session_id and message are required'}), 400
+    session_id = data['session_id']
+    message = data['message']
     try:
         cursor, connection = get_cursor()
         cursor.execute("INSERT INTO Messages (session_id, message, timestamp) VALUES (%s, %s, NOW())", (session_id, message))
         connection.commit()
         return jsonify({'message': 'Message sent'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+
+@expert.route('complete_session', methods=['POST'])
+def complete_session():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    session_id = request.form['session_id']
+    try:
+        cursor, connection = get_cursor()
+
+        cursor.execute("UPDATE Session SET status='Completed' WHERE session_id=%s", (session_id,))
+        connection.commit()
+        return jsonify({'status': 'Session completed'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     finally:

@@ -695,8 +695,9 @@ def start_session():
 def send_message():
     if 'loggedin' not in session:
         return redirect(url_for('login.login_page'))
-    session_id = request.form['session_id']
-    message = request.form['message']
+    data = request.get_json()
+    session_id = data['session_id']
+    message = data['message']
     try:
         cursor, connection = get_cursor()
 
