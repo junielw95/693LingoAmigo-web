@@ -1,0 +1,129 @@
+{% extends 'layout.html' %} {% block title %}LingoAmigo - Language{% endblock %} {% block
+    content %}
+
+<body>
+
+    
+<div class="page-wrapper">
+
+    
+
+    <div class="stricky-header stricked-menu main-menu">
+        <div class="sticky-header__content">
+
+        </div><!-- /.sticky-header__content -->
+    </div><!-- /.stricky-header -->
+
+
+
+<!--Page Header Start-->
+<section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="page-header__wrapper clearfix">
+                    <div class="page-header__title">
+                        <h2>Languages</h2>
+                    </div>
+                    <div class="page-header__menu">
+                        <ul class="page-header__menu-list list-unstyled clearfix">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="{{ url_for('courses') }}">All Courses</a></li>
+                            <li class="active">Manage Languages</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!--Page Header End-->
+{% with messages = get_flashed_messages() %} {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+            <li><strong><i class="fas fa-lightbulb"></i>{{ message }}</strong></li>
+            {% endfor %}
+        </ul>
+    {% endif %} {% endwith %}
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-xl-4 col-lg-4">
+            <div class="contact-page__left">
+                <div class="section-title">
+                    <span class="section-title__tagline"></span>
+                    <h2 class="section-title__title">Add <br>New Language</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-8 col-lg-8">
+            <div class="contact-page__right">
+                <div class="post-submission-form">
+                    <form method="POST" action="{{ url_for('administrator.add_language') }}" enctype="multipart/form-data">
+                        <input type="text" name="language_name" placeholder="Language Name" required>
+                        <input type="file" class="form-control-file" id="image_url" name="image_url">
+                        <button type="submit" class="thm-btn">Add Language</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br>
+
+<div class="company-logos-one__title text-center">
+    <h3>Existing Languages</h3>
+</div>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Language</th>
+            <th>Courses</th>
+            <th>Edit Language Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for language in languages %}
+        <tr>
+            <td>
+                {% if language[2] %}
+                    <img src="{{ url_for('static', filename='course/' + language[2]) }}" alt="{{ language[1] }}" class="course-incart-photo">
+                {% else %}
+                    <img src="{{ url_for('static', filename='course/language-default.png') }}" alt="{{ language[1] }}" class="course-incart-photo">
+                {% endif %}
+                {{ language[1] }}
+            </td>
+            <td>
+                <ul>
+                    {% if language[0] in language_courses %}
+                        {% for course in language_courses[language[0]] %}
+                            <li>{{ course[1] }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No courses available.</li>
+                    {% endif %}
+                </ul>
+            </td>
+            <td>
+                <form method="POST" action="{{ url_for('administrator.update_language', language_id=language[0]) }}" enctype="multipart/form-data">
+                    <input type="hidden" name="language_id" value="{{ language[0] }}">
+                    <input type="text" name="language_name" placeholder="New Language Name" value="{{ language[1] }}">
+                    <input type="file" class="form-control-file" id="image_url" name="image_url">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+</div><!-- /.page-wrapper -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+</body>
+{% endblock %}

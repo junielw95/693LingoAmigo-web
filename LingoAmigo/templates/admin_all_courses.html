@@ -1,0 +1,268 @@
+{% extends 'layout.html' %} {% block title %}LingoAmigo - all_courses{% endblock %} {% block
+    content %}
+
+<body>
+
+    
+<div class="page-wrapper">
+
+    
+
+    <div class="stricky-header stricked-menu main-menu">
+        <div class="sticky-header__content">
+
+        </div><!-- /.sticky-header__content -->
+    </div><!-- /.stricky-header -->
+
+
+
+<!--Page Header Start-->
+<section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="page-header__wrapper clearfix">
+                    <div class="page-header__title">
+                        <h2>Manage All Courses</h2>
+                    </div>
+                    <div class="page-header__menu">
+                        <ul class="page-header__menu-list list-unstyled clearfix">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="{{ url_for('courses') }}">All Courses</a></li>
+                            <li class="active">Manage Courses</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!--Page Header End-->
+{% with messages = get_flashed_messages() %} {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+            <li><strong><i class="fas fa-lightbulb"></i>{{ message }}</strong></li>
+            {% endfor %}
+        </ul>
+    {% endif %} {% endwith %}
+    <!--Course list-->
+    <section class="course-section">
+        <div class="container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Language</th>
+                        <th>Course Name</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in all_courses %}
+                    <tr>
+                        <td><a href="{{ url_for('course_details', course_id=course[0]) }}"><img
+                                src="{{ url_for('static', filename='course/' + course[2]) }}"
+                                alt="Product Image"
+                                class="course-incart-photo"
+                            /></a></td>
+                        <td>{{ course[5] }}</td>
+                        <td><a href="{{ url_for('course_details', course_id=course[0]) }}">{{ course[1] }}</a></td>
+                        <td>{{ course[3] }}</td>
+                        <td>
+                            <div class="d-flex flex-column flex-md-row">
+                                {% if course[3] == 'Active' %}
+                                <a
+                                    href="{{ url_for('teacher.view_students', course_id=course[0]) }}"
+                                    class="btn btn-primary btn-action"
+                                    >View Students</a>
+                                <a
+                                    href="{{ url_for('administrator.edit_course', course_id=course[0]) }}"
+                                    class="btn btn-secondary btn-action"
+                                    >Edit Course</a>
+                                <a
+                                    href="javascript:void(0)"
+                                    onclick="confirmDelete({{ course[0] }})"
+                                    class="btn btn-danger btn-action"
+                                    >Delete Course</a>
+                                {% endif %}
+                                {% if course[3] == 'Pending' %}
+                                <a
+                                    href="javascript:void(0)"
+                                    onclick="approveCourse({{ course[0] }})"
+                                    class="btn btn-success btn-action"
+                                    >Approve</a>
+                                <a
+                                    href="{{ url_for('administrator.edit_course', course_id=course[0]) }}"
+                                    class="btn btn-secondary btn-action"
+                                    >Edit Course</a>
+                                <a
+                                    href="javascript:void(0)"
+                                    onclick="confirmDelete({{ course[0] }})"
+                                    class="btn btn-danger btn-action"
+                                    >Delete Course</a>
+                                {% endif %}
+                                {% if course[3] == 'Inactive' %}
+                                <a
+                                    href="javascript:void(0)"
+                                    onclick="activeCourse({{ course[0] }})"
+                                    class="btn btn-success btn-action"
+                                    >Active</a>
+                                <a
+                                    href="{{ url_for('administrator.edit_course', course_id=course[0]) }}"
+                                    class="btn btn-secondary btn-action"
+                                    >Edit Course</a>
+                                {% endif %}
+                                
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    
+    <br><br>
+    
+
+</div><!-- /.page-wrapper -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+function confirmDelete(courseId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This will deactivate the course and it will no longer be available to students.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, deactivate it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/administrator/delete_course/${courseId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire(
+                            'Deactived!',
+                            'Your course has been deactived.',
+                            'success'
+                        ).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            data.error,
+                            'error'
+                        );
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire(
+                        'Error!',
+                        'There was an error processing your request.',
+                        'error'
+                    );
+                });
+        }
+    });
+}
+
+function approveCourse(courseId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You are going to approve this course.",
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, approve it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/administrator/approve_course/${courseId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire(
+                            'Approved!',
+                            'Your course has been approved.',
+                            'success'
+                        ).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            data.error,
+                            'error'
+                        );
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire(
+                        'Error!',
+                        'There was an error processing your request.',
+                        'error'
+                    );
+                });
+        }
+    });
+}
+
+
+function activeCourse(courseId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You are going to active this course.",
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, active it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/administrator/approve_course/${courseId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire(
+                            'Actived!',
+                            'Your course has been actived.',
+                            'success'
+                        ).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            data.error,
+                            'error'
+                        );
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire(
+                        'Error!',
+                        'There was an error processing your request.',
+                        'error'
+                    );
+                });
+        }
+    });
+}
+
+</script>
+
+</body>
+{% endblock %}

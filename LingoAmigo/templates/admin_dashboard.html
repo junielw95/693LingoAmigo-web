@@ -155,22 +155,22 @@
         <div class="row">
             <!--Language card-->
           <div class="col-md-4">
-            <a href="#" class="card-link">
+            <a href="{{ url_for('administrator.admin_language') }}" class="card-link">
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title"><i class="fas fa-book" style="font-size: 2rem"></i>Manage Languages</h5>
-                  <p class="card-text">#</p>
+                  <p class="card-text">View all languages, edit languages and add new languages.</p>
                 </div>
               </div>
             </a>
           </div>
           <!--Course card-->
           <div class="col-md-4">
-            <a href="#" class="card-link">
+            <a href="{{ url_for('administrator.admin_all_courses') }}" class="card-link">
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title"><i class="fas fa-book" style="font-size: 2rem"></i>Manage All Courses</h5>
-                  <p class="card-text">#</p>
+                  <p class="card-text">View students, edit courses, approve new courses and delete courses.</p>
                 </div>
               </div>
             </a>

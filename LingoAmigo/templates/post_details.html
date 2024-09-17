@@ -55,6 +55,9 @@
             <div class="text-right">
                 <p><small class="post-date">Posted on {{ post[3].strftime('%d-%m-%Y') }}</small></p>
             </div>
+            {% if session['loggedin'] %} {% if session['role'] == 'Administrator' %}
+                <a href="{{ url_for('administrator.delete_post', post_id=post[0]) }}" class="btn btn-danger btn-delete">Delete Post</a>
+            {% endif %}{% endif %}
         </div>
     </div>
     <!--Post box end-->
@@ -73,9 +76,13 @@
                 </div>
                 <div class="box-right pl-4">
                     <p>{{ reply[0] }}</p>
+                    
                     <div class="text-right">
                         <p><small class="reply-date">Posted on {{ reply[1].strftime('%d-%m-%Y') }}</small></p>
                     </div>
+                    {% if session['loggedin'] %} {% if session['role'] == 'Administrator' %}
+                        <a href="{{ url_for('administrator.delete_reply', reply_id=reply[7], post_id=post[0]) }}" class="btn btn-danger btn-delete">Delete Reply</a>
+                    {% endif %}{% endif %}
                 </div>
             </div>
         {% endfor %}

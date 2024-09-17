@@ -184,6 +184,7 @@ def teacher_courses():
     connection.close()
     return render_template('teacher_courses.html', teacher_courses=teacher_courses, user_role=user_role)
 
+
 @teacher.route('view_students/<int:course_id>')
 def view_students(course_id):
     if 'loggedin' not in session:
