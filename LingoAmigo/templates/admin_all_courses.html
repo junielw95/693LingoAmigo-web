@@ -49,12 +49,14 @@
     <!--Course list-->
     <section class="course-section">
         <div class="container">
+        <h3>All Courses</h3><br>
             <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>Course</th>
                         <th>Language</th>
                         <th>Course Name</th>
+                        <th>Price</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -69,6 +71,12 @@
                             /></a></td>
                         <td>{{ course[5] }}</td>
                         <td><a href="{{ url_for('course_details', course_id=course[0]) }}">{{ course[1] }}</a></td>
+                        <td>{% if course[7] and course[7] != 'None' %}
+                                <s>{{ "%.2f"|format(course[6]) }}</s> <span style="color: rgb(255, 145, 0);">{{ "%.2f"|format(course[8]) }}</span>
+                            {% else %}
+                                {{ "%.2f"|format(course[6]) }}
+                            {% endif %}
+                        </td>
                         <td>{{ course[3] }}</td>
                         <td>
                             <div class="d-flex flex-column flex-md-row">
@@ -122,9 +130,68 @@
                 </tbody>
             </table>
         </div>
+
+
+        <br><br>
+
+    <!--set promotion-->
+    <div class="container">
+        <h3>Set Promotion</h3><br>
+        <div class="promotion-container">
+            <div id="category-discount-form">
+                <form method="POST" action="{{ url_for('administrator.update_language_discount') }}">
+                    <h5>Set Discount for Language</h5><br>
+                    <select class="form-select" name="language_id" id="language_id" required>
+                        {% for language in languages %}
+                        <option value="{{ language[0] }}">{{ language[1] }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="categoryDiscount" class="form-select" name="discount">
+                    <option value="None">None</option>
+                        {% for i in range(10,100,5) %}
+                        <option value="{{ i }}%">{{ i }}%</option>
+                        {% endfor %}
+                    </select>
+                    <button id="applyCategoryDiscount" class="btn btn-primary">Apply Discount</button>
+                </form>
+            </div>
+            <br><hr><br>
+            <div id="category-discount-form"></div>
+                <form method="POST" action="{{ url_for('administrator.update_course_discount') }}">
+                    <h5>Set Discount for One Course</h5><br>
+                    <select class="form-select" name="course_id" id="course_id" required>
+                        <option value="">Select Course (Optional)</option>
+                        {% for course in courselist %}
+                        <option value="{{ course[0] }}">
+                            {{ course[1] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <select id="categoryDiscount" class="form-select" name="discount">
+                    <option value="None">None</option>
+                        {% for i in range(10,100,5) %}
+                        <option value="{{ i }}%">{{ i }}%</option>
+                        {% endfor %}
+                    </select>
+                    <button id="applyCourseDiscount" class="btn btn-primary">Apply Discount</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    
+
+
+
+
     </section>
 
     
+
+
+
+
+
     <br><br>
     
 

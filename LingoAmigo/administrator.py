@@ -2,6 +2,7 @@ from LingoAmigo import app
 from LingoAmigo import Blueprint
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify,current_app
 from .database import get_cursor
+from decimal import Decimal, InvalidOperation
 import re
 from flask_hashing import Hashing
 from datetime import datetime, timedelta, date, time
@@ -153,15 +154,31 @@ def admin_all_courses():
     user_role = session.get('role', None)
     cursor, connection = get_cursor()
     courses_query = '''
-                    SELECT c.course_id, c.course_name, c.image_url, c.status, l.language_id, l.language_name
+                    SELECT c.course_id, c.course_name, c.image_url, c.status, l.language_id, l.language_name, c.price, c.discount_details
                     FROM Course c
                     JOIN Language l ON c.language_id = l.language_id
                     '''
     cursor.execute(courses_query)
     all_courses = cursor.fetchall()
+
+    courses_with_discounts = []
+    for course in all_courses:
+        
+        try:
+            if course[7] and '%' in course[7]:
+                discount_rate = Decimal(course[7].rstrip('%')) / 100
+                discount_price = course[6] * (1 - discount_rate)
+            else:
+                discount_price = course[6]
+
+        except InvalidOperation:
+            discount_price = course[6]
+        courses_with_discounts.append(course + (discount_price,))
+            
+
     cursor.close()
     connection.close()
-    return render_template('admin_all_courses.html', all_courses=all_courses, user_role=user_role)
+    return render_template('admin_all_courses.html', all_courses=courses_with_discounts, user_role=user_role)
 
 
 @administrator.route("/edit_course/<int:course_id>", methods=['GET', 'POST'])
@@ -446,3 +463,338 @@ def delete_reply(reply_id, post_id):
         cursor.close()
         connection.close()
     return redirect(url_for('student.post_details', post_id=post_id))
+
+
+@administrator.route('view_students')
+def view_students():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    
+    cursor, connection = get_cursor()
+    student_query = '''
+                    SELECT s.student_id, s.first_name, s.last_name, s.email, s.phone, s.image_url, s.status
+                    FROM Student s
+                    '''
+    cursor.execute(student_query)
+    students = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template('admin_all_students.html', students=students)
+
+
+@administrator.route('view_teachers')
+def view_teachers():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    
+    cursor, connection = get_cursor()
+    teacher_query = '''
+                    SELECT *
+                    FROM Teacher
+                    '''
+    cursor.execute(teacher_query)
+    teachers = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template('admin_all_teachers.html', teachers=teachers)
+
+
+@administrator.route('view_experts')
+def view_experts():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    
+    cursor, connection = get_cursor()
+    expert_query = '''
+                    SELECT *
+                    FROM Expert
+                    '''
+    cursor.execute(expert_query)
+    experts = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template('admin_all_experts.html', experts=experts)
+
+
+@administrator.route('/administrator/edit_teacher/<int:teacher_id>', methods=['GET', 'POST'])
+def edit_teacher(teacher_id):
+    if 'loggedin' in session :
+
+
+        # nationality list
+        nationalities = ['American', 'Canadian', 'Chinese', 'Mexican', 'Brazilian', 'Argentinian', 'British', 'French', 'German', 'Italian', 'Spanish', 'Portuguese', 'Russian', 'Indian', 'Japanese', 'Korean', 'Australian', 'New Zealander', 'South African', 'Egyptian', 'Nigerian', 'Saudi', 'Emirati', 'Iranian', 'Turkish', 'Indonesian', 'Thai', 'Vietnamese', 'Filipino', 'Malaysian']
+        cursor, connection = get_cursor() 
+        # Fetch teacher details for the give teacher_id
+        cursor.execute("SELECT * FROM Teacher WHERE teacher_id = %s", (teacher_id,))
+        teacher_profile = cursor.fetchone()
+        if request.method == 'POST':
+            first_name = request.form.get('first_name')
+            last_name = request.form.get('last_name')
+            phone = request.form.get('phone')
+            title = request.form.get('title')
+            nationality = request.form.get('nationality')
+            description = request.form.get('description')
+            email = request.form.get('email')
+            date_join = request.form.get('date_join')
+            image_url = request.files.get('image_url')
+            image_path = upload(image_url)
+            
+            # email format
+            if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                flash('Invalid email address format.', 'error')
+                return redirect(request.url)
+            # phone format
+            nz_phone_pattern = re.compile(r"^(\+64|0)([2-9]\d{1}|[27]\d{2})[-\s]?\d{3}[-\s]?\d{4}$")
+            if not nz_phone_pattern.match(phone):
+                flash('Phone number must be in New Zealand format.', 'error')
+                return redirect(request.url)
+            # date
+            try:
+                date_join = datetime.strptime(date_join, '%Y-%m-%d').date()
+            except ValueError:
+                flash('Invalid date format.', 'error')
+                return redirect(request.url)
+            
+            if image_path:
+
+                cursor.execute('''
+                               UPDATE Teacher
+                               SET first_name=%s, last_name=%s, email=%s, title=%s, nationality=%s, description=%s, phone=%s, image_url=%s, date_join=%s
+                            WHERE teacher_id=%s
+                           ''', (first_name, last_name, email, title, nationality, description, phone, image_path, date_join, teacher_id))
+            else:
+
+                #update teacher info
+                cursor.execute('''
+                                UPDATE Teacher
+                                SET first_name=%s, last_name=%s, email=%s, title=%s, nationality=%s, description=%s, phone=%s, date_join=%s
+                                WHERE teacher_id=%s
+                           ''', (first_name, last_name, email, title, nationality, description, phone, date_join, teacher_id))
+            flash('Profile updated successfully', 'success')
+            return redirect(url_for('administrator.view_teachers', image_path=image_path))
+        else:
+            cursor.execute('SELECT * FROM User WHERE user_id = %s',(session['id'],))
+            teacher_info = cursor.fetchone()
+            #fetch current teacher profile for edit
+            cursor.execute('SELECT * FROM Teacher WHERE teacher_id = %s', (teacher_id,))
+            teacher_profile = cursor.fetchone()
+
+
+            cursor.close()  
+            connection.close() 
+
+            return render_template('admin_edit_teacher.html', teacher_profile=teacher_profile, teacher_info=teacher_info, nationalities=nationalities)
+    else:
+        return redirect(url_for('login.login_page'))
+    
+def upload(file):
+    if file and file.filename:
+                filename = secure_filename(file.filename)
+                uploads_dir =os.path.join(current_app.root_path,'static','uploads')
+                os.makedirs(uploads_dir, exist_ok=True)
+                filepath = os.path.join(uploads_dir, filename)
+                file.save(filepath.replace("\\", "/"))
+                return filename
+    
+
+
+
+@administrator.route('/administrator/edit_expert/<int:expert_id>', methods=['GET', 'POST'])
+def edit_expert(expert_id):
+    if 'loggedin' in session :
+
+        # nationality list
+        nationalities = ['American', 'Canadian', 'Chinese', 'Mexican', 'Brazilian', 'Argentinian', 'British', 'French', 'German', 'Italian', 'Spanish', 'Portuguese', 'Russian', 'Indian', 'Japanese', 'Korean', 'Australian', 'New Zealander', 'South African', 'Egyptian', 'Nigerian', 'Saudi', 'Emirati', 'Iranian', 'Turkish', 'Indonesian', 'Thai', 'Vietnamese', 'Filipino', 'Malaysian']
+        cursor, connection = get_cursor()
+        # Fetch expert details for the give expert_id
+        cursor.execute("SELECT * FROM Expert WHERE expert_id = %s", (expert_id,))
+        expert_profile = cursor.fetchone()
+        if request.method == 'POST':
+            first_name = request.form.get('first_name')
+            last_name = request.form.get('last_name')
+            phone = request.form.get('phone')
+            title = request.form.get('title')
+            nationality = request.form.get('nationality')
+            description = request.form.get('description')
+            email = request.form.get('email')
+            date_join = request.form.get('date_join')
+            image_url = request.files.get('image_url')
+            image_path = upload(image_url)
+            
+            # email format
+            if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                flash('Invalid email address format.', 'error')
+                return redirect(request.url)
+            # phone format
+            nz_phone_pattern = re.compile(r"^(\+64|0)([2-9]\d{1}|[27]\d{2})[-\s]?\d{3}[-\s]?\d{4}$")
+            if not nz_phone_pattern.match(phone):
+                flash('Phone number must be in New Zealand format.', 'error')
+                return redirect(request.url)
+            # date
+            try:
+                date_join = datetime.strptime(date_join, '%Y-%m-%d').date()
+            except ValueError:
+                flash('Invalid date format.', 'error')
+                return redirect(request.url)
+            
+            if image_path:
+
+                cursor.execute('''
+                               UPDATE Expert
+                               SET first_name=%s, last_name=%s, email=%s, title=%s, nationality=%s, description=%s, phone=%s, image_url=%s, date_join=%s
+                            WHERE expert_id=%s
+                           ''', (first_name, last_name, email, title, nationality, description, phone, image_path, date_join, expert_id))
+            else:
+
+                #update expert info
+                cursor.execute('''
+                                UPDATE Expert
+                                SET first_name=%s, last_name=%s, email=%s, title=%s, nationality=%s, description=%s, phone=%s, date_join=%s
+                                WHERE expert_id=%s
+                           ''', (first_name, last_name, email, title, nationality, description, phone, date_join, expert_id))
+            flash('Profile updated successfully', 'success')
+            return redirect(url_for('administrator.view_experts', image_path=image_path))
+        else:
+            cursor.execute('SELECT * FROM User WHERE user_id = %s',(expert_id,))
+            expert_info = cursor.fetchone()
+            #fetch current expert profile for edit
+            cursor.execute('SELECT * FROM Expert WHERE expert_id = %s', (expert_id,))
+            expert_profile = cursor.fetchone()
+
+
+            cursor.close()  
+            connection.close() 
+
+            return render_template('admin_edit_expert.html', expert_profile=expert_profile, expert_info=expert_info, nationalities=nationalities)
+    else:
+        return redirect(url_for('login.login_page'))
+    
+def upload(file):
+    if file and file.filename:
+                filename = secure_filename(file.filename)
+                uploads_dir =os.path.join(current_app.root_path,'static','uploads')
+                os.makedirs(uploads_dir, exist_ok=True)
+                filepath = os.path.join(uploads_dir, filename)
+                file.save(filepath.replace("\\", "/"))
+                return filename
+    
+
+@administrator.route('/administrator/edit_student/<int:student_id>', methods=['GET', 'POST'])
+def edit_student(student_id):
+    if 'loggedin' in session :
+        
+        cursor, connection = get_cursor() 
+        #fetch current student profile for edit
+        cursor.execute('SELECT * FROM student WHERE student_id = %s', (student_id,))
+        student_profile = cursor.fetchone()
+
+        if request.method == 'POST':
+            first_name = request.form.get('first_name')
+            last_name = request.form.get('last_name')
+            phone = request.form.get('phone')
+            email = request.form.get('email')
+            date_birth = request.form.get('date_birth')
+            image_url = request.files.get('image_url')
+            image_path = upload(image_url)
+            # email format
+            if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                flash('Invalid email address format.', 'error')
+                return redirect(request.url)
+            # phone format
+            nz_phone_pattern = re.compile(r"^(\+64|0)([2-9]\d{1}|[27]\d{2})[-\s]?\d{3}[-\s]?\d{4}$")
+            if not nz_phone_pattern.match(phone):
+                flash('Phone number must be in New Zealand format.', 'error')
+                return redirect(request.url)
+            # date
+            try:
+                date_birth = datetime.strptime(date_birth, '%Y-%m-%d').date()
+            except ValueError:
+                flash('Invalid date format.', 'error')
+                return redirect(request.url)
+            
+            if image_path:
+
+                cursor.execute('''
+                               UPDATE Student
+                               SET first_name=%s, last_name=%s, phone=%s, email=%s, image_url=%s, date_birth=%s
+                            WHERE student_id=%s
+                           ''', (first_name, last_name, phone, email, image_path, date_birth, student_id))
+
+            else:
+
+                #update student info
+                cursor.execute('''
+                                UPDATE Student
+                                SET first_name=%s, last_name=%s, phone=%s, email=%s, date_birth=%s
+                                WHERE student_id=%s
+                           ''', (first_name, last_name, phone, email, date_birth, student_id))
+            flash('Profile updated successfully', 'success')
+            return redirect(url_for('administrator.view_students', image_path=image_path))
+        else:
+            cursor.execute('SELECT * FROM User WHERE user_id = %s',(student_id,))
+            student_info = cursor.fetchone()
+            #fetch current student profile for edit
+            cursor.execute('SELECT * FROM student WHERE student_id = %s', (student_id,))
+            student_profile = cursor.fetchone()
+
+
+            cursor.close()  
+            connection.close() 
+
+            return render_template('admin_edit_student.html', student_profile=student_profile, student_info=student_info)
+    else:
+        return redirect(url_for('login.login_page'))
+    
+def upload(file):
+    if file and file.filename:
+                filename = secure_filename(file.filename)
+                uploads_dir =os.path.join(current_app.root_path,'static','uploads')
+                os.makedirs(uploads_dir, exist_ok=True)
+                filepath = os.path.join(uploads_dir, filename)
+                file.save(filepath.replace("\\", "/"))
+                return filename
+    
+@administrator.route('update_language_discount', methods=['POST'])
+def update_language_discount():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    
+    cursor, connection = get_cursor()
+
+    langauge_id = request.form.get('language_id')
+    discount = request.form.get('discount')
+
+    try:
+        cursor.execute("UPDATE Course SET discount_details = %s WHERE language_id = %s", (discount, langauge_id))
+        connection.commit()
+        flash('Discount updated successfully!', 'success')
+    except Exception as e:
+        connection.rollback()
+        flash(f'An error occurred: {str(e)}', 'error')
+    finally:
+        cursor.close()
+        connection.close()
+    return redirect(url_for('administrator.admin_all_courses'))
+
+    
+@administrator.route('update_course_discount', methods=['POST'])
+def update_course_discount():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    
+    cursor, connection = get_cursor()
+
+    course_id = request.form.get('course_id')
+    discount = request.form.get('discount')
+
+    try:
+        cursor.execute("UPDATE Course SET discount_details = %s WHERE course_id = %s", (discount, course_id))
+        connection.commit()
+        flash('Discount updated successfully!', 'success')
+    except Exception as e:
+        connection.rollback()
+        flash(f'An error occurred: {str(e)}', 'error')
+    finally:
+        cursor.close()
+        connection.close()
+    return redirect(url_for('administrator.admin_all_courses'))

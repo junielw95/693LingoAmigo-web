@@ -175,45 +175,57 @@
               </div>
             </a>
           </div>
-          <!--Resource card-->
+          <!--Posts card-->
           <div class="col-md-4">
-            <a href="#" class="card-link">
+            <a href="{{ url_for('student.discussion_board') }}" class="card-link">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title"><i class="fas fa-book" style="font-size: 2rem"></i>Manage Resources</h5>
-                  <p class="card-text">#</p>
+                  <h5 class="card-title"><i class="fas fa-envelope" style="font-size: 2rem"></i>Manage Posts</h5>
+                  <p class="card-text">Admin view all posts on discussion board and delete posts or replies.</p>
                 </div>
               </div>
             </a>
           </div>
+          
           <!--Student card-->
           <div class="col-md-4">
-            <a href="#" class="card-link">
+            <a href="{{ url_for('administrator.view_students') }}" class="card-link">
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title"><i class="fas fa-user-cog" style="font-size: 2rem"></i>Manage All Students</h5>
-                  <p class="card-text">#</p>
+                  <p class="card-text">Admin view all students, edit students' account including profile, and status.</p>
                 </div>
               </div>
             </a>
           </div>
           <!--Teacher card-->
           <div class="col-md-4">
-            <a href="#" class="card-link">
+            <a href="{{ url_for('administrator.view_teachers') }}" class="card-link">
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title"><i class="fas fa-user-tie" style="font-size: 2rem"></i>Manage All Teachers</h5>
-                  <p class="card-text">#</p>
+                  <p class="card-text">Admin view all teachers, edit teachers' account including profile, and status.</p>
                 </div>
               </div>
             </a>
           </div>
           <!--Expert card-->
           <div class="col-md-4">
-            <a href="#" class="card-link">
+            <a href="{{ url_for('administrator.view_experts') }}" class="card-link">
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title"><i class="fas fa-user-tie" style="font-size: 2rem"></i>Manage All Experts</h5>
+                  <p class="card-text">Admin view all experts, experts' account including profile, and status.</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          <!--Resource card-->
+          <div class="col-md-4">
+            <a href="#" class="card-link">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"><i class="fas fa-book" style="font-size: 2rem"></i>Manage Resources</h5>
                   <p class="card-text">#</p>
                 </div>
               </div>
@@ -231,17 +243,7 @@
             </a>
           </div>
           
-          <!--Posts card-->
-          <div class="col-md-4">
-            <a href="#" class="card-link">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title"><i class="fas fa-envelope" style="font-size: 2rem"></i>Manage Posts</h5>
-                  <p class="card-text">#</p>
-                </div>
-              </div>
-            </a>
-          </div>
+          
         </div>
       </div>
     </div>

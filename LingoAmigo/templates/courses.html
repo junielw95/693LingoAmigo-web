@@ -1,13 +1,6 @@
-﻿{% extends 'layout.html' %} {% block title %}LingoAmigo{% endblock %} {% block
+﻿{% extends 'layout.html' %} {% block title %}LingoAmigo - courses{% endblock %} {% block
     content %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Courses || LingoAmigo</title>
-</head>
 
 <body>
 
@@ -117,7 +110,11 @@
                                     <span>(4)</span>
                                 </div>
                             </div>
-                            <p class="courses-one__single-content-price">${{ course[4] }}</p>
+                            <p class="courses-one__single-content-price">${% if course[12] and course[12] != 'None' %}
+                                <s>{{ "%.2f"|format(course[4]) }}</s> <span style="color: rgb(255, 145, 0);">{{ "%.2f"|format(course[13]) }}</span>
+                            {% else %}
+                                {{ "%.2f"|format(course[4]) }}
+                            {% endif %}</p>
                             <ul class="courses-one__single-content-courses-info list-unstyled">
                                 <li>{{ course[3] }} Lessons</li>
                                 <li>{{ course[8] }}</li>
@@ -219,5 +216,5 @@
     </script>
 </body>
 
-</html>
+
 {% endblock %}

@@ -7,7 +7,7 @@ from flask_hashing import Hashing
 from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from datetime import datetime, timedelta, date
 from math import ceil
 
@@ -155,7 +155,7 @@ def cart():
     user_id = session.get('id', None)
     cursor, connection = get_cursor()
     cart_query = '''
-                SELECT c.course_id, c.course_name, c.price, c.image_url, o.order_id
+                SELECT c.course_id, c.course_name, c.price, c.image_url, o.order_id, c.discount_details
                 FROM Course c
                 JOIN `Order` o ON c.course_id = o.course_id
                 WHERE o.user_id = %s AND o.status = 'Incart'
@@ -163,9 +163,28 @@ def cart():
     cursor.execute(cart_query, (user_id,))
     cart_items = cursor.fetchall()
 
+    
+    # calculate the discounted price
+    
+    courses_with_discounts = []
+    for course in cart_items:
+        
+        try:
+            if course[5] and course[5] != 'None':
+                discount_rate = Decimal(course[5].rstrip('%')) / 100
+                discount_price = course[2] * (1 - discount_rate)
+            else:
+                discount_price = course[2]
+
+        except InvalidOperation:
+            discount_price = course[2]
+        courses_with_discounts.append(course + (discount_price,))
+            
+    
+
     cursor.close()  
     connection.close() 
-    return render_template('shopping_cart.html', cart_items=cart_items, user_role=user_role)
+    return render_template('shopping_cart.html', cart_items=courses_with_discounts, user_role=user_role)
 
 
 @student.route("/add_to_cart/<int:course_id>", methods=["POST"])
@@ -215,19 +234,45 @@ def checkout():
 
     cursor, connection = get_cursor()
     course_query = '''
-                    SELECT course_id, course_name, price, image_url
+                    SELECT course_id, course_name, price, image_url, discount_details
                     FROM Course
                     WHERE course_id IN (%s)
                     ''' % ','.join(['%s'] * len(selected_course_ids))
     cursor.execute(course_query, tuple(selected_course_ids))
     cart_items = cursor.fetchall()
+    
+    # calculate the discounted price
+    
+    courses_with_discounts = []
+    for course in cart_items:
+        
+        try:
+            if course[4] and course[4] != 'None':
+                discount_rate = Decimal(course[4].rstrip('%')) / 100
+                discount_price = course[2] * (1 - discount_rate)
+            else:
+                discount_price = course[2]
 
-    total_price = sum(item[2] for item in cart_items)
+        except InvalidOperation:
+            discount_price = course[2]
+        courses_with_discounts.append(course + (discount_price,))
+
+    # calculate total price considering discounts
+    total_price = 0
+    for course in cart_items:  
+        if course[4] and course[4] != 'None':
+            discount_rate = Decimal(course[4].rstrip('%')) / 100
+            discount_price = course[2] * (1 - discount_rate)
+        else:
+            discount_price = course[2]
+        total_price += discount_price  
+
+   
 
     cursor.close()  
     connection.close() 
 
-    return render_template('course_checkout.html', cart_items=cart_items, total_price=total_price)
+    return render_template('course_checkout.html', cart_items=courses_with_discounts, total_price=total_price)
 
 @student.route('make_payment', methods = ['POST'])
 def make_payment():

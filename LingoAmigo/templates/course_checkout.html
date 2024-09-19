@@ -27,14 +27,18 @@
                 class="course-incart-photo"/>
                 <div>
                     <h3>{{ item[1] }}</h3>
-                    <p>Price: ${{ item[2] }}</p>
+                    <p>Price: ${% if item[4] and item[4] != 'None' %}
+                                          <s>{{ "%.2f"|format(item[2]) }}</s> <span style="color: rgb(255, 145, 0);">{{ "%.2f"|format(item[5]) }}</span>
+                                      {% else %}
+                                          {{ "%.2f"|format(item[2]) }}
+                                      {% endif %}</p>
                     <input type="hidden" name="selected_courses" value="{{ item[0] }}">
                 </div>
             </div>
             {% endfor %}
         </div>
         <div>
-            <h3>Total Price: ${{ total_price }}</h3>
+            <h3>Total Price: ${{ "%.2f"|format(total_price) }}</h3>
         </div>
     </div>
     <br><br>
@@ -128,7 +132,7 @@
             </div>
             <div>
                 <button type="button" class="pay-button" id="complete_payment">
-                Complete Payment ${{ total_price }}
+                Complete Payment ${{ "%.2f"|format(total_price) }}
                 </button>
             </div>
         

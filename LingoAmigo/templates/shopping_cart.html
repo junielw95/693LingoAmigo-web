@@ -19,8 +19,9 @@
         {% if cart_items %}
         <div class="cart-items-container">
           {% for item in cart_items %}
+          {% set item_price = "%.2f"|format(item[6] if item[5] and item[5] != 'None' else item[2]) %}
           <div class="cart-item">
-            <input type="checkbox" class="item-checkbox" data-price="{{ item[2] }}" data-id="{{ item[0] }}">
+            <input type="checkbox" class="item-checkbox" data-price="{{ item_price }}" data-id="{{ item[0] }}">
             <div class="cart-product">
               <img
                 src="{{ url_for('static', filename='course/' + item[3]) }}"
@@ -32,7 +33,11 @@
                   <a href="{{ url_for('course_details', course_id=item[0]) }}" class="cart-product-link">See more</a>
               </div>
             </div>
-            <span class="cart-price">${{ item[2] }}</span>
+            <span class="cart-price">${% if item[5] and item[5] != 'None' %}
+                                          <s>{{ "%.2f"|format(item[2]) }}</s> <span style="color: rgb(255, 145, 0);">{{ "%.2f"|format(item[6]) }}</span>
+                                      {% else %}
+                                          {{ "%.2f"|format(item[2]) }}
+                                      {% endif %} </span>
             <div class="cart-remove">
               <button
                   type="button"

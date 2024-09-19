@@ -3,6 +3,7 @@ from .database import get_cursor
 from LingoAmigo import Blueprint
 from flask import Blueprint, render_template, request, g, session
 from math import ceil
+from decimal import Decimal, InvalidOperation
 
 visitor = Blueprint("visitor", __name__, static_folder="static", 
                        template_folder="templates")
@@ -21,7 +22,7 @@ def visitor_home():
                     SELECT c.course_id, c.course_name, c.description, c.duration, c.price, c.image_url, c.status,
                             CONCAT(t.first_name, ' ', t.last_name) AS teacher_name,
                             l.language_name, l.language_id,
-                            t.image_url AS teacher_image, t.teacher_id
+                            t.image_url AS teacher_image, t.teacher_id, c.discount_details
                     FROM Course c
                     JOIN Teacher t ON c.creator_id = t.teacher_id
                     JOIN Language l ON c.language_id = l.language_id 
@@ -34,6 +35,24 @@ def visitor_home():
     else:
         cursor.execute(course_query)
     course_list = cursor.fetchall()
+    
+    # calculate the discounted price
+    
+    courses_with_discounts = []
+    for course in course_list:
+        
+        try:
+            if course[12] and course[12] != 'None':
+                discount_rate = Decimal(course[12].rstrip('%')) / 100
+                discount_price = course[4] * (1 - discount_rate)
+            else:
+                discount_price = course[4]
+
+        except InvalidOperation:
+            discount_price = course[4]
+        courses_with_discounts.append(course + (discount_price,))
+            
+    
     current_language = None
     if language_filter and course_list:
         current_language = course_list[0][8]
@@ -56,7 +75,7 @@ def visitor_home():
     cursor.close()  
     connection.close() 
 
-    return render_template('index.html', teachers=teachers, course_list=course_list, current_language=current_language, news_items=news_items)
+    return render_template('index.html', teachers=teachers, course_list=courses_with_discounts, current_language=current_language, news_items=news_items)
 
 
 @app.route('/about')
@@ -114,7 +133,6 @@ def teacher_profile(teacher_id):
         return "Teacher not found", 404
     
     return render_template('teachers_list_profile.html', teacher=teacher)
-
 
 
 @app.route('/expert/<int:expert_id>')
@@ -217,7 +235,8 @@ def courses():
                     SELECT c.course_id, c.course_name, c.description, c.duration, c.price, c.image_url, c.status,
                             CONCAT(t.first_name, ' ', t.last_name) AS teacher_name,
                             l.language_name, l.language_id,
-                            t.image_url AS teacher_image, t.teacher_id
+                            t.image_url AS teacher_image, t.teacher_id,
+                            c.discount_details
                     {base_query}
                     '''
     if where_clause:
@@ -235,10 +254,27 @@ def courses():
         cursor.execute("SELECT language_name FROM Language WHERE language_id = %s", (language_filter,))
         current_language = cursor.fetchone()[0]
 
+    # calculate the discounted price
+    
+    courses_with_discounts = []
+    for course in course_list:
+        
+        try:
+            if course[12] and course[12] != 'None':
+                discount_rate = Decimal(course[12].rstrip('%')) / 100
+                discount_price = course[4] * (1 - discount_rate)
+            else:
+                discount_price = course[4]
+
+        except InvalidOperation:
+            discount_price = course[4]
+        courses_with_discounts.append(course + (discount_price,))
+            
+    
     cursor.close()  
     connection.close() 
 
-    return render_template('courses.html', course_list=course_list, language_filter=language_filter, current_language=current_language, total_pages=total_pages, current_page=page)
+    return render_template('courses.html', course_list=courses_with_discounts, language_filter=language_filter, current_language=current_language, total_pages=total_pages, current_page=page)
 
 
 @app.route('/course_details/<int:course_id>')
@@ -260,7 +296,7 @@ def course_details(course_id):
                     SELECT c.course_id, c.course_name, c.description, c.duration, c.price, c.image_url, c.status,
                             CONCAT(t.first_name, ' ', t.last_name) AS teacher_name, t.image_url AS teacher_image,
                             l.language_name, l.language_id,
-                            t.teacher_id, c.creator_id
+                            t.teacher_id, c.creator_id, c.discount_details
                     FROM Course c
                     JOIN Teacher t ON c.creator_id = t.teacher_id
                     JOIN Language l ON c.language_id = l.language_id
@@ -296,17 +332,48 @@ def course_details(course_id):
     quiz = cursor.fetchone()
     quiz_id = quiz[0] if quiz else None
     related_courses = '''
-                        SELECT course_id, course_name, price, image_url, status
+                        SELECT course_id, course_name, price, image_url, status, discount_details
                         FROM Course
                         WHERE language_id = %s AND course_id !=%s AND status = 'Active'
                         ORDER BY RAND()
-                        LIMIT 6
+                        LIMIT 8
                     '''
     cursor.execute(related_courses, (course[10], course_id))
     related_courses = cursor.fetchall()
+
+    
+    # calculate the discounted price
+    
+    try:
+        if course[13] and course[13] != 'None':
+            discount_rate = Decimal(course[13].rstrip('%')) / 100
+            discount_price = course[4] * (1 - discount_rate)
+        else:
+            discount_price = course[4]
+
+    except InvalidOperation:
+        discount_price = course[4]
+
+    course = course + (discount_price,)
+
+    # calculate the discounted price for related course
+    related_courses_with_discount = []
+    for rc in related_courses:
+        try:
+            if rc[5] and rc[5] != 'None':
+                discount_rate = Decimal(rc[5].rstrip('%')) / 100
+                discount_price = rc[2] * (1 - discount_rate)
+            else:
+                discount_price = rc[2]
+
+        except InvalidOperation:
+            discount_price = rc[2]
+
+    related_courses_with_discount.append(rc + (discount_price,))
+        
     cursor.close()  
     connection.close() 
-    return render_template('course_details.html', course=course, sections=sections, user_role=user_role, section_count=section_count, related_courses=related_courses, user_has_access=user_has_access, course_id=course_id, quiz_id=quiz_id)
+    return render_template('course_details.html', course=course, sections=sections, user_role=user_role, section_count=section_count, related_courses=related_courses_with_discount, user_has_access=user_has_access, course_id=course_id, quiz_id=quiz_id)
 
 @app.route('/news')
 def news():

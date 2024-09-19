@@ -1,0 +1,97 @@
+{% extends 'layout.html' %} {% block title %}LingoAmigo - view experts{% endblock %} {% block
+    content %}
+
+<body>
+
+    
+<div class="page-wrapper">
+
+    
+
+    <div class="stricky-header stricked-menu main-menu">
+        <div class="sticky-header__content">
+
+        </div><!-- /.sticky-header__content -->
+    </div><!-- /.stricky-header -->
+
+
+
+<!--Page Header Start-->
+<section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="page-header__wrapper clearfix">
+                    <div class="page-header__title">
+                        <h2>All Experts</h2>
+                    </div>
+                    <div class="page-header__menu">
+                        <ul class="page-header__menu-list list-unstyled clearfix">
+                            <li><a href="index.html">Home</a></li>
+                            <li class="active">View Experts</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!--Page Header End-->
+{% with messages = get_flashed_messages() %} {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+            <li><strong><i class="fas fa-lightbulb"></i>{{ message }}</strong></li>
+            {% endfor %}
+        </ul>
+    {% endif %} {% endwith %}
+    <!--experts list-->
+    <section class="course-section">
+        <div class="container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Photo</th>
+                        <th>Title</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Nationality</th>
+                        <th>Status</th>
+                        <th>Date of Join</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expert in experts %}
+                    <tr>
+                        <td>{{ expert[0] }}</td>
+                        <td><img
+                                src="{{ url_for('static', filename='uploads/' + expert[8]) }}"
+                                alt="Product Image"
+                                class="course-incart-photo"
+                            /></td>
+                        <td>{{ expert[4] }}</td>
+                        <td>{{ expert[1] }} {{ expert[2] }}</td>
+                        <td>{{ expert[3] }}</td>
+                        <td>{{ expert[7] }}</td>
+                        <td>{{ expert[5] }}</td>
+                        <td>{{ expert[9] }}</td>
+                        <td>{{ expert[10].strftime('%d-%m-%Y') }}</td>
+                        <td><a
+                                    href="{{ url_for('administrator.edit_expert', expert_id=expert[0]) }}"
+                                    class="btn btn-primary btn-action"
+                                    >Edit</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div><!-- /.page-wrapper -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="http://kit.fontawesome.com/a076d05399.js"></script>
+ 
+</body>
+{% endblock %}

@@ -32,7 +32,7 @@
    |    |    |-- expert_dashboard.html                      # Expert dashboard
    |    |    |-- expert_edit_profile.html                      # Expert edit profile and change password
    |    |    |-- admin_dashboard.html                      # Admin dashboard
-   |    |    |-- admin_eodit_profile.html                      # Admin  edit profile and change password
+   |    |    |-- admin_edit_profile.html                      # Admin  edit profile and change password
    |    |    |visitor pages:
    |    |    |-- about.html                      # Page for the LingoAmigo information
    |    |    |-- contact.html                      # Page for contact details of LingoAmigo
@@ -61,6 +61,18 @@
    |    |    |-- student_edit_course.html      # Teacher edit their own courses
    |    |    |-- teacher_view_students.html    # Teacher view students who subscribe the course
    |    |    |Expert pages:
+   |    |    |-- add_resource.html             # Expert create new resources including news, articles, tutorials and researches
+   |    |    |Admin pages:
+   |    |    |-- admin_all_courses.html          # Admin manage all courses
+   |    |    |-- admin_all_language.html         # Admin manage all language
+   |    |    |-- admin_all_students.html         # Admin manage all students
+   |    |    |-- admin_all_teachers.html         # Admin manage all teachers
+   |    |    |-- admin_all_experts.html         # Admin manage all experts
+   |    |    |-- admin_edit_student.html        # Admin edit student profile
+   |    |    |-- admin_edit_teachers.html         # Admin edit teacher profile
+   |    |    |-- admin_edit_experts.html         # Admin edit expert profile
+   |    |    |-- 
+   |    |    |-- 
    |    |    |-- 
    |    |    |-- 
    |

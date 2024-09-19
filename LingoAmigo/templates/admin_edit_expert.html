@@ -1,5 +1,6 @@
-{% extends 'layout.html' %} {% block title %} LingoAmigo - Edit profile{% endblock %} {% block
+{% extends 'layout.html' %} {% block title %} LingoAmigo - Expert dashboard{% endblock %} {% block
         content %}
+
 
 <body>
 
@@ -11,30 +12,30 @@
 </div><!-- /.stricky-header -->
 
 
-    <!--Page Header Start-->
-    <section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="page-header__wrapper clearfix">
-                        <div class="page-header__title">
-                            <h2>Edit My profile</h2>
-                        </div>
-                        <div class="page-header__menu">
-                            <ul class="page-header__menu-list list-unstyled clearfix">
-                                <li><a href="{{ url_for('visitor_home') }}">Home</a></li>
-                                <li class="active">My profile</li>
-                            </ul>
-                        </div>
+<!--Page Header Start-->
+<section class="page-header clearfix" style="background-image: url({{ url_for('static', filename='images/page-header-bg.jpg') }});">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="page-header__wrapper clearfix">
+                    <div class="page-header__title">
+                        <h2>Edit Expert Profile</h2>
+                    </div>
+                    <div class="page-header__menu">
+                        <ul class="page-header__menu-list list-unstyled clearfix">
+                            <li><a href="{{ url_for('visitor_home') }}">Home</a></li>
+                            <li class="active">Edit expert profile</li>
+                        </ul>
                     </div>
                 </div>
-
             </div>
+
         </div>
-    </section>
+    </div>
+</section>
 
     <div class="container mt-5">
-        <h2 class="mb-4" style="text-align:center">Teacher Profile</h2>
+        <h2 class="mb-4" style="text-align:center">Expert Profile</h2>
         <div class="card">
           <div class="card-body">
             <form method="POST" class="row"  enctype="multipart/form-data">
@@ -42,36 +43,36 @@
                     <!--`first_name`, `last_name`, `email`, `title`, `nationality`, `description`, `phone`, `image_url`, `status`, `date_join`-->
                     <div class="mb-3">
                         <label for="first_name" class="form-label">First Name:</label>
-                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ teacher_profile[1] }}">
+                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ expert_profile[1] }}">
                     </div>
                     <div class="mb-3">
                         <label for="last_name" class="form-label">Last Name:</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ teacher_profile[2] }}">
+                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ expert_profile[2] }}">
                     </div>
                     <div class="mb-3">
                         <label for="email">Email Address:</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ teacher_profile[3] }}">
+                        <input type="email" class="form-control" id="email" name="email" value="{{ expert_profile[3] }}">
                     </div>
                     <div class="mb-3">
                         <label for="title">Title:</label>
                         <select class="form-control" id="title" name="title">
-                            <option value="Mr" {% if teacher_profile[4] == "Mr" %}selected{% endif %}>Mr</option>
-                            <option value="Ms" {% if teacher_profile[4] == "Ms" %}selected{% endif %}>Ms</option>
-                            <option value="Miss" {% if teacher_profile[4] == "Miss" %}selected{% endif %}>Miss</option>
+                            <option value="Mr" {% if expert_profile[4] == "Mr" %}selected{% endif %}>Mr</option>
+                            <option value="Ms" {% if expert_profile[4] == "Ms" %}selected{% endif %}>Ms</option>
+                            <option value="Miss" {% if expert_profile[4] == "Miss" %}selected{% endif %}>Miss</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="nationality">Nationality:</label>
                         <select class="form-control" id="nationality" name="nationality">
-                            <option value="{{ teacher_profile[5] }}">Select your nationality</option>
+                            <option value="{{ expert_profile[5] }}">Select nationality</option>
                             {% for nationality in nationalities %}
-                            <option value="{{ nationality }}" {% if teacher_profile[5] == nationality %}selected{% endif %}>{{ nationality }}</option>
+                            <option value="{{ nationality }}" {% if expert_profile[5] == nationality %}selected{% endif %}>{{ nationality }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label">Phone Number:</label>
-                        <input type="tel" class="form-control" id="phone" name="phone" value="{{ teacher_profile[7] }}">
+                        <input type="tel" class="form-control" id="phone" name="phone" value="{{ expert_profile[7] }}">
                         <small id="phoneHelp" class="form-text text-muted">Please enter phone number in New Zealand format (e.g., 021-123-4567 or 0211234567 )</small>
                             <div class="invalid-feedback">
                                 Phone number must be in New Zealand format (e.g., 021-123-4567 or 0211234567)
@@ -79,11 +80,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="description">Description:</label>
-                        <input type="text" class="form-control" id="description" name="description" value="{{ teacher_profile[6] }}">
+                        <input type="text" class="form-control" id="description" name="description" value="{{ expert_profile[6] }}">
                     </div>
                     <div class="mb-3">
                         <label for="date_join" class="form-label">Date of Join:</label>
-                        <input type="date" class="form-control" id="date_join" name="date_join" value="{{ teacher_profile[10].strftime('%Y-%m-%d') if teacher_profile[10] else ''  }}">
+                        <input type="date" class="form-control" id="date_join" name="date_join" value="{{ expert_profile[10].strftime('%Y-%m-%d') if expert_profile[10] else ''  }}">
                     </div>
 
                     
@@ -159,10 +160,6 @@
             });
         });
     </script>
-    
-    
-    
-</body>  
+</body>
 
 {% endblock %}
-    

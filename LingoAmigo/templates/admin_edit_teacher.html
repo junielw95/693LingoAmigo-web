@@ -18,12 +18,12 @@
                 <div class="col-xl-12">
                     <div class="page-header__wrapper clearfix">
                         <div class="page-header__title">
-                            <h2>Edit My profile</h2>
+                            <h2>Edit Teacher Profile</h2>
                         </div>
                         <div class="page-header__menu">
                             <ul class="page-header__menu-list list-unstyled clearfix">
                                 <li><a href="{{ url_for('visitor_home') }}">Home</a></li>
-                                <li class="active">My profile</li>
+                                <li class="active">Edit profile</li>
                             </ul>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                     <div class="mb-3">
                         <label for="nationality">Nationality:</label>
                         <select class="form-control" id="nationality" name="nationality">
-                            <option value="{{ teacher_profile[5] }}">Select your nationality</option>
+                            <option value="{{ teacher_profile[5] }}">Select nationality</option>
                             {% for nationality in nationalities %}
                             <option value="{{ nationality }}" {% if teacher_profile[5] == nationality %}selected{% endif %}>{{ nationality }}</option>
                             {% endfor %}

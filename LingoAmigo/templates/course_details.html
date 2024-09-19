@@ -291,7 +291,12 @@
                 <div class="col-xl-4 col-lg-4">
                     <div class="course-details__sidebar">
                         <div class="course-details__price wow fadeInUp animated" data-wow-delay="0.1s">
-                            <h2 class="course-details__price-amount">$ {{ course[4] }}</h2>
+                            <h2 class="course-details__price-amount">$ {% if course[13] and course[13] != 'None' %}
+                                <s>{{ "%.2f"|format(course[4]) }}</s> <span style="color: rgb(255, 145, 0);">{{ "%.2f"|format(course[14]) }}</span>
+                            {% else %}
+                                {{ "%.2f"|format(course[4]) }}
+                            {% endif %}</h2>
+                            
                             {% if user_role == 'Student' %}
                             <div class="course-details__price-btn">
                                 <button onclick="addToCart({{ course[0] }})" class="thm-btn">Buy this course</a>
@@ -362,7 +367,11 @@
                                                 <span>(4)</span>
                                             </div>
                                         </div>
-                                        <p class="course-details__new-courses-price">${{ rc[2] }}</p>
+                                        <p class="course-details__new-courses-price">${% if rc[5] and rc[5] != 'None' %}
+                                                                                            <s>{{ "%.2f"|format(rc[2]) }}</s> <span style="color: rgb(255, 145, 0);">{{ "%.2f"|format(rc[6]) }}</span>
+                                                                                        {% else %}
+                                                                                            {{ "%.2f"|format(rc[2]) }}
+                                                                                        {% endif %}</p>
                                     </div>
                                 </li>
                                 {% endfor %}
