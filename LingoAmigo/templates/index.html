@@ -307,9 +307,16 @@
                             <div class="courses-one__single wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1000ms">
                                 <div class="courses-one__single-img">
                                     <img src="{{ url_for('static', filename='course/' + course[5]) }}" alt="{{ course[1] }}" class="courselist-course-photo">
-                                    <div class="overlay-text">
-                                        <p>Top</p>
-                                    </div>
+                                    {% if course[12] and course[12] != 'None' %}
+                                        <div class="discount-tag">
+                                            <img src="static/images/course-discount-notification.png" alt="Discount">
+                                        </div>
+                                    {% else %}
+                                        <div class="overlay-text">
+                                            <p>Top</p>
+                                        </div>
+                                    {% endif %}
+                                    
                                 </div>
                                 <div class="courses-one__single-content">
                                     <div class="courses-one__single-content-overlay-img">
