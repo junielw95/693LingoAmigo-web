@@ -1,13 +1,5 @@
 {% extends 'layout.html' %} {% block title %} LingoAmigo {% endblock %} {% block
         content %}
-<!DOCTYPE html>
-<html lang="en">
-    
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard</title>
-</head>
 
 <body>
 
@@ -184,6 +176,22 @@
         </div>
       </div>
     </div>
+
+    <br><hr><br>
+    <div class="container mt-5">
+      {% if status %}
+        {% if status == 'Pending' %}
+        <div class="alert alert-info" role="alert">
+          Waiting for teacher application approval.
+        </div>
+        {% elif status == 'Active' %}
+          <div class="alert alert-success" role="alert">
+            Application approved! You can become a teacher!
+            <a href="{{ url_for('student.teacher_setup') }}">Click here to set your teacher account!</a>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
     <br><br><br>
       
 
@@ -201,5 +209,5 @@
         }
     </script>
 </body>
-</html>
+
 {% endblock %}

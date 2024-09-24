@@ -32,11 +32,23 @@ def student_dashboard():
         cursor.execute('SELECT * FROM User WHERE user_id = %s',(session['id'],))
         student_info = cursor.fetchone()
 
-        cursor.close()  
-        connection.close() 
+        # Check if apply to become a teacher
+        status = None
+        try:
+            cursor.execute('SELECT status FROM Teacher WHERE teacher_id = %s', (user_id,))
+            result = cursor.fetchone()
+            if result:
+                status = result[0]
+        except Exception as e:
+            print(f"Error fetching application status: {e}")
+        finally:
+
+
+            cursor.close()  
+            connection.close() 
         
 
-        return render_template('student_dashboard.html',student_info = student_info, student_profile = student_profile)
+        return render_template('student_dashboard.html',student_info = student_info, student_profile = student_profile, status=status)
     return redirect(url_for('login.login_page'))
 
 
@@ -793,3 +805,110 @@ def complete_session():
     finally:
         cursor.close()
         connection.close()
+
+
+
+
+
+@student.route('/apply_for_teacher', methods=['GET', 'POST'])
+def apply_for_teacher():
+    if 'loggedin' in session :
+        user_role = session.get('role', None)
+        user_id = session.get('id', None)
+        # nationality list
+        nationalities = ['American', 'Canadian', 'Chinese', 'Mexican', 'Brazilian', 'Argentinian', 'British', 'French', 'German', 'Italian', 'Spanish', 'Portuguese', 'Russian', 'Indian', 'Japanese', 'Korean', 'Australian', 'New Zealander', 'South African', 'Egyptian', 'Nigerian', 'Saudi', 'Emirati', 'Iranian', 'Turkish', 'Indonesian', 'Thai', 'Vietnamese', 'Filipino', 'Malaysian']
+        cursor, connection = get_cursor() 
+        if request.method == 'POST':
+            first_name = request.form['first_name']
+            last_name = request.form['last_name']
+            phone = request.form['phone']
+            title = request.form['title']
+            nationality = request.form['nationality']
+            description = request.form['description']
+            email = request.form['email']
+            image_url = request.files['image_url']
+            image_path = upload(image_url)
+            date_join = datetime.now().date()
+            status = 'Pending'
+            
+            # email format
+            if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                flash('Invalid email address format.', 'error')
+                return redirect(request.url)
+            # phone format
+            nz_phone_pattern = re.compile(r"^(\+64|0)([2-9]\d{1}|[27]\d{2})[-\s]?\d{3}[-\s]?\d{4}$")
+            if not nz_phone_pattern.match(phone):
+                flash('Phone number must be in New Zealand format.', 'error')
+                return redirect(request.url)
+           
+            
+            #teacher info
+            cursor.execute('''
+                            INSERT INTO Teacher (teacher_id, first_name, last_name, email, title, nationality, description, phone, image_url, status, date_join)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        ''', (user_id, first_name, last_name, email, title, nationality, description, phone, image_path, status, date_join))
+            connection.commit()
+            flash('Application submitted! Waiting for approval!', 'success')
+            return redirect(url_for('student.student_dashboard'))
+        else:
+            
+            return render_template('apply_for_teacher.html', nationalities=nationalities)
+    else:
+        return redirect(url_for('login.login_page'))
+    
+def upload(file):
+    if file and file.filename:
+                filename = secure_filename(file.filename)
+                uploads_dir =os.path.join(current_app.root_path,'static','uploads')
+                os.makedirs(uploads_dir, exist_ok=True)
+                filepath = os.path.join(uploads_dir, filename)
+                file.save(filepath.replace("\\", "/"))
+                return filename
+    
+
+
+@student.route('teacher_setup', methods=['GET','POST'])
+def teacher_setup():
+    msg = ''
+    if request.method == 'POST':
+        user_id = session.get('id', None)
+        if not user_id:
+            return redirect(url_for('login.login_page'))
+        username = request.form['username']
+        password = request.form['password']
+        confirmpassword = request.form['confirmpassword']
+        if password != confirmpassword:
+            msg = 'Password and confirm password do not matche!'
+            return render_template('teacher_setup.html')
+        
+        # Get cursor and connection from the database module
+        cursor, connection = get_cursor()
+        
+
+        cursor.execute('SELECT * FROM User WHERE username = %s', (username,))
+        account = cursor.fetchone()
+        if account:
+            msg = 'Account already exists!'
+        else:
+            hashed = hashing.hash_value(password, salt='abcd')
+            default_role = 'Teacher'
+            cursor.execute('INSERT INTO User (username, password, role) VALUES (%s, %s, %s)',(username, hashed, default_role))
+            connection.commit()  # Commit changes to the database
+            
+            cursor.execute('SELECT user_id FROM User WHERE username = %s', (username,))
+            new_user_id = cursor.fetchone()[0]
+
+            cursor.execute('UPDATE Teacher SET teacher_id = %s WHERE teacher_id = %s', (new_user_id, user_id))
+            connection.commit()  # Commit changes to the database
+            
+            msg = 'Your teacher account has been set up!'
+            session.clear()
+            return redirect(url_for('login.login_page'))
+
+            
+        # Close cursor and connection
+        cursor.close()
+        connection.close()
+    return render_template('teacher_setup.html', msg=msg)
+
+

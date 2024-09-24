@@ -79,10 +79,15 @@
                         <td>{{ teacher[5] }}</td>
                         <td>{{ teacher[9] }}</td>
                         <td>{{ teacher[10].strftime('%d-%m-%Y') }}</td>
-                        <td><a
+                        <td>
+                            {% if teacher[9] == 'Pending' %}
+                                <button onclick="approveTeacher({{ teacher[0] }})" class="btn btn-success">Approve</button>
+                            {% endif %}
+                        <a
                                     href="{{ url_for('administrator.edit_teacher', teacher_id=teacher[0]) }}"
                                     class="btn btn-primary btn-action"
                                     >Edit</a></td>
+                            
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -92,6 +97,40 @@
 </div><!-- /.page-wrapper -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="http://kit.fontawesome.com/a076d05399.js"></script>
+
+<script>
+function approveTeacher(teacherId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You are about to approve this teacher's application.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, approve it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/administrator/approve_teacher/${teacherId}`, {
+                method: 'POST',
+            }).then(response => response.json())
+            .then(data => {
+                Swal.fire('Approved!', 'The teacher has been approved.', 'success').then(() => {
+                    window.location.reload();
+                });
+            }).catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'There was an error processing your request.',
+                        icon: 'error',
+                        confirmButtonText: 'Close'
+                });
+            });
+        }
+    });
+}
+
+</script>
  
 </body>
 {% endblock %}

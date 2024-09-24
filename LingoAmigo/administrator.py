@@ -798,3 +798,20 @@ def update_course_discount():
         cursor.close()
         connection.close()
     return redirect(url_for('administrator.admin_all_courses'))
+
+@administrator.route('/approve_teacher/<int:teacher_id>', methods=['POST'])
+def approve_teacher(teacher_id):
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    
+    cursor, connection = get_cursor()
+    try:
+        cursor.execute("UPDATE Teacher SET status = 'Active' WHERE teacher_id = %s", (teacher_id,))
+        connection.commit()
+        return jsonify({'success': 'Teacher approved successfully'}), 200
+    except Exception as e:
+        connection.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+        connection.close()

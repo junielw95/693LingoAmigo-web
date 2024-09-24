@@ -117,3 +117,5 @@ def home_register_route():
         msg = 'Please fill out the form!'
     
     return render_template('index.html', msg=msg)
+
+

@@ -107,9 +107,9 @@ def teachers():
     search_query = request.args.get('search', '')
     if search_query:
         search_query = f"%{search_query}%"
-        cursor.execute('SELECT * FROM Teacher WHERE first_name LIKE %s OR last_name LIKE %s OR nationality LIKE %s', (search_query, search_query, search_query))
+        cursor.execute("SELECT * FROM Teacher WHERE first_name LIKE %s OR last_name LIKE %s OR nationality LIKE %s AND status = 'Active'", (search_query, search_query, search_query))
     else:
-        cursor.execute('SELECT * FROM Teacher')
+        cursor.execute("SELECT * FROM Teacher WHERE status = 'Active'")
 
 
     teachers = cursor.fetchall()
