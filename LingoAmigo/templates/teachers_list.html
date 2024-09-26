@@ -1,13 +1,5 @@
-﻿{% extends 'layout.html' %} {% block title %} LingoAmigo {% endblock %} {% block
+﻿{% extends 'layout.html' %} {% block title %} LingoAmigo - Teachers{% endblock %} {% block
         content %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Teachers || LingoAmigo</title>
-</head>
 
 <body>
 
@@ -129,7 +121,7 @@
                         </div>
                         <div class="registration-two__right">
                             <div class="registration-two__right-btn">
-                                <a href="#" class="thm-btn">Apply</a>
+                                <a href="{{ url_for('student.apply_for_teacher') }}" class="thm-btn">Apply</a>
                             </div>
                         </div>
                     </div>
@@ -197,5 +189,5 @@
 
 
 </body>
-</html>
+
 {% endblock %}

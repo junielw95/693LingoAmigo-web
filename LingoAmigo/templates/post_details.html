@@ -56,7 +56,7 @@
                 <p><small class="post-date">Posted on {{ post[3].strftime('%d-%m-%Y') }}</small></p>
             </div>
             {% if session['loggedin'] %} {% if session['role'] == 'Administrator' %}
-                <a href="{{ url_for('administrator.delete_post', post_id=post[0]) }}" class="btn btn-danger btn-delete">Delete Post</a>
+                <button onclick="confirmDelete('{{ post[0] }}', 'post')" class="btn btn-danger btn-delete">Delete Post</button>
             {% endif %}{% endif %}
         </div>
     </div>
@@ -81,7 +81,7 @@
                         <p><small class="reply-date">Posted on {{ reply[1].strftime('%d-%m-%Y') }}</small></p>
                     </div>
                     {% if session['loggedin'] %} {% if session['role'] == 'Administrator' %}
-                        <a href="{{ url_for('administrator.delete_reply', reply_id=reply[7], post_id=post[0]) }}" class="btn btn-danger btn-delete">Delete Reply</a>
+                        <button onclick="confirmDelete('{{ reply[7] }}', 'reply', '{{ post[0] }}')" class="btn btn-danger btn-delete">Delete Reply</button>
                     {% endif %}{% endif %}
                 </div>
             </div>
@@ -107,6 +107,7 @@
 
 
 
+
     <div class="search-popup">
         <div class="search-popup__overlay search-toggler"></div>
         <!-- /.search-popup__overlay -->
@@ -123,6 +124,7 @@
     </div>
     <!-- /.search-popup -->
 <a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -135,6 +137,52 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 });
+
+function confirmDelete(entityId, type, postId = null) {
+    let message = (type === 'post') ? "This will delete the post and all its replies.": "This will delete the reply.";
+    let url = (type === 'post') ? `/administrator/delete_post/${entityId}`: `/administrator/delete_reply/${entityId}/${postId}`;
+    Swal.fire({
+        title: 'Are you sure?',
+        text: message,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(url, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire(
+                            'Deleted!',
+                            'The ' + type + ' has been deleted',
+                            'success'
+                        ).then(() => {
+                            window.location.href = data.redirect_url;
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            data.error,
+                            'error'
+                        );
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire(
+                        'Error!',
+                        'There was an error processing your request.',
+                        'error'
+                    );
+                });
+        }
+    });
+}
+
 
 </script>
 </body>

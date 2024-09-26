@@ -220,24 +220,14 @@
               </div>
             </a>
           </div>
-          <!--Resource card-->
-          <div class="col-md-4">
-            <a href="#" class="card-link">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title"><i class="fas fa-book" style="font-size: 2rem"></i>Manage Resources</h5>
-                  <p class="card-text">#</p>
-                </div>
-              </div>
-            </a>
-          </div>
+          
           <!--Report card-->
           <div class="col-md-4">
-            <a href="#" class="card-link">
+            <a href="{{ url_for('administrator.view_report') }}" class="card-link">
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title"><i class="fas fa-chart-line" style="font-size: 2rem"></i>Report</h5>
-                  <p class="card-text">#</p>
+                  <p class="card-text">Admin view reports to analyse popularity of courses.</p>
                 </div>
               </div>
             </a>

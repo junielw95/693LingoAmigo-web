@@ -426,7 +426,7 @@ def upload(file):
         file.save(filepath.replace("\\", "/"))
         return filename
     
-@administrator.route("/delete_post/<int:post_id>", methods=['GET'])
+@administrator.route("/delete_post/<int:post_id>", methods=['POST'])
 def delete_post(post_id):
     if 'loggedin' not in session:
         return redirect(url_for('login.login_page'))
@@ -440,13 +440,17 @@ def delete_post(post_id):
         delete_post_query = "DELETE FROM Post WHERE post_id = %s"
         cursor.execute(delete_post_query, (post_id,))
         connection.commit()
+        return jsonify(success=True, redirect_url=url_for('student.discussion_board')), 200
+    except Exception as e:
+        connection.rollback()
+        return jsonify(success=False, error=str(e)), 500
     finally:
         cursor.close()
         connection.close()
-    return redirect(url_for('student.discussion_board'))
 
 
-@administrator.route("/delete_reply/<int:reply_id>/<int:post_id>", methods=['GET'])
+
+@administrator.route("/delete_reply/<int:reply_id>/<int:post_id>", methods=['POST'])
 def delete_reply(reply_id, post_id):
     if 'loggedin' not in session:
         return redirect(url_for('login.login_page'))
@@ -456,13 +460,15 @@ def delete_reply(reply_id, post_id):
         # Delete replies
         delete_replies_query = "DELETE FROM Replies WHERE reply_id = %s"
         cursor.execute(delete_replies_query, (reply_id,))
-
         
         connection.commit()
+        return jsonify(success=True, redirect_url=url_for('student.post_details', post_id=post_id)), 200
+    except Exception as e:
+        connection.rollback()
+        return jsonify(success=False, error=str(e)), 500
     finally:
         cursor.close()
         connection.close()
-    return redirect(url_for('student.post_details', post_id=post_id))
 
 
 @administrator.route('view_students')
@@ -815,3 +821,41 @@ def approve_teacher(teacher_id):
     finally:
         cursor.close()
         connection.close()
+
+@administrator.route('/view_report', methods=['GET', 'POST'])
+def view_report():
+    if 'loggedin' not in session:
+        return redirect(url_for('login.login_page'))
+    # Set default start and end dates
+    current_year = date.today().year
+    default_start_date = f"{current_year}-01-01"
+    default_end_date = date.today().strftime('%Y-%m-%d')
+
+
+    # Get user-provided start and end dates for first chart
+    start_date = request.args.get('start_date', default_start_date)
+    end_date = request.args.get('end_date', default_end_date)
+    if request.headers.get('Accept') == 'application/json':
+        cursor, connection = get_cursor()
+        courses_query = f'''
+                        SELECT c.course_name, COUNT(o.course_id) as total_sales, SUM(c.price) AS total_revenue
+                        FROM Course c
+                        JOIN `Order` o ON c.course_id = o.course_id
+                        WHERE o.status = 'Completed' AND o.order_date BETWEEN %s AND %s
+                        GROUP BY c.course_name
+                        ORDER BY total_sales DESC;
+                        '''
+        cursor.execute(courses_query, (start_date, end_date))
+        sales_data = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+
+        courses = [x[0] for x in sales_data]
+        total_sales = [x[1] for x in sales_data]
+        total_revenue = [float(x[2]) for x in sales_data]
+        return jsonify({'courses': courses, 'total_sales': total_sales, 'total_revenue': total_revenue})
+    sales_data = []
+    return render_template('view_report.html', sales_data=sales_data, start_date=start_date, end_date=end_date)
+    
