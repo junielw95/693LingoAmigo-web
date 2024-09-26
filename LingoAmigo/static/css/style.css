@@ -1135,3 +1135,31 @@ textarea:focus {
   50% { opacity: 0.5; }
   100% { opacity: 1; }
 }
+
+.card {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+  font-weight: bold;
+}
+.card {
+  margin: 20px;
+  padding: 20px;
+}
+
+.center-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.center-flex .col-md-4 {
+  flex: 0 0 auto;
+}

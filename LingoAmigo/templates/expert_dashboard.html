@@ -161,30 +161,26 @@
           </button>
         </form>
       </div>
+            <br><hr>
+      <!-- Manage hub-->
       <div class = "container mt-5">
-        <div class="row">
+        <div class="section-title text-center">
+            <span class="section-title__tagline"></span>
+            <h2 class="section-title__title">Management Hub</h2>
+        </div>
+        <div class="row center-flex">
           <!--Resource card-->
           <div class="col-md-4">
-            <a href="#" class="card-link">
+            <a href="{{ url_for('expert.add_resource')}}" class="card-link">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title"><i class="fas fa-book" style="font-size: 2rem"></i>Manage Resources</h5>
-                  <p class="card-text">#</p>
+                  <h5 class="card-title"><i class="fas fa-book" style="font-size: 2rem"></i>Add Resources</h5>
+                  <p class="card-text">Expert upload new resources including news, articles, tutorials or researches.</p>
                 </div>
               </div>
             </a>
           </div>
-          <!--Message card-->
-          <div class="col-md-4">
-            <a href="#" class="card-link">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title"><i class="fas fa-envelope" style="font-size: 2rem"></i>Sessions</h5>
-                  <p class="card-text">#</p>
-                </div>
-              </div>
-            </a>
-          </div>
+          
         </div>
       </div>
     </div>

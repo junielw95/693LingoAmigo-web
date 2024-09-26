@@ -160,8 +160,15 @@
           </button>
         </form>
       </div>
+
+      <br><hr>
+      <!-- Manage hub-->
       <div class = "container mt-5">
-        <div class="row">
+        <div class="section-title text-center">
+            <span class="section-title__tagline"></span>
+            <h2 class="section-title__title">Management Hub</h2>
+        </div>
+        <div class="row center-flex">
           <!--Course card-->
           <div class="col-md-4">
             <a href="{{ url_for('teacher.teacher_courses') }}" class="card-link">
@@ -169,6 +176,17 @@
                 <div class="card-body">
                   <h5 class="card-title"><i class="fas fa-book" style="font-size: 2rem"></i>Manage My Courses</h5>
                   <p class="card-text">View all my courses. Edit and add my courses.</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          <!--Create Course card-->
+          <div class="col-md-4">
+            <a href="{{ url_for('teacher.create_course') }}" class="card-link">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"><i class="fas fa-book" style="font-size: 2rem"></i>Create a New Course</h5>
+                  <p class="card-text">Create new courses, upload quiz and video.</p>
                 </div>
               </div>
             </a>
