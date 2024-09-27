@@ -73,7 +73,7 @@
    |    |    |-- admin_edit_student.html        # Admin edit student profile
    |    |    |-- admin_edit_teachers.html         # Admin edit teacher profile
    |    |    |-- admin_edit_experts.html         # Admin edit expert profile
-   |    |    |-- 
+   |    |    |-- view_report.html           # Admin see the sales and revenue of courses
    |    |    |-- 
    |    |    |-- 
    |    |    |-- 
