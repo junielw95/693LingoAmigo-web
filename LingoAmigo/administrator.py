@@ -691,7 +691,7 @@ def edit_student(student_id):
         
         cursor, connection = get_cursor() 
         #fetch current student profile for edit
-        cursor.execute('SELECT * FROM student WHERE student_id = %s', (student_id,))
+        cursor.execute('SELECT * FROM Student WHERE student_id = %s', (student_id,))
         student_profile = cursor.fetchone()
 
         if request.method == 'POST':
