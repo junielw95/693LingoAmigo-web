@@ -85,3 +85,37 @@
    |-- LingoAmigo.sql                    # Database
 
 
+
+Web App Log-in details
+Student
+Username: student1; Password: NewPassword1!
+Username: student2; Password: NewPassword1!
+Username: student3; Password: NewPassword1!
+Username: student4; Password: NewPassword1!
+Username: student5; Password: NewPassword1!
+Username: student6; Password: NewPassword1!
+Username: student7; Password: NewPassword1!
+Username: student8; Password: NewPassword1!
+Username: student9; Password: NewPassword1!
+Username: student10; Password: NewPassword1!
+Username: student11; Password: NewPassword1!
+Username: student12; Password: NewPassword1!
+Username: student13; Password: NewPassword1!
+Username: student14; Password: NewPassword1!
+Username: student15; Password: NewPassword1!
+Teacher
+Username: teacher1; Password: NewPassword1!
+Username: teacher2; Password: NewPassword1!
+Username: teacher3; Password: NewPassword1!
+Username: teacher4; Password: NewPassword1!
+Username: teacher5; Password: NewPassword1!
+Username: teacher6; Password: NewPassword1!
+Username: teacher7; Password: NewPassword1!
+Expert
+Username: expert1; Password: NewPassword1!
+Username: expert2; Password: NewPassword1!
+Username: expert3; Password: NewPassword1!
+Administrator
+Username: admin1; Password: NewPassword1!
+Username: admin2; Password: NewPassword1!
+
